@@ -11,21 +11,54 @@ namespace StokTakipOtomasyonu.Forms
     {
         private int _kullaniciId;
         private DataTable _urunlerDt;
+        private DataTable _projelerDt;
 
         public ManuelUrunGirisiForm(int kullaniciId)
         {
             InitializeComponent();
             _kullaniciId = kullaniciId;
             IslemTurleriYukle();
+            ProjeleriYukle();
             TumUrunleriYukle();
             txtBarkod.Focus();
+
+            // Event handlers
+            btnBarkodAra.Click += BtnBarkodAra_Click;
+            btnKaydet.Click += BtnKaydet_Click;
+            btnIptal.Click += BtnIptal_Click;
+            txtBarkod.KeyDown += TxtBarkod_KeyDown;
+            cmbIslemTuru.SelectedIndexChanged += CmbIslemTuru_SelectedIndexChanged;
+        }
+
+        private void BtnBarkodAra_Click(object sender, EventArgs e)
+        {
+            BarkodAra(txtBarkod.Text);
+        }
+
+        private void ProjeleriYukle()
+        {
+            try
+            {
+                string query = "SELECT proje_id, proje_kodu, proje_tanimi FROM projeler WHERE aktif = 1";
+                _projelerDt = DatabaseHelper.ExecuteQuery(query);
+
+                cmbProje.DataSource = _projelerDt;
+                cmbProje.DisplayMember = "proje_kodu";
+                cmbProje.ValueMember = "proje_id";
+                cmbProje.SelectedIndex = -1;
+                cmbProje.Enabled = false;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Projeler yüklenirken hata oluştu: " + ex.Message,
+                              "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void IslemTurleriYukle()
         {
             try
             {
-                // Sadece Stok (0) ve Proje (1) işlem türlerini yükle
                 string query = "SELECT * FROM islem_turu WHERE islem_turu_id IN (0, 1)";
                 var dt = DatabaseHelper.ExecuteQuery(query);
 
@@ -38,6 +71,35 @@ namespace StokTakipOtomasyonu.Forms
             {
                 MessageBox.Show("İşlem türleri yüklenirken hata oluştu: " + ex.Message,
                               "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void CmbIslemTuru_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (cmbIslemTuru.SelectedValue != null)
+            {
+                DataRowView selectedRow = (DataRowView)cmbIslemTuru.SelectedItem;
+                int selectedValue = Convert.ToInt32(selectedRow["islem_turu_id"]);
+                bool isProje = (selectedValue == 1);
+
+                lblProje.Visible = isProje;
+                cmbProje.Visible = isProje;
+                cmbProje.Enabled = isProje;
+
+                if (!isProje)
+                {
+                    cmbProje.SelectedIndex = -1;
+                }
+
+                // Form boyutunu ayarla
+                if (panelYeniUrun.Visible)
+                {
+                    this.Height = isProje ? 500 : 420;
+                }
+                else
+                {
+                    this.Height = isProje ? 350 : 270;
+                }
             }
         }
 
@@ -65,11 +127,6 @@ namespace StokTakipOtomasyonu.Forms
             }
         }
 
-        private void btnBarkodAra_Click(object sender, EventArgs e)
-        {
-            BarkodAra(txtBarkod.Text);
-        }
-
         private void BarkodAra(string barkod)
         {
             if (string.IsNullOrWhiteSpace(barkod))
@@ -86,24 +143,27 @@ namespace StokTakipOtomasyonu.Forms
 
                 if (dt.Rows.Count > 0)
                 {
-                    // Barkod bulundu, mevcut ürünü güncelleme modu
                     var row = dt.Rows[0];
                     lblUrunBilgisi.Text = $"{row["urun_adi"]} - {row["urun_kodu"]} (Stok: {row["miktar"]})";
                     txtMiktar.Enabled = true;
                     btnKaydet.Enabled = true;
                     panelYeniUrun.Visible = false;
-                    this.Height = 270; // Normal boyut
+
+                    bool isProje = cmbIslemTuru.SelectedValue != null &&
+                                 Convert.ToInt32(((DataRowView)cmbIslemTuru.SelectedItem)["islem_turu_id"]) == 1;
+                    this.Height = isProje ? 350 : 270;
                 }
                 else
                 {
-                    // Barkod bulunamadı, yeni ürün ekleme modu
                     lblUrunBilgisi.Text = "Yeni ürün kaydedilecek";
                     txtMiktar.Enabled = true;
                     btnKaydet.Enabled = true;
                     panelYeniUrun.Visible = true;
-                    this.Height = 500; // Büyük boyut
 
-                    // Varsayılan değerleri ayarla
+                    bool isProje = cmbIslemTuru.SelectedValue != null &&
+                                 Convert.ToInt32(((DataRowView)cmbIslemTuru.SelectedItem)["islem_turu_id"]) == 1;
+                    this.Height = isProje ? 500 : 420;
+
                     txtUrunAdi.Text = "YENİ ÜRÜN";
                     txtUrunKodu.Text = barkod;
                     txtUrunMarka.Text = "";
@@ -117,12 +177,20 @@ namespace StokTakipOtomasyonu.Forms
             }
         }
 
-        private void btnKaydet_Click(object sender, EventArgs e)
+        private void BtnKaydet_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrWhiteSpace(txtBarkod.Text) || string.IsNullOrWhiteSpace(txtMiktar.Text))
             {
                 MessageBox.Show("Lütfen zorunlu alanları doldurun!",
                               "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (panelYeniUrun.Visible && string.IsNullOrWhiteSpace(txtUrunAdi.Text))
+            {
+                MessageBox.Show("Ürün adı zorunludur!",
+                              "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtUrunAdi.Focus();
                 return;
             }
 
@@ -133,9 +201,18 @@ namespace StokTakipOtomasyonu.Forms
                 return;
             }
 
+            DataRowView selectedRow = (DataRowView)cmbIslemTuru.SelectedItem;
+            int islemTuruId = Convert.ToInt32(selectedRow["islem_turu_id"]);
+
+            if (islemTuruId == 1 && (cmbProje.SelectedIndex == -1 || cmbProje.SelectedValue == null))
+            {
+                MessageBox.Show("Proje işlemi için proje seçimi zorunludur!",
+                              "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
             string barkod = txtBarkod.Text;
             string aciklama = txtAciklama.Text;
-            int islemTuruId = Convert.ToInt32(cmbIslemTuru.SelectedValue);
 
             try
             {
@@ -148,14 +225,12 @@ namespace StokTakipOtomasyonu.Forms
                         {
                             int urunId;
 
-                            // Ürün var mı kontrol et
                             string checkQuery = "SELECT urun_id FROM urunler WHERE urun_barkod = @barkod";
                             var checkDt = DatabaseHelper.ExecuteQuery(checkQuery, transaction,
                                 new MySqlParameter("@barkod", barkod));
 
                             if (checkDt.Rows.Count == 0)
                             {
-                                // Yeni ürün ekle (ürün adı zorunlu değil)
                                 string urunAdi = string.IsNullOrWhiteSpace(txtUrunAdi.Text) ? "YENİ ÜRÜN" : txtUrunAdi.Text;
 
                                 string insertQuery = @"INSERT INTO urunler 
@@ -176,13 +251,14 @@ namespace StokTakipOtomasyonu.Forms
                                 urunId = Convert.ToInt32(checkDt.Rows[0]["urun_id"]);
                             }
 
-                            // Stok güncelleme
-                            string updateQuery = "UPDATE urunler SET miktar = miktar + @miktar WHERE urun_id = @urunId";
-                            DatabaseHelper.ExecuteNonQuery(updateQuery, transaction,
-                                new MySqlParameter("@miktar", miktar),
-                                new MySqlParameter("@urunId", urunId));
+                            if (islemTuruId == 0)
+                            {
+                                string updateQuery = "UPDATE urunler SET miktar = miktar + @miktar WHERE urun_id = @urunId";
+                                DatabaseHelper.ExecuteNonQuery(updateQuery, transaction,
+                                    new MySqlParameter("@miktar", miktar),
+                                    new MySqlParameter("@urunId", urunId));
+                            }
 
-                            // Hareket kaydı
                             string insertHareketQuery = @"INSERT INTO urun_hareketleri 
                                                         (urun_id, hareket_turu, miktar, kullanici_id, aciklama, islem_turu_id) 
                                                         VALUES 
@@ -193,6 +269,20 @@ namespace StokTakipOtomasyonu.Forms
                                 new MySqlParameter("@kullaniciId", _kullaniciId),
                                 new MySqlParameter("@aciklama", aciklama),
                                 new MySqlParameter("@islemTuruId", islemTuruId));
+
+                            if (islemTuruId == 1)
+                            {
+                                int projeId = Convert.ToInt32(cmbProje.SelectedValue);
+                                string insertProjeUrunQuery = @"INSERT INTO proje_urunleri 
+                                                              (proje_id, urun_id, miktar, user_id) 
+                                                              VALUES 
+                                                              (@projeId, @urunId, @miktar, @userId)";
+                                DatabaseHelper.ExecuteNonQuery(insertProjeUrunQuery, transaction,
+                                    new MySqlParameter("@projeId", projeId),
+                                    new MySqlParameter("@urunId", urunId),
+                                    new MySqlParameter("@miktar", miktar),
+                                    new MySqlParameter("@userId", _kullaniciId));
+                            }
 
                             transaction.Commit();
                             MessageBox.Show("Ürün girişi başarıyla kaydedildi!",
@@ -215,12 +305,12 @@ namespace StokTakipOtomasyonu.Forms
             }
         }
 
-        private void btnIptal_Click(object sender, EventArgs e)
+        private void BtnIptal_Click(object sender, EventArgs e)
         {
             this.Close();
         }
 
-        private void txtBarkod_KeyDown(object sender, KeyEventArgs e)
+        private void TxtBarkod_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
             {
