@@ -207,8 +207,8 @@ namespace StokTakipOtomasyonu.Forms
                     connection.Open();
 
                 string query = @"SELECT u.urun_id, u.urun_adi, u.urun_kodu, u.urun_barkod, u.miktar AS toplam_miktar,
-                               (SELECT SUM(ud.miktar) FROM urun_depo_konum ud WHERE ud.urun_id = u.urun_id) AS depodaki_toplam
-                               FROM urunler u WHERE u.urun_id = @urunId";
+                       (SELECT SUM(ud.miktar) FROM urun_depo_konum ud WHERE ud.urun_id = u.urun_id) AS depodaki_toplam
+                       FROM urunler u WHERE u.urun_id = @urunId";
 
                 using (MySqlCommand cmd = new MySqlCommand(query, connection))
                 {
@@ -228,8 +228,8 @@ namespace StokTakipOtomasyonu.Forms
                             if (depodakiToplamMiktar > urunToplamMiktar)
                             {
                                 lblUyari.Visible = true;
-                                lblUyari.Text = "UYARI: Depodaki toplam miktar ürün kaydıyla uyuşmuyor!";
-                                lblUyari.ForeColor = System.Drawing.Color.Red;
+                                lblUyari.Text = "UYARI: Depodaki toplam miktar ürün kaydıyla uyuşmuyor! (Düzeltme yapabilirsiniz)";
+                                lblUyari.ForeColor = System.Drawing.Color.Orange;
                             }
                             else
                             {
@@ -328,13 +328,18 @@ namespace StokTakipOtomasyonu.Forms
                     return;
                 }
 
-                // Toplam miktar kontrolü
-                int toplamMiktar = depodakiToplamMiktar - currentMiktar + yeniMiktar;
-                if (toplamMiktar > urunToplamMiktar)
+                // Toplam miktar kontrolü (sadece artış durumunda)
+                if (yeniMiktar > currentMiktar)
                 {
-                    MessageBox.Show("Stok miktarını aştınız! Depodaki toplam miktar stoktaki miktardan fazla olamaz.", "Uyarı",
-                                  MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
+                    int fark = yeniMiktar - currentMiktar;
+                    int kullanilabilirMiktar = urunToplamMiktar - (depodakiToplamMiktar - currentMiktar);
+
+                    if (fark > kullanilabilirMiktar)
+                    {
+                        MessageBox.Show($"Stok miktarını aştınız! En fazla {kullanilabilirMiktar} adet ekleyebilirsiniz.", "Uyarı",
+                                      MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
+                    }
                 }
 
                 try
@@ -344,7 +349,7 @@ namespace StokTakipOtomasyonu.Forms
 
                     // Update record
                     string updateQuery = @"UPDATE urun_depo_konum SET miktar = @miktar 
-                                        WHERE urun_id = @urunId AND depo_konum_id = @konumId";
+                                WHERE urun_id = @urunId AND depo_konum_id = @konumId";
                     using (MySqlCommand updateCmd = new MySqlCommand(updateQuery, connection))
                     {
                         updateCmd.Parameters.AddWithValue("@miktar", yeniMiktar);
@@ -373,7 +378,7 @@ namespace StokTakipOtomasyonu.Forms
             }
             else if (e.ColumnIndex == dgvDepoKonumlari.Columns["colSil"].Index)
             {
-                // Silme işlemi
+                // Silme işlemi (değişmedi)
                 if (MessageBox.Show("Bu depo konumunu silmek istediğinize emin misiniz?", "Onay",
                                   MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                 {
@@ -384,7 +389,7 @@ namespace StokTakipOtomasyonu.Forms
 
                         // Delete record
                         string deleteQuery = @"DELETE FROM urun_depo_konum 
-                                            WHERE urun_id = @urunId AND depo_konum_id = @konumId";
+                                    WHERE urun_id = @urunId AND depo_konum_id = @konumId";
                         using (MySqlCommand deleteCmd = new MySqlCommand(deleteQuery, connection))
                         {
                             deleteCmd.Parameters.AddWithValue("@urunId", currentUrunId);
