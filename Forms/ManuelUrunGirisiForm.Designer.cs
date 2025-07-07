@@ -158,7 +158,7 @@
             this.panelYeniUrun.Controls.Add(this.lblUrunKodu);
             this.panelYeniUrun.Controls.Add(this.txtUrunAdi);
             this.panelYeniUrun.Controls.Add(this.lblUrunAdi);
-            this.panelYeniUrun.Location = new System.Drawing.Point(47, 303);
+            this.panelYeniUrun.Location = new System.Drawing.Point(43, 306);
             this.panelYeniUrun.Name = "panelYeniUrun";
             this.panelYeniUrun.Size = new System.Drawing.Size(400, 170);
             this.panelYeniUrun.TabIndex = 12;

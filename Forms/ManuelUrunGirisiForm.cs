@@ -234,10 +234,10 @@ namespace StokTakipOtomasyonu.Forms
                                 string urunAdi = string.IsNullOrWhiteSpace(txtUrunAdi.Text) ? "YENİ ÜRÜN" : txtUrunAdi.Text;
 
                                 string insertQuery = @"INSERT INTO urunler 
-                                    (urun_adi, urun_kodu, urun_barkod, urun_marka, urun_no, miktar) 
-                                    VALUES 
-                                    (@adi, @kod, @barkod, @marka, @no, 0);
-                                    SELECT LAST_INSERT_ID();";
+                            (urun_adi, urun_kodu, urun_barkod, urun_marka, urun_no, miktar) 
+                            VALUES 
+                            (@adi, @kod, @barkod, @marka, @no, 0);
+                            SELECT LAST_INSERT_ID();";
 
                                 urunId = Convert.ToInt32(DatabaseHelper.ExecuteScalar(insertQuery, transaction,
                                     new MySqlParameter("@adi", urunAdi),
@@ -251,7 +251,7 @@ namespace StokTakipOtomasyonu.Forms
                                 urunId = Convert.ToInt32(checkDt.Rows[0]["urun_id"]);
                             }
 
-                            if (islemTuruId == 0)
+                            if (islemTuruId == 0) // Stok işlemi
                             {
                                 string updateQuery = "UPDATE urunler SET miktar = miktar + @miktar WHERE urun_id = @urunId";
                                 DatabaseHelper.ExecuteNonQuery(updateQuery, transaction,
@@ -260,9 +260,9 @@ namespace StokTakipOtomasyonu.Forms
                             }
 
                             string insertHareketQuery = @"INSERT INTO urun_hareketleri 
-                                                        (urun_id, hareket_turu, miktar, kullanici_id, aciklama, islem_turu_id) 
-                                                        VALUES 
-                                                        (@urunId, 'Giris', @miktar, @kullaniciId, @aciklama, @islemTuruId)";
+                                                (urun_id, hareket_turu, miktar, kullanici_id, aciklama, islem_turu_id) 
+                                                VALUES 
+                                                (@urunId, 'Giris', @miktar, @kullaniciId, @aciklama, @islemTuruId)";
                             DatabaseHelper.ExecuteNonQuery(insertHareketQuery, transaction,
                                 new MySqlParameter("@urunId", urunId),
                                 new MySqlParameter("@miktar", miktar),
@@ -270,18 +270,41 @@ namespace StokTakipOtomasyonu.Forms
                                 new MySqlParameter("@aciklama", aciklama),
                                 new MySqlParameter("@islemTuruId", islemTuruId));
 
-                            if (islemTuruId == 1)
+                            if (islemTuruId == 1) // Proje işlemi
                             {
                                 int projeId = Convert.ToInt32(cmbProje.SelectedValue);
-                                string insertProjeUrunQuery = @"INSERT INTO proje_urunleri 
-                                                              (proje_id, urun_id, miktar, user_id) 
-                                                              VALUES 
-                                                              (@projeId, @urunId, @miktar, @userId)";
-                                DatabaseHelper.ExecuteNonQuery(insertProjeUrunQuery, transaction,
+
+                                // Önce bu ürünün projede olup olmadığını kontrol et
+                                string checkProjeUrunQuery = @"SELECT id FROM proje_urunleri 
+                                                     WHERE proje_id = @projeId AND urun_id = @urunId";
+                                var checkProjeUrunDt = DatabaseHelper.ExecuteQuery(checkProjeUrunQuery, transaction,
                                     new MySqlParameter("@projeId", projeId),
-                                    new MySqlParameter("@urunId", urunId),
-                                    new MySqlParameter("@miktar", miktar),
-                                    new MySqlParameter("@userId", _kullaniciId));
+                                    new MySqlParameter("@urunId", urunId));
+
+                                if (checkProjeUrunDt.Rows.Count > 0)
+                                {
+                                    // Var olan kaydı güncelle
+                                    string updateProjeUrunQuery = @"UPDATE proje_urunleri 
+                                                          SET miktar = miktar + @miktar 
+                                                          WHERE proje_id = @projeId AND urun_id = @urunId";
+                                    DatabaseHelper.ExecuteNonQuery(updateProjeUrunQuery, transaction,
+                                        new MySqlParameter("@miktar", miktar),
+                                        new MySqlParameter("@projeId", projeId),
+                                        new MySqlParameter("@urunId", urunId));
+                                }
+                                else
+                                {
+                                    // Yeni kayıt oluştur
+                                    string insertProjeUrunQuery = @"INSERT INTO proje_urunleri 
+                                                          (proje_id, urun_id, miktar, user_id) 
+                                                          VALUES 
+                                                          (@projeId, @urunId, @miktar, @userId)";
+                                    DatabaseHelper.ExecuteNonQuery(insertProjeUrunQuery, transaction,
+                                        new MySqlParameter("@projeId", projeId),
+                                        new MySqlParameter("@urunId", urunId),
+                                        new MySqlParameter("@miktar", miktar),
+                                        new MySqlParameter("@userId", _kullaniciId));
+                                }
                             }
 
                             transaction.Commit();
