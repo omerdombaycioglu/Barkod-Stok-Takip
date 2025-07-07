@@ -313,91 +313,64 @@ namespace StokTakipOtomasyonu.Forms
             if (e.RowIndex < 0) return;
 
             DataGridViewRow row = dgvDepoKonumlari.Rows[e.RowIndex];
-            int depoKonumId = Convert.ToInt32(row.Cells["colDepoKonumId"].Value);
-            int currentMiktar = Convert.ToInt32(row.Cells["colMiktar"].Value);
 
-            if (e.ColumnIndex == dgvDepoKonumlari.Columns["colGuncelle"].Index)
+            try
             {
-                // Güncelleme işlemi
-                string miktarStr = row.Cells["colMiktar"].Value?.ToString();
+                int depoKonumId = Convert.ToInt32(row.Cells["colDepoKonumId"].Value);
 
-                if (!int.TryParse(miktarStr, out int yeniMiktar) || yeniMiktar < 0)
+                // Null kontrolü eklendi
+                if (row.Cells["colMiktar"].Value == null || string.IsNullOrWhiteSpace(row.Cells["colMiktar"].Value.ToString()))
                 {
-                    MessageBox.Show("Geçerli bir miktar giriniz!", "Uyarı",
+                    MessageBox.Show("Miktar boş olamaz! Lütfen geçerli bir sayı giriniz.", "Uyarı",
                                   MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
 
-                // Toplam miktar kontrolü (sadece artış durumunda)
-                if (yeniMiktar > currentMiktar)
-                {
-                    int fark = yeniMiktar - currentMiktar;
-                    int kullanilabilirMiktar = urunToplamMiktar - (depodakiToplamMiktar - currentMiktar);
+                int currentMiktar = Convert.ToInt32(row.Cells["colMiktar"].Value);
 
-                    if (fark > kullanilabilirMiktar)
+                if (e.ColumnIndex == dgvDepoKonumlari.Columns["colGuncelle"].Index)
+                {
+                    // Güncelleme işlemi
+                    string miktarStr = row.Cells["colMiktar"].Value?.ToString();
+
+                    if (!int.TryParse(miktarStr, out int yeniMiktar) || yeniMiktar < 0)
                     {
-                        MessageBox.Show($"Stok miktarını aştınız! En fazla {kullanilabilirMiktar} adet ekleyebilirsiniz.", "Uyarı",
+                        MessageBox.Show("Geçerli bir miktar giriniz! (0 veya pozitif sayı)", "Uyarı",
                                       MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         return;
                     }
-                }
 
-                try
-                {
-                    if (connection.State != ConnectionState.Open)
-                        connection.Open();
-
-                    // Update record
-                    string updateQuery = @"UPDATE urun_depo_konum SET miktar = @miktar 
-                                WHERE urun_id = @urunId AND depo_konum_id = @konumId";
-                    using (MySqlCommand updateCmd = new MySqlCommand(updateQuery, connection))
+                    // Toplam miktar kontrolü (sadece artış durumunda)
+                    if (yeniMiktar > currentMiktar)
                     {
-                        updateCmd.Parameters.AddWithValue("@miktar", yeniMiktar);
-                        updateCmd.Parameters.AddWithValue("@urunId", currentUrunId);
-                        updateCmd.Parameters.AddWithValue("@konumId", depoKonumId);
-                        updateCmd.ExecuteNonQuery();
+                        int fark = yeniMiktar - currentMiktar;
+                        int kullanilabilirMiktar = urunToplamMiktar - (depodakiToplamMiktar - currentMiktar);
+
+                        if (fark > kullanilabilirMiktar)
+                        {
+                            MessageBox.Show($"Stok miktarını aştınız! En fazla {kullanilabilirMiktar} adet ekleyebilirsiniz.", "Uyarı",
+                                          MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            return;
+                        }
                     }
 
-                    MessageBox.Show("Depo konum bilgisi güncellendi!", "Bilgi",
-                                  MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                    // Refresh data
-                    UrunBilgileriniYukle(currentUrunId);
-                    UrunKonumlariniYukle(currentUrunId);
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("Güncelleme sırasında hata oluştu: " + ex.Message,
-                                  "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-                finally
-                {
-                    if (connection.State == ConnectionState.Open)
-                        connection.Close();
-                }
-            }
-            else if (e.ColumnIndex == dgvDepoKonumlari.Columns["colSil"].Index)
-            {
-                // Silme işlemi (değişmedi)
-                if (MessageBox.Show("Bu depo konumunu silmek istediğinize emin misiniz?", "Onay",
-                                  MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
-                {
                     try
                     {
                         if (connection.State != ConnectionState.Open)
                             connection.Open();
 
-                        // Delete record
-                        string deleteQuery = @"DELETE FROM urun_depo_konum 
+                        // Update record
+                        string updateQuery = @"UPDATE urun_depo_konum SET miktar = @miktar 
                                     WHERE urun_id = @urunId AND depo_konum_id = @konumId";
-                        using (MySqlCommand deleteCmd = new MySqlCommand(deleteQuery, connection))
+                        using (MySqlCommand updateCmd = new MySqlCommand(updateQuery, connection))
                         {
-                            deleteCmd.Parameters.AddWithValue("@urunId", currentUrunId);
-                            deleteCmd.Parameters.AddWithValue("@konumId", depoKonumId);
-                            deleteCmd.ExecuteNonQuery();
+                            updateCmd.Parameters.AddWithValue("@miktar", yeniMiktar);
+                            updateCmd.Parameters.AddWithValue("@urunId", currentUrunId);
+                            updateCmd.Parameters.AddWithValue("@konumId", depoKonumId);
+                            updateCmd.ExecuteNonQuery();
                         }
 
-                        MessageBox.Show("Depo konumu başarıyla silindi!", "Bilgi",
+                        MessageBox.Show("Depo konum bilgisi güncellendi!", "Bilgi",
                                       MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                         // Refresh data
@@ -406,7 +379,7 @@ namespace StokTakipOtomasyonu.Forms
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show("Silme sırasında hata oluştu: " + ex.Message,
+                        MessageBox.Show("Güncelleme sırasında hata oluştu: " + ex.Message,
                                       "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                     finally
@@ -415,42 +388,95 @@ namespace StokTakipOtomasyonu.Forms
                             connection.Close();
                     }
                 }
+                else if (e.ColumnIndex == dgvDepoKonumlari.Columns["colSil"].Index)
+                {
+                    // Silme işlemi (değişmedi)
+                    if (MessageBox.Show("Bu depo konumunu silmek istediğinize emin misiniz?", "Onay",
+                                      MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                    {
+                        try
+                        {
+                            if (connection.State != ConnectionState.Open)
+                                connection.Open();
+
+                            // Delete record
+                            string deleteQuery = @"DELETE FROM urun_depo_konum 
+                                        WHERE urun_id = @urunId AND depo_konum_id = @konumId";
+                            using (MySqlCommand deleteCmd = new MySqlCommand(deleteQuery, connection))
+                            {
+                                deleteCmd.Parameters.AddWithValue("@urunId", currentUrunId);
+                                deleteCmd.Parameters.AddWithValue("@konumId", depoKonumId);
+                                deleteCmd.ExecuteNonQuery();
+                            }
+
+                            MessageBox.Show("Depo konumu başarıyla silindi!", "Bilgi",
+                                          MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                            // Refresh data
+                            UrunBilgileriniYukle(currentUrunId);
+                            UrunKonumlariniYukle(currentUrunId);
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show("Silme sırasında hata oluştu: " + ex.Message,
+                                          "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                        finally
+                        {
+                            if (connection.State == ConnectionState.Open)
+                                connection.Close();
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("İşlem sırasında bir hata oluştu: " + ex.Message,
+                              "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
         private void btnYeniKonumEkle_Click(object sender, EventArgs e)
         {
-            if (currentUrunId == -1)
-            {
-                MessageBox.Show("Önce bir ürün seçmelisiniz!", "Uyarı",
-                              MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            if (cmbKatKonum.SelectedIndex == -1)
-            {
-                MessageBox.Show("Lütfen bir depo konumu seçiniz!", "Uyarı",
-                              MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            if (!int.TryParse(txtMiktar.Text, out int miktar) || miktar <= 0)
-            {
-                MessageBox.Show("Geçerli bir miktar giriniz!", "Uyarı",
-                              MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            // Toplam miktar kontrolü
-            if (depodakiToplamMiktar + miktar > urunToplamMiktar)
-            {
-                MessageBox.Show("Stok miktarını aştınız! Depodaki toplam miktar stoktaki miktardan fazla olamaz.", "Uyarı",
-                              MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
             try
             {
+                if (currentUrunId == -1)
+                {
+                    MessageBox.Show("Önce bir ürün seçmelisiniz!", "Uyarı",
+                                  MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                if (cmbKatKonum.SelectedIndex == -1)
+                {
+                    MessageBox.Show("Lütfen bir depo konumu seçiniz!", "Uyarı",
+                                  MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                // Null ve boşluk kontrolü eklendi
+                if (string.IsNullOrWhiteSpace(txtMiktar.Text))
+                {
+                    MessageBox.Show("Miktar boş olamaz! Lütfen bir değer giriniz.", "Uyarı",
+                                  MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                if (!int.TryParse(txtMiktar.Text, out int miktar) || miktar <= 0)
+                {
+                    MessageBox.Show("Geçerli bir miktar giriniz! (Pozitif sayı)", "Uyarı",
+                                  MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                // Toplam miktar kontrolü
+                if (depodakiToplamMiktar + miktar > urunToplamMiktar)
+                {
+                    MessageBox.Show($"Stok miktarını aştınız! En fazla {urunToplamMiktar - depodakiToplamMiktar} adet ekleyebilirsiniz.", "Uyarı",
+                                  MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
                 if (connection.State != ConnectionState.Open)
                     connection.Open();
 
@@ -473,7 +499,7 @@ namespace StokTakipOtomasyonu.Forms
 
                 // Add product to location
                 string insertQuery = @"INSERT INTO urun_depo_konum (urun_id, depo_konum_id, miktar) 
-                                    VALUES (@urunId, @konumId, @miktar)";
+                            VALUES (@urunId, @konumId, @miktar)";
                 using (MySqlCommand insertCmd = new MySqlCommand(insertQuery, connection))
                 {
                     insertCmd.Parameters.AddWithValue("@urunId", currentUrunId);
@@ -494,7 +520,7 @@ namespace StokTakipOtomasyonu.Forms
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Kayıt sırasında hata oluştu: " + ex.Message,
+                MessageBox.Show("İşlem sırasında bir hata oluştu: " + ex.Message,
                               "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally

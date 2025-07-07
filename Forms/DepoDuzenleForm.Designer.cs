@@ -35,7 +35,7 @@
             this.lblBarkodArama.AutoSize = true;
             this.lblBarkodArama.Location = new System.Drawing.Point(12, 15);
             this.lblBarkodArama.Name = "lblBarkodArama";
-            this.lblBarkodArama.Size = new System.Drawing.Size(96, 16);
+            this.lblBarkodArama.Size = new System.Drawing.Size(78, 16);
             this.lblBarkodArama.TabIndex = 0;
             this.lblBarkodArama.Text = "Barkod Ara:";
             // 
@@ -49,15 +49,15 @@
             // 
             // dgvDepoKonumlari
             // 
-            this.dgvDepoKonumlari.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-            | System.Windows.Forms.AnchorStyles.Left)
+            this.dgvDepoKonumlari.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dgvDepoKonumlari.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvDepoKonumlari.Location = new System.Drawing.Point(12, 140);
             this.dgvDepoKonumlari.Name = "dgvDepoKonumlari";
             this.dgvDepoKonumlari.RowHeadersWidth = 51;
             this.dgvDepoKonumlari.RowTemplate.Height = 24;
-            this.dgvDepoKonumlari.Size = new System.Drawing.Size(760, 310);
+            this.dgvDepoKonumlari.Size = new System.Drawing.Size(839, 310);
             this.dgvDepoKonumlari.TabIndex = 2;
             this.dgvDepoKonumlari.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvDepoKonumlari_CellContentClick);
             // 
@@ -98,7 +98,7 @@
             // btnYeniKonumEkle
             // 
             this.btnYeniKonumEkle.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnYeniKonumEkle.Location = new System.Drawing.Point(650, 100);
+            this.btnYeniKonumEkle.Location = new System.Drawing.Point(729, 100);
             this.btnYeniKonumEkle.Name = "btnYeniKonumEkle";
             this.btnYeniKonumEkle.Size = new System.Drawing.Size(120, 30);
             this.btnYeniKonumEkle.TabIndex = 7;
@@ -120,7 +120,7 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(12, 103);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(96, 16);
+            this.label1.Size = new System.Drawing.Size(95, 16);
             this.label1.TabIndex = 9;
             this.label1.Text = "Depo Konumu:";
             // 
@@ -129,7 +129,7 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(320, 103);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(56, 16);
+            this.label2.Size = new System.Drawing.Size(46, 16);
             this.label2.TabIndex = 10;
             this.label2.Text = "Miktar:";
             // 
@@ -144,7 +144,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(784, 461);
+            this.ClientSize = new System.Drawing.Size(863, 461);
             this.Controls.Add(this.txtMiktar);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
