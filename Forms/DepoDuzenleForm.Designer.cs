@@ -13,6 +13,8 @@
             base.Dispose(disposing);
         }
 
+        #region Windows Form Designer generated code
+
         private void InitializeComponent()
         {
             this.lblBarkodArama = new System.Windows.Forms.Label();
@@ -27,6 +29,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.txtMiktar = new System.Windows.Forms.TextBox();
+            this.lblUyari2 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dgvDepoKonumlari)).BeginInit();
             this.SuspendLayout();
             // 
@@ -35,7 +38,7 @@
             this.lblBarkodArama.AutoSize = true;
             this.lblBarkodArama.Location = new System.Drawing.Point(12, 15);
             this.lblBarkodArama.Name = "lblBarkodArama";
-            this.lblBarkodArama.Size = new System.Drawing.Size(78, 16);
+            this.lblBarkodArama.Size = new System.Drawing.Size(96, 16);
             this.lblBarkodArama.TabIndex = 0;
             this.lblBarkodArama.Text = "Barkod Ara:";
             // 
@@ -49,15 +52,15 @@
             // 
             // dgvDepoKonumlari
             // 
-            this.dgvDepoKonumlari.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.dgvDepoKonumlari.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dgvDepoKonumlari.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvDepoKonumlari.Location = new System.Drawing.Point(12, 140);
             this.dgvDepoKonumlari.Name = "dgvDepoKonumlari";
             this.dgvDepoKonumlari.RowHeadersWidth = 51;
             this.dgvDepoKonumlari.RowTemplate.Height = 24;
-            this.dgvDepoKonumlari.Size = new System.Drawing.Size(839, 310);
+            this.dgvDepoKonumlari.Size = new System.Drawing.Size(760, 310);
             this.dgvDepoKonumlari.TabIndex = 2;
             this.dgvDepoKonumlari.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvDepoKonumlari_CellContentClick);
             // 
@@ -89,7 +92,7 @@
             // lblUyari
             // 
             this.lblUyari.AutoSize = true;
-            this.lblUyari.ForeColor = System.Drawing.Color.Red;
+            this.lblUyari.ForeColor = System.Drawing.Color.Orange;
             this.lblUyari.Location = new System.Drawing.Point(400, 70);
             this.lblUyari.Name = "lblUyari";
             this.lblUyari.Size = new System.Drawing.Size(0, 16);
@@ -98,7 +101,7 @@
             // btnYeniKonumEkle
             // 
             this.btnYeniKonumEkle.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnYeniKonumEkle.Location = new System.Drawing.Point(729, 100);
+            this.btnYeniKonumEkle.Location = new System.Drawing.Point(650, 100);
             this.btnYeniKonumEkle.Name = "btnYeniKonumEkle";
             this.btnYeniKonumEkle.Size = new System.Drawing.Size(120, 30);
             this.btnYeniKonumEkle.TabIndex = 7;
@@ -120,7 +123,7 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(12, 103);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(95, 16);
+            this.label1.Size = new System.Drawing.Size(96, 16);
             this.label1.TabIndex = 9;
             this.label1.Text = "Depo Konumu:";
             // 
@@ -129,7 +132,7 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(320, 103);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(46, 16);
+            this.label2.Size = new System.Drawing.Size(56, 16);
             this.label2.TabIndex = 10;
             this.label2.Text = "Miktar:";
             // 
@@ -140,11 +143,21 @@
             this.txtMiktar.Size = new System.Drawing.Size(100, 22);
             this.txtMiktar.TabIndex = 11;
             // 
+            // lblUyari2
+            // 
+            this.lblUyari2.AutoSize = true;
+            this.lblUyari2.ForeColor = System.Drawing.Color.Red;
+            this.lblUyari2.Location = new System.Drawing.Point(400, 90);
+            this.lblUyari2.Name = "lblUyari2";
+            this.lblUyari2.Size = new System.Drawing.Size(0, 16);
+            this.lblUyari2.TabIndex = 12;
+            // 
             // DepoDuzenleForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(863, 461);
+            this.ClientSize = new System.Drawing.Size(784, 461);
+            this.Controls.Add(this.lblUyari2);
             this.Controls.Add(this.txtMiktar);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
@@ -167,6 +180,8 @@
 
         }
 
+        #endregion
+
         private System.Windows.Forms.Label lblBarkodArama;
         private System.Windows.Forms.TextBox txtBarkodArama;
         private System.Windows.Forms.DataGridView dgvDepoKonumlari;
@@ -179,5 +194,6 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox txtMiktar;
+        private System.Windows.Forms.Label lblUyari2;
     }
 }

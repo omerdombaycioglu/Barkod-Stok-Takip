@@ -1,8 +1,9 @@
-﻿using System;
+﻿using MySql.Data.MySqlClient;
+using System;
 using System.Data;
+using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using MySql.Data.MySqlClient;
 
 namespace StokTakipOtomasyonu.Forms
 {
@@ -207,8 +208,8 @@ namespace StokTakipOtomasyonu.Forms
                     connection.Open();
 
                 string query = @"SELECT u.urun_id, u.urun_adi, u.urun_kodu, u.urun_barkod, u.miktar AS toplam_miktar,
-                       (SELECT SUM(ud.miktar) FROM urun_depo_konum ud WHERE ud.urun_id = u.urun_id) AS depodaki_toplam
-                       FROM urunler u WHERE u.urun_id = @urunId";
+               (SELECT SUM(ud.miktar) FROM urun_depo_konum ud WHERE ud.urun_id = u.urun_id) AS depodaki_toplam
+               FROM urunler u WHERE u.urun_id = @urunId";
 
                 using (MySqlCommand cmd = new MySqlCommand(query, connection))
                 {
@@ -225,15 +226,36 @@ namespace StokTakipOtomasyonu.Forms
                                                 Convert.ToInt32(reader["depodaki_toplam"]) : 0;
                             lblDepodakiToplam.Text = $"Depoda: {depodakiToplamMiktar}";
 
+                            // Uyarıları sıfırla
+                            lblUyari.Visible = false;
+                            lblUyari2.Visible = false;
+
+                            // Konumu belirlenmemiş ürün kontrolü (kırmızı renk)
+                            if (urunToplamMiktar > depodakiToplamMiktar)
+                            {
+                                int fark = urunToplamMiktar - depodakiToplamMiktar;
+                                lblUyari2.Visible = true;
+                                // Mevcut konumu al
+                                Point currentLocation = lblUyari2.Location;
+
+                                // Y koordinatını biraz yukarı çek (örneğin 10 piksel)
+                                lblUyari2.Location = new Point(currentLocation.X, currentLocation.Y - 10);
+
+                                // Yazıyı ayarla
+                                lblUyari2.Text = $"UYARI: {fark} adet ürünün depo konumu belirtilmemiş!";
+                                lblUyari2.ForeColor = System.Drawing.Color.Red;
+                                lblUyari2.Visible = true;
+
+                                lblUyari2.Text = $"UYARI: {fark} adet ürünün depo konumu belirtilmemiş!";
+                                lblUyari2.ForeColor = System.Drawing.Color.Red;
+                            }
+
+                            // Depodaki fazlalık kontrolü (kırmızı renk)
                             if (depodakiToplamMiktar > urunToplamMiktar)
                             {
                                 lblUyari.Visible = true;
-                                lblUyari.Text = "UYARI: Depodaki toplam miktar ürün kaydıyla uyuşmuyor! (Düzeltme yapabilirsiniz)";
-                                lblUyari.ForeColor = System.Drawing.Color.Orange;
-                            }
-                            else
-                            {
-                                lblUyari.Visible = false;
+                                lblUyari.Text = "UYARI: Depodaki toplam miktar ürün kaydıyla uyuşmuyor!";
+                                lblUyari.ForeColor = System.Drawing.Color.Red;
                             }
                         }
                     }
