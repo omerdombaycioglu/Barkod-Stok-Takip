@@ -157,7 +157,7 @@
             // 
             this.groupBox2.Controls.Add(this.btnManuelUrunCikisi);
             this.groupBox2.Controls.Add(this.btnBarkodUrunCikisi);
-            this.groupBox2.Location = new System.Drawing.Point(250, 20);
+            this.groupBox2.Location = new System.Drawing.Point(265, 20);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(210, 130);
             this.groupBox2.TabIndex = 10;
