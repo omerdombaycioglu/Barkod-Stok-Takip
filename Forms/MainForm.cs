@@ -21,7 +21,7 @@ namespace StokTakipOtomasyonu.Forms
         {
             if (_yetki == 2) // Standart kullanıcı
             {
-                // Örnek: btnKullaniciYonetimi.Enabled = false;
+                btnDepoDuzenle.Enabled = false;
             }
         }
 
@@ -60,19 +60,14 @@ namespace StokTakipOtomasyonu.Forms
             new ExcelIslemForm(_kullaniciId).ShowDialog();
         }
 
-        private void btnUrunAra_Click(object sender, EventArgs e)
+        private void btnDepoDuzenle_Click(object sender, EventArgs e)
         {
-            new UrunAramaForm().ShowDialog();
+            new DepoDuzenleForm().ShowDialog();
         }
 
-        private void btnIslemGecmisi_Click(object sender, EventArgs e)
+        private void btnSonIslemler_Click(object sender, EventArgs e)
         {
-            new IslemGecmisiForm().ShowDialog();
-        }
-
-        private void btnEnvanterKontrol_Click(object sender, EventArgs e)
-        {
-            new EnvanterKontrolForm().ShowDialog();
+            new SonIslemlerForm().ShowDialog();
         }
 
         private void btnCikis_Click(object sender, EventArgs e)

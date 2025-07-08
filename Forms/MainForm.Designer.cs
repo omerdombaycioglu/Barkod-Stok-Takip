@@ -7,9 +7,13 @@
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
+            {
                 components.Dispose();
+            }
             base.Dispose(disposing);
         }
+
+        #region Windows Form Designer generated code
 
         private void InitializeComponent()
         {
@@ -19,123 +23,202 @@
             this.btnBarkodUrunCikisi = new System.Windows.Forms.Button();
             this.btnUrunListele = new System.Windows.Forms.Button();
             this.btnExcelIslem = new System.Windows.Forms.Button();
-            this.btnUrunAra = new System.Windows.Forms.Button();
-            this.btnIslemGecmisi = new System.Windows.Forms.Button();
-            this.btnEnvanterKontrol = new System.Windows.Forms.Button();
+            this.btnDepoDuzenle = new System.Windows.Forms.Button();
             this.btnCikis = new System.Windows.Forms.Button();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.btnSonIslemler = new System.Windows.Forms.Button();
+            this.groupBox1.SuspendLayout();
+            this.groupBox2.SuspendLayout();
+            this.groupBox3.SuspendLayout();
+            this.groupBox4.SuspendLayout();
+            this.groupBox5.SuspendLayout();
             this.SuspendLayout();
-
+            // 
             // btnManuelUrunGirisi
-            this.btnManuelUrunGirisi.Location = new System.Drawing.Point(30, 30);
+            // 
+            this.btnManuelUrunGirisi.Image = global::IspBarkodStok.Properties.Resources.manuelgiris;
+            this.btnManuelUrunGirisi.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnManuelUrunGirisi.Location = new System.Drawing.Point(15, 25);
             this.btnManuelUrunGirisi.Name = "btnManuelUrunGirisi";
-            this.btnManuelUrunGirisi.Size = new System.Drawing.Size(150, 50);
-            this.btnManuelUrunGirisi.TabIndex = 0;
+            this.btnManuelUrunGirisi.Size = new System.Drawing.Size(180, 40);
+            this.btnManuelUrunGirisi.TabIndex = 7;
             this.btnManuelUrunGirisi.Text = "Manuel Ürün Girişi";
+            this.btnManuelUrunGirisi.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnManuelUrunGirisi.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnManuelUrunGirisi.UseVisualStyleBackColor = true;
             this.btnManuelUrunGirisi.Click += new System.EventHandler(this.btnManuelUrunGirisi_Click);
-
+            // 
             // btnBarkodUrunGirisi
-            this.btnBarkodUrunGirisi.Location = new System.Drawing.Point(200, 30);
+            // 
+            this.btnBarkodUrunGirisi.Image = global::IspBarkodStok.Properties.Resources.barkodlagiris;
+            this.btnBarkodUrunGirisi.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnBarkodUrunGirisi.Location = new System.Drawing.Point(15, 75);
             this.btnBarkodUrunGirisi.Name = "btnBarkodUrunGirisi";
-            this.btnBarkodUrunGirisi.Size = new System.Drawing.Size(150, 50);
-            this.btnBarkodUrunGirisi.TabIndex = 1;
-            this.btnBarkodUrunGirisi.Text = "Barkod ile Ürün Girişi";
+            this.btnBarkodUrunGirisi.Size = new System.Drawing.Size(180, 40);
+            this.btnBarkodUrunGirisi.TabIndex = 7;
+            this.btnBarkodUrunGirisi.Text = "Barkod Ürün Girişi";
+            this.btnBarkodUrunGirisi.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnBarkodUrunGirisi.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnBarkodUrunGirisi.UseVisualStyleBackColor = true;
             this.btnBarkodUrunGirisi.Click += new System.EventHandler(this.btnBarkodUrunGirisi_Click);
-
+            // 
             // btnManuelUrunCikisi
-            this.btnManuelUrunCikisi.Location = new System.Drawing.Point(30, 100);
+            // 
+            this.btnManuelUrunCikisi.Location = new System.Drawing.Point(15, 25);
             this.btnManuelUrunCikisi.Name = "btnManuelUrunCikisi";
-            this.btnManuelUrunCikisi.Size = new System.Drawing.Size(150, 50);
+            this.btnManuelUrunCikisi.Size = new System.Drawing.Size(180, 40);
             this.btnManuelUrunCikisi.TabIndex = 2;
-            this.btnManuelUrunCikisi.Text = "Manuel Ürün Çıkışı";
+            this.btnManuelUrunCikisi.Text = "Manuel Ürün Çıkış";
             this.btnManuelUrunCikisi.UseVisualStyleBackColor = true;
             this.btnManuelUrunCikisi.Click += new System.EventHandler(this.btnManuelUrunCikisi_Click);
-
+            // 
             // btnBarkodUrunCikisi
-            this.btnBarkodUrunCikisi.Location = new System.Drawing.Point(200, 100);
+            // 
+            this.btnBarkodUrunCikisi.Location = new System.Drawing.Point(15, 75);
             this.btnBarkodUrunCikisi.Name = "btnBarkodUrunCikisi";
-            this.btnBarkodUrunCikisi.Size = new System.Drawing.Size(150, 50);
+            this.btnBarkodUrunCikisi.Size = new System.Drawing.Size(180, 40);
             this.btnBarkodUrunCikisi.TabIndex = 3;
-            this.btnBarkodUrunCikisi.Text = "Barkod ile Ürün Çıkışı";
+            this.btnBarkodUrunCikisi.Text = "Barkodla Ürün Çıkış";
             this.btnBarkodUrunCikisi.UseVisualStyleBackColor = true;
             this.btnBarkodUrunCikisi.Click += new System.EventHandler(this.btnBarkodUrunCikisi_Click);
-
+            // 
             // btnUrunListele
-            this.btnUrunListele.Location = new System.Drawing.Point(30, 170);
+            // 
+            this.btnUrunListele.Location = new System.Drawing.Point(15, 25);
             this.btnUrunListele.Name = "btnUrunListele";
-            this.btnUrunListele.Size = new System.Drawing.Size(150, 50);
+            this.btnUrunListele.Size = new System.Drawing.Size(180, 40);
             this.btnUrunListele.TabIndex = 4;
             this.btnUrunListele.Text = "Tüm Ürünleri Listele";
             this.btnUrunListele.UseVisualStyleBackColor = true;
             this.btnUrunListele.Click += new System.EventHandler(this.btnUrunListele_Click);
-
+            // 
             // btnExcelIslem
-            this.btnExcelIslem.Location = new System.Drawing.Point(200, 170);
+            // 
+            this.btnExcelIslem.Location = new System.Drawing.Point(15, 25);
             this.btnExcelIslem.Name = "btnExcelIslem";
-            this.btnExcelIslem.Size = new System.Drawing.Size(150, 50);
+            this.btnExcelIslem.Size = new System.Drawing.Size(180, 40);
             this.btnExcelIslem.TabIndex = 5;
             this.btnExcelIslem.Text = "Excel ile Ürün Giriş/Çıkış";
             this.btnExcelIslem.UseVisualStyleBackColor = true;
             this.btnExcelIslem.Click += new System.EventHandler(this.btnExcelIslem_Click);
-
-            // btnUrunAra
-            this.btnUrunAra.Location = new System.Drawing.Point(30, 240);
-            this.btnUrunAra.Name = "btnUrunAra";
-            this.btnUrunAra.Size = new System.Drawing.Size(150, 50);
-            this.btnUrunAra.TabIndex = 6;
-            this.btnUrunAra.Text = "Ürün Ara";
-            this.btnUrunAra.UseVisualStyleBackColor = true;
-            this.btnUrunAra.Click += new System.EventHandler(this.btnUrunAra_Click);
-
-            // btnIslemGecmisi
-            this.btnIslemGecmisi.Location = new System.Drawing.Point(200, 240);
-            this.btnIslemGecmisi.Name = "btnIslemGecmisi";
-            this.btnIslemGecmisi.Size = new System.Drawing.Size(150, 50);
-            this.btnIslemGecmisi.TabIndex = 7;
-            this.btnIslemGecmisi.Text = "İşlem Geçmişi";
-            this.btnIslemGecmisi.UseVisualStyleBackColor = true;
-            this.btnIslemGecmisi.Click += new System.EventHandler(this.btnIslemGecmisi_Click);
-
-            // btnEnvanterKontrol
-            this.btnEnvanterKontrol.Location = new System.Drawing.Point(115, 310);
-            this.btnEnvanterKontrol.Name = "btnEnvanterKontrol";
-            this.btnEnvanterKontrol.Size = new System.Drawing.Size(150, 50);
-            this.btnEnvanterKontrol.TabIndex = 8;
-            this.btnEnvanterKontrol.Text = "Envanter Kontrol";
-            this.btnEnvanterKontrol.UseVisualStyleBackColor = true;
-            this.btnEnvanterKontrol.Click += new System.EventHandler(this.btnEnvanterKontrol_Click);
-
+            // 
+            // btnDepoDuzenle
+            // 
+            this.btnDepoDuzenle.Image = global::IspBarkodStok.Properties.Resources.stock;
+            this.btnDepoDuzenle.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnDepoDuzenle.Location = new System.Drawing.Point(15, 25);
+            this.btnDepoDuzenle.Name = "btnDepoDuzenle";
+            this.btnDepoDuzenle.Size = new System.Drawing.Size(180, 40);
+            this.btnDepoDuzenle.TabIndex = 7;
+            this.btnDepoDuzenle.Text = "Depo Düzenle";
+            this.btnDepoDuzenle.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnDepoDuzenle.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnDepoDuzenle.UseVisualStyleBackColor = true;
+            this.btnDepoDuzenle.Click += new System.EventHandler(this.btnDepoDuzenle_Click);
+            // 
             // btnCikis
-            this.btnCikis.Location = new System.Drawing.Point(115, 380);
+            // 
+            this.btnCikis.Location = new System.Drawing.Point(265, 316);
             this.btnCikis.Name = "btnCikis";
-            this.btnCikis.Size = new System.Drawing.Size(150, 50);
-            this.btnCikis.TabIndex = 9;
+            this.btnCikis.Size = new System.Drawing.Size(180, 40);
+            this.btnCikis.TabIndex = 8;
             this.btnCikis.Text = "Çıkış";
             this.btnCikis.UseVisualStyleBackColor = true;
             this.btnCikis.Click += new System.EventHandler(this.btnCikis_Click);
-
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.btnManuelUrunGirisi);
+            this.groupBox1.Controls.Add(this.btnBarkodUrunGirisi);
+            this.groupBox1.Location = new System.Drawing.Point(20, 20);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(210, 130);
+            this.groupBox1.TabIndex = 9;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Ürün Girişi";
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.btnManuelUrunCikisi);
+            this.groupBox2.Controls.Add(this.btnBarkodUrunCikisi);
+            this.groupBox2.Location = new System.Drawing.Point(250, 20);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(210, 130);
+            this.groupBox2.TabIndex = 10;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Ürün Çıkışı";
+            // 
+            // groupBox3
+            // 
+            this.groupBox3.Controls.Add(this.btnDepoDuzenle);
+            this.groupBox3.Location = new System.Drawing.Point(20, 170);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(210, 80);
+            this.groupBox3.TabIndex = 11;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "Depo Yönetimi";
+            // 
+            // groupBox4
+            // 
+            this.groupBox4.Controls.Add(this.btnUrunListele);
+            this.groupBox4.Location = new System.Drawing.Point(250, 170);
+            this.groupBox4.Name = "groupBox4";
+            this.groupBox4.Size = new System.Drawing.Size(210, 80);
+            this.groupBox4.TabIndex = 12;
+            this.groupBox4.TabStop = false;
+            this.groupBox4.Text = "Ürün Listesi";
+            // 
+            // groupBox5
+            // 
+            this.groupBox5.Controls.Add(this.btnExcelIslem);
+            this.groupBox5.Location = new System.Drawing.Point(20, 270);
+            this.groupBox5.Name = "groupBox5";
+            this.groupBox5.Size = new System.Drawing.Size(210, 82);
+            this.groupBox5.TabIndex = 13;
+            this.groupBox5.TabStop = false;
+            this.groupBox5.Text = "Diğer İşlemler";
+            // 
+            // btnSonIslemler
+            // 
+            this.btnSonIslemler.Location = new System.Drawing.Point(265, 270);
+            this.btnSonIslemler.Name = "btnSonIslemler";
+            this.btnSonIslemler.Size = new System.Drawing.Size(180, 40);
+            this.btnSonIslemler.TabIndex = 6;
+            this.btnSonIslemler.Text = "Son İşlemler";
+            this.btnSonIslemler.UseVisualStyleBackColor = true;
+            this.btnSonIslemler.Click += new System.EventHandler(this.btnSonIslemler_Click);
+            // 
             // MainForm
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(384, 450);
+            this.ClientSize = new System.Drawing.Size(500, 400);
+            this.Controls.Add(this.groupBox5);
+            this.Controls.Add(this.btnSonIslemler);
+            this.Controls.Add(this.groupBox4);
+            this.Controls.Add(this.groupBox3);
+            this.Controls.Add(this.groupBox2);
+            this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.btnCikis);
-            this.Controls.Add(this.btnEnvanterKontrol);
-            this.Controls.Add(this.btnIslemGecmisi);
-            this.Controls.Add(this.btnUrunAra);
-            this.Controls.Add(this.btnExcelIslem);
-            this.Controls.Add(this.btnUrunListele);
-            this.Controls.Add(this.btnBarkodUrunCikisi);
-            this.Controls.Add(this.btnManuelUrunCikisi);
-            this.Controls.Add(this.btnBarkodUrunGirisi);
-            this.Controls.Add(this.btnManuelUrunGirisi);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Stok Takip Ana Menü";
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox3.ResumeLayout(false);
+            this.groupBox4.ResumeLayout(false);
+            this.groupBox5.ResumeLayout(false);
             this.ResumeLayout(false);
+
         }
+
+        #endregion
 
         private System.Windows.Forms.Button btnManuelUrunGirisi;
         private System.Windows.Forms.Button btnBarkodUrunGirisi;
@@ -143,9 +226,13 @@
         private System.Windows.Forms.Button btnBarkodUrunCikisi;
         private System.Windows.Forms.Button btnUrunListele;
         private System.Windows.Forms.Button btnExcelIslem;
-        private System.Windows.Forms.Button btnUrunAra;
-        private System.Windows.Forms.Button btnIslemGecmisi;
-        private System.Windows.Forms.Button btnEnvanterKontrol;
+        private System.Windows.Forms.Button btnDepoDuzenle;
         private System.Windows.Forms.Button btnCikis;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.GroupBox groupBox4;
+        private System.Windows.Forms.GroupBox groupBox5;
+        private System.Windows.Forms.Button btnSonIslemler;
     }
 }

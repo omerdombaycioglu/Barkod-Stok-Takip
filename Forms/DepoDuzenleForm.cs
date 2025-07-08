@@ -299,13 +299,11 @@ namespace StokTakipOtomasyonu.Forms
                     DataTable dt = new DataTable();
                     adapter.Fill(dt);
 
-                    dgvDepoKonumlari.DataSource = dt;
-
-                    // Calculate and display sum
+                    dgvDepoKonumlari.DataSource = dt;        
                     depodakiToplamMiktar = dt.AsEnumerable().Sum(row => Convert.ToInt32(row["miktar"]));
                     lblDepodakiToplam.Text = $"Depoda: {depodakiToplamMiktar}";
 
-                    // Check if sum exceeds total
+                    
                     if (depodakiToplamMiktar > urunToplamMiktar)
                     {
                         lblUyari.Visible = true;
@@ -370,7 +368,7 @@ namespace StokTakipOtomasyonu.Forms
 
                         if (fark > kullanilabilirMiktar)
                         {
-                            MessageBox.Show($"Stok miktarını aştınız! En fazla {kullanilabilirMiktar} adet ekleyebilirsiniz.", "Uyarı",
+                            MessageBox.Show($"Stok miktarını aştınız!.", "Uyarı",
                                           MessageBoxButtons.OK, MessageBoxIcon.Warning);
                             return;
                         }

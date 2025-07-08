@@ -20,6 +20,8 @@
             this.btnKapat = new System.Windows.Forms.Button();
             this.txtArama = new System.Windows.Forms.TextBox();
             this.lblArama = new System.Windows.Forms.Label();
+            this.cmbProjeler = new System.Windows.Forms.ComboBox();
+            this.lblProje = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
 
@@ -27,11 +29,12 @@
             this.dataGridView1.AllowUserToAddRows = false;
             this.dataGridView1.AllowUserToDeleteRows = false;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Location = new System.Drawing.Point(20, 50);
+            this.dataGridView1.Location = new System.Drawing.Point(20, 80);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.ReadOnly = true;
-            this.dataGridView1.Size = new System.Drawing.Size(760, 400);
+            this.dataGridView1.Size = new System.Drawing.Size(760, 370);
             this.dataGridView1.TabIndex = 0;
+            this.dataGridView1.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
 
             // btnYenile
             this.btnYenile.Location = new System.Drawing.Point(600, 460);
@@ -66,10 +69,29 @@
             this.lblArama.TabIndex = 4;
             this.lblArama.Text = "Arama:";
 
+            // cmbProjeler
+            this.cmbProjeler.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbProjeler.FormattingEnabled = true;
+            this.cmbProjeler.Location = new System.Drawing.Point(70, 50);
+            this.cmbProjeler.Name = "cmbProjeler";
+            this.cmbProjeler.Size = new System.Drawing.Size(300, 21);
+            this.cmbProjeler.TabIndex = 5;
+            this.cmbProjeler.SelectedIndexChanged += new System.EventHandler(this.cmbProjeler_SelectedIndexChanged);
+
+            // lblProje
+            this.lblProje.AutoSize = true;
+            this.lblProje.Location = new System.Drawing.Point(20, 53);
+            this.lblProje.Name = "lblProje";
+            this.lblProje.Size = new System.Drawing.Size(34, 13);
+            this.lblProje.TabIndex = 6;
+            this.lblProje.Text = "Proje:";
+
             // UrunListeleForm
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 500);
+            this.Controls.Add(this.lblProje);
+            this.Controls.Add(this.cmbProjeler);
             this.Controls.Add(this.lblArama);
             this.Controls.Add(this.txtArama);
             this.Controls.Add(this.btnKapat);
@@ -80,7 +102,7 @@
             this.MinimizeBox = false;
             this.Name = "UrunListeleForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Tüm Ürünleri Listele";
+            this.Text = "Ürün Listesi";
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -91,5 +113,7 @@
         private System.Windows.Forms.Button btnKapat;
         private System.Windows.Forms.TextBox txtArama;
         private System.Windows.Forms.Label lblArama;
+        private System.Windows.Forms.ComboBox cmbProjeler;
+        private System.Windows.Forms.Label lblProje;
     }
 }
