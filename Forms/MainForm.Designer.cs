@@ -2,8 +2,15 @@
 {
     partial class MainForm
     {
+        /// <summary>
+        /// Required designer variable.
+        /// </summary>
         private System.ComponentModel.IContainer components = null;
 
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -15,6 +22,10 @@
 
         #region Windows Form Designer generated code
 
+        /// <summary>
+        /// Required method for Designer support - do not modify
+        /// the contents of this method with the code editor.
+        /// </summary>
         private void InitializeComponent()
         {
             this.btnManuelUrunGirisi = new System.Windows.Forms.Button();
@@ -31,21 +42,24 @@
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
             this.btnSonIslemler = new System.Windows.Forms.Button();
+            this.groupBox6 = new System.Windows.Forms.GroupBox();
+            this.btnProjeEkle = new System.Windows.Forms.Button();
+            this.btnProjeMontaj = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox4.SuspendLayout();
             this.groupBox5.SuspendLayout();
+            this.groupBox6.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnManuelUrunGirisi
             // 
-            this.btnManuelUrunGirisi.Image = global::IspBarkodStok.Properties.Resources.manuelgiris;
             this.btnManuelUrunGirisi.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnManuelUrunGirisi.Location = new System.Drawing.Point(15, 25);
             this.btnManuelUrunGirisi.Name = "btnManuelUrunGirisi";
             this.btnManuelUrunGirisi.Size = new System.Drawing.Size(180, 40);
-            this.btnManuelUrunGirisi.TabIndex = 7;
+            this.btnManuelUrunGirisi.TabIndex = 0;
             this.btnManuelUrunGirisi.Text = "Manuel Ürün Girişi";
             this.btnManuelUrunGirisi.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.btnManuelUrunGirisi.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
@@ -54,13 +68,12 @@
             // 
             // btnBarkodUrunGirisi
             // 
-            this.btnBarkodUrunGirisi.Image = global::IspBarkodStok.Properties.Resources.barkodlagiris;
             this.btnBarkodUrunGirisi.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnBarkodUrunGirisi.Location = new System.Drawing.Point(15, 75);
             this.btnBarkodUrunGirisi.Name = "btnBarkodUrunGirisi";
             this.btnBarkodUrunGirisi.Size = new System.Drawing.Size(180, 40);
-            this.btnBarkodUrunGirisi.TabIndex = 7;
-            this.btnBarkodUrunGirisi.Text = "Barkod Ürün Girişi";
+            this.btnBarkodUrunGirisi.TabIndex = 1;
+            this.btnBarkodUrunGirisi.Text = "Barkodla Ürün Girişi";
             this.btnBarkodUrunGirisi.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.btnBarkodUrunGirisi.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnBarkodUrunGirisi.UseVisualStyleBackColor = true;
@@ -71,7 +84,7 @@
             this.btnManuelUrunCikisi.Location = new System.Drawing.Point(15, 25);
             this.btnManuelUrunCikisi.Name = "btnManuelUrunCikisi";
             this.btnManuelUrunCikisi.Size = new System.Drawing.Size(180, 40);
-            this.btnManuelUrunCikisi.TabIndex = 2;
+            this.btnManuelUrunCikisi.TabIndex = 0;
             this.btnManuelUrunCikisi.Text = "Manuel Ürün Çıkış";
             this.btnManuelUrunCikisi.UseVisualStyleBackColor = true;
             this.btnManuelUrunCikisi.Click += new System.EventHandler(this.btnManuelUrunCikisi_Click);
@@ -81,7 +94,7 @@
             this.btnBarkodUrunCikisi.Location = new System.Drawing.Point(15, 75);
             this.btnBarkodUrunCikisi.Name = "btnBarkodUrunCikisi";
             this.btnBarkodUrunCikisi.Size = new System.Drawing.Size(180, 40);
-            this.btnBarkodUrunCikisi.TabIndex = 3;
+            this.btnBarkodUrunCikisi.TabIndex = 1;
             this.btnBarkodUrunCikisi.Text = "Barkodla Ürün Çıkış";
             this.btnBarkodUrunCikisi.UseVisualStyleBackColor = true;
             this.btnBarkodUrunCikisi.Click += new System.EventHandler(this.btnBarkodUrunCikisi_Click);
@@ -91,8 +104,8 @@
             this.btnUrunListele.Location = new System.Drawing.Point(15, 25);
             this.btnUrunListele.Name = "btnUrunListele";
             this.btnUrunListele.Size = new System.Drawing.Size(180, 40);
-            this.btnUrunListele.TabIndex = 4;
-            this.btnUrunListele.Text = "Tüm Ürünleri Listele";
+            this.btnUrunListele.TabIndex = 0;
+            this.btnUrunListele.Text = "Ürün Listele/Ara/Filtrele";
             this.btnUrunListele.UseVisualStyleBackColor = true;
             this.btnUrunListele.Click += new System.EventHandler(this.btnUrunListele_Click);
             // 
@@ -101,19 +114,18 @@
             this.btnExcelIslem.Location = new System.Drawing.Point(15, 25);
             this.btnExcelIslem.Name = "btnExcelIslem";
             this.btnExcelIslem.Size = new System.Drawing.Size(180, 40);
-            this.btnExcelIslem.TabIndex = 5;
+            this.btnExcelIslem.TabIndex = 0;
             this.btnExcelIslem.Text = "Excel ile Ürün Giriş/Çıkış";
             this.btnExcelIslem.UseVisualStyleBackColor = true;
             this.btnExcelIslem.Click += new System.EventHandler(this.btnExcelIslem_Click);
             // 
             // btnDepoDuzenle
             // 
-            this.btnDepoDuzenle.Image = global::IspBarkodStok.Properties.Resources.stock;
             this.btnDepoDuzenle.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnDepoDuzenle.Location = new System.Drawing.Point(15, 25);
             this.btnDepoDuzenle.Name = "btnDepoDuzenle";
             this.btnDepoDuzenle.Size = new System.Drawing.Size(180, 40);
-            this.btnDepoDuzenle.TabIndex = 7;
+            this.btnDepoDuzenle.TabIndex = 0;
             this.btnDepoDuzenle.Text = "Depo Düzenle";
             this.btnDepoDuzenle.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.btnDepoDuzenle.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
@@ -122,7 +134,7 @@
             // 
             // btnCikis
             // 
-            this.btnCikis.Location = new System.Drawing.Point(265, 316);
+            this.btnCikis.Location = new System.Drawing.Point(280, 406);
             this.btnCikis.Name = "btnCikis";
             this.btnCikis.Size = new System.Drawing.Size(180, 40);
             this.btnCikis.TabIndex = 8;
@@ -165,7 +177,7 @@
             // groupBox4
             // 
             this.groupBox4.Controls.Add(this.btnUrunListele);
-            this.groupBox4.Location = new System.Drawing.Point(250, 170);
+            this.groupBox4.Location = new System.Drawing.Point(265, 170);
             this.groupBox4.Name = "groupBox4";
             this.groupBox4.Size = new System.Drawing.Size(210, 80);
             this.groupBox4.TabIndex = 12;
@@ -175,7 +187,7 @@
             // groupBox5
             // 
             this.groupBox5.Controls.Add(this.btnExcelIslem);
-            this.groupBox5.Location = new System.Drawing.Point(20, 270);
+            this.groupBox5.Location = new System.Drawing.Point(265, 270);
             this.groupBox5.Name = "groupBox5";
             this.groupBox5.Size = new System.Drawing.Size(210, 82);
             this.groupBox5.TabIndex = 13;
@@ -184,7 +196,7 @@
             // 
             // btnSonIslemler
             // 
-            this.btnSonIslemler.Location = new System.Drawing.Point(265, 270);
+            this.btnSonIslemler.Location = new System.Drawing.Point(280, 360);
             this.btnSonIslemler.Name = "btnSonIslemler";
             this.btnSonIslemler.Size = new System.Drawing.Size(180, 40);
             this.btnSonIslemler.TabIndex = 6;
@@ -192,11 +204,43 @@
             this.btnSonIslemler.UseVisualStyleBackColor = true;
             this.btnSonIslemler.Click += new System.EventHandler(this.btnSonIslemler_Click);
             // 
+            // groupBox6
+            // 
+            this.groupBox6.Controls.Add(this.btnProjeEkle);
+            this.groupBox6.Controls.Add(this.btnProjeMontaj);
+            this.groupBox6.Location = new System.Drawing.Point(20, 270);
+            this.groupBox6.Name = "groupBox6";
+            this.groupBox6.Size = new System.Drawing.Size(210, 130);
+            this.groupBox6.TabIndex = 14;
+            this.groupBox6.TabStop = false;
+            this.groupBox6.Text = "Proje Yönetimi";
+            // 
+            // btnProjeEkle
+            // 
+            this.btnProjeEkle.Location = new System.Drawing.Point(15, 25);
+            this.btnProjeEkle.Name = "btnProjeEkle";
+            this.btnProjeEkle.Size = new System.Drawing.Size(180, 40);
+            this.btnProjeEkle.TabIndex = 0;
+            this.btnProjeEkle.Text = "Proje Ekle";
+            this.btnProjeEkle.UseVisualStyleBackColor = true;
+            this.btnProjeEkle.Click += new System.EventHandler(this.btnProjeEkle_Click);
+            // 
+            // btnProjeMontaj
+            // 
+            this.btnProjeMontaj.Location = new System.Drawing.Point(15, 75);
+            this.btnProjeMontaj.Name = "btnProjeMontaj";
+            this.btnProjeMontaj.Size = new System.Drawing.Size(180, 40);
+            this.btnProjeMontaj.TabIndex = 1;
+            this.btnProjeMontaj.Text = "Proje Montaj/Ürün Kontrol";
+            this.btnProjeMontaj.UseVisualStyleBackColor = true;
+            this.btnProjeMontaj.Click += new System.EventHandler(this.btnProjeMontaj_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(500, 400);
+            this.ClientSize = new System.Drawing.Size(492, 489);
+            this.Controls.Add(this.groupBox6);
             this.Controls.Add(this.groupBox5);
             this.Controls.Add(this.btnSonIslemler);
             this.Controls.Add(this.groupBox4);
@@ -214,6 +258,7 @@
             this.groupBox3.ResumeLayout(false);
             this.groupBox4.ResumeLayout(false);
             this.groupBox5.ResumeLayout(false);
+            this.groupBox6.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -234,5 +279,8 @@
         private System.Windows.Forms.GroupBox groupBox4;
         private System.Windows.Forms.GroupBox groupBox5;
         private System.Windows.Forms.Button btnSonIslemler;
+        private System.Windows.Forms.GroupBox groupBox6;
+        private System.Windows.Forms.Button btnProjeEkle;
+        private System.Windows.Forms.Button btnProjeMontaj;
     }
 }

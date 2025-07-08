@@ -22,6 +22,7 @@ namespace StokTakipOtomasyonu.Forms
             if (_yetki == 2) // Standart kullanıcı
             {
                 btnDepoDuzenle.Enabled = false;
+                btnProjeEkle.Enabled = false;
             }
         }
 
@@ -68,6 +69,16 @@ namespace StokTakipOtomasyonu.Forms
         private void btnSonIslemler_Click(object sender, EventArgs e)
         {
             new SonIslemlerForm().ShowDialog();
+        }
+
+        private void btnProjeEkle_Click(object sender, EventArgs e)
+        {
+            new ProjeEkleForm(_kullaniciId).ShowDialog();
+        }
+
+        private void btnProjeMontaj_Click(object sender, EventArgs e)
+        {
+            new ProjeMontajForm(_kullaniciId).ShowDialog();
         }
 
         private void btnCikis_Click(object sender, EventArgs e)
