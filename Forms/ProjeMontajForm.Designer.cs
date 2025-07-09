@@ -4,14 +4,6 @@
     {
         private System.ComponentModel.IContainer components = null;
 
-        private System.Windows.Forms.ComboBox cmbProjeler;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label lblProjeTanimi;
-        private System.Windows.Forms.DataGridView dgvProjeUrunleri;
-        private System.Windows.Forms.Button btnUrunEkle;
-        private System.Windows.Forms.Button btnUrunSil;
-        private System.Windows.Forms.Button btnKapat;
-
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -21,101 +13,103 @@
             base.Dispose(disposing);
         }
 
+        #region Windows Form Designer generated code
+
         private void InitializeComponent()
         {
-            this.cmbProjeler = new System.Windows.Forms.ComboBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.lblProjeTanimi = new System.Windows.Forms.Label();
-            this.dgvProjeUrunleri = new System.Windows.Forms.DataGridView();
-            this.btnUrunEkle = new System.Windows.Forms.Button();
-            this.btnUrunSil = new System.Windows.Forms.Button();
-            this.btnKapat = new System.Windows.Forms.Button();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvProjeUrunleri)).BeginInit();
+            this.dataGridViewProjeler = new System.Windows.Forms.DataGridView();
+            this.btnUrunListesi = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.dataGridViewUrunler = new System.Windows.Forms.DataGridView();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewProjeler)).BeginInit();
+            this.groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewUrunler)).BeginInit();
+            this.groupBox2.SuspendLayout();
             this.SuspendLayout();
-
-            // cmbProjeler
-            this.cmbProjeler.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbProjeler.FormattingEnabled = true;
-            this.cmbProjeler.Location = new System.Drawing.Point(120, 20);
-            this.cmbProjeler.Name = "cmbProjeler";
-            this.cmbProjeler.Size = new System.Drawing.Size(200, 24);
-            this.cmbProjeler.TabIndex = 0;
-            this.cmbProjeler.SelectedIndexChanged += new System.EventHandler(this.cmbProjeler_SelectedIndexChanged);
-
-            // label1
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(20, 23);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(94, 16);
-            this.label1.TabIndex = 1;
-            this.label1.Text = "Proje Seçiniz:";
-
-            // lblProjeTanimi
-            this.lblProjeTanimi.AutoSize = true;
-            this.lblProjeTanimi.Location = new System.Drawing.Point(20, 60);
-            this.lblProjeTanimi.Name = "lblProjeTanimi";
-            this.lblProjeTanimi.Size = new System.Drawing.Size(0, 16);
-            this.lblProjeTanimi.TabIndex = 2;
-
-            // dgvProjeUrunleri
-            this.dgvProjeUrunleri.AllowUserToAddRows = false;
-            this.dgvProjeUrunleri.AllowUserToDeleteRows = false;
-            this.dgvProjeUrunleri.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvProjeUrunleri.Location = new System.Drawing.Point(20, 90);
-            this.dgvProjeUrunleri.Name = "dgvProjeUrunleri";
-            this.dgvProjeUrunleri.ReadOnly = true;
-            this.dgvProjeUrunleri.RowHeadersVisible = false;
-            this.dgvProjeUrunleri.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvProjeUrunleri.Size = new System.Drawing.Size(500, 250);
-            this.dgvProjeUrunleri.TabIndex = 3;
-
-            // btnUrunEkle
-            this.btnUrunEkle.Location = new System.Drawing.Point(20, 350);
-            this.btnUrunEkle.Name = "btnUrunEkle";
-            this.btnUrunEkle.Size = new System.Drawing.Size(120, 30);
-            this.btnUrunEkle.TabIndex = 4;
-            this.btnUrunEkle.Text = "Ürün Ekle";
-            this.btnUrunEkle.UseVisualStyleBackColor = true;
-            this.btnUrunEkle.Click += new System.EventHandler(this.btnUrunEkle_Click);
-
-            // btnUrunSil
-            this.btnUrunSil.Location = new System.Drawing.Point(150, 350);
-            this.btnUrunSil.Name = "btnUrunSil";
-            this.btnUrunSil.Size = new System.Drawing.Size(120, 30);
-            this.btnUrunSil.TabIndex = 5;
-            this.btnUrunSil.Text = "Ürün Sil";
-            this.btnUrunSil.UseVisualStyleBackColor = true;
-            this.btnUrunSil.Click += new System.EventHandler(this.btnUrunSil_Click);
-
-            // btnKapat
-            this.btnKapat.Location = new System.Drawing.Point(400, 350);
-            this.btnKapat.Name = "btnKapat";
-            this.btnKapat.Size = new System.Drawing.Size(120, 30);
-            this.btnKapat.TabIndex = 6;
-            this.btnKapat.Text = "Kapat";
-            this.btnKapat.UseVisualStyleBackColor = true;
-            this.btnKapat.Click += new System.EventHandler(this.btnKapat_Click);
-
+            // 
+            // dataGridViewProjeler
+            // 
+            this.dataGridViewProjeler.AllowUserToAddRows = false;
+            this.dataGridViewProjeler.AllowUserToDeleteRows = false;
+            this.dataGridViewProjeler.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridViewProjeler.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.btnUrunListesi});
+            this.dataGridViewProjeler.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dataGridViewProjeler.Location = new System.Drawing.Point(3, 19);
+            this.dataGridViewProjeler.Name = "dataGridViewProjeler";
+            this.dataGridViewProjeler.ReadOnly = true;
+            this.dataGridViewProjeler.Size = new System.Drawing.Size(894, 200);
+            this.dataGridViewProjeler.TabIndex = 0;
+            this.dataGridViewProjeler.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewProjeler_CellContentClick);
+            // 
+            // btnUrunListesi
+            // 
+            this.btnUrunListesi.HeaderText = "Ürün Listesi";
+            this.btnUrunListesi.Name = "btnUrunListesi";
+            this.btnUrunListesi.ReadOnly = true;
+            this.btnUrunListesi.Text = "Ürünleri Göster";
+            this.btnUrunListesi.UseColumnTextForButtonValue = true;
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.dataGridViewProjeler);
+            this.groupBox1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.groupBox1.Location = new System.Drawing.Point(0, 0);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(900, 222);
+            this.groupBox1.TabIndex = 1;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Projeler";
+            // 
+            // dataGridViewUrunler
+            // 
+            this.dataGridViewUrunler.AllowUserToAddRows = false;
+            this.dataGridViewUrunler.AllowUserToDeleteRows = false;
+            this.dataGridViewUrunler.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridViewUrunler.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dataGridViewUrunler.Location = new System.Drawing.Point(3, 19);
+            this.dataGridViewUrunler.Name = "dataGridViewUrunler";
+            this.dataGridViewUrunler.ReadOnly = true;
+            this.dataGridViewUrunler.Size = new System.Drawing.Size(894, 200);
+            this.dataGridViewUrunler.TabIndex = 0;
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.dataGridViewUrunler);
+            this.groupBox2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBox2.Location = new System.Drawing.Point(0, 222);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(900, 222);
+            this.groupBox2.TabIndex = 2;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Proje Ürünleri";
+            // 
             // ProjeMontajForm
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(540, 400);
-            this.Controls.Add(this.btnKapat);
-            this.Controls.Add(this.btnUrunSil);
-            this.Controls.Add(this.btnUrunEkle);
-            this.Controls.Add(this.dgvProjeUrunleri);
-            this.Controls.Add(this.lblProjeTanimi);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.cmbProjeler);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            this.MaximizeBox = false;
-            this.MinimizeBox = false;
+            this.ClientSize = new System.Drawing.Size(900, 444);
+            this.Controls.Add(this.groupBox2);
+            this.Controls.Add(this.groupBox1);
             this.Name = "ProjeMontajForm";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Proje Montaj / Ürün Kontrol";
-            ((System.ComponentModel.ISupportInitialize)(this.dgvProjeUrunleri)).EndInit();
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.Text = "Proje Montaj";
+            this.Load += new System.EventHandler(this.ProjeMontajForm_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewProjeler)).EndInit();
+            this.groupBox1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewUrunler)).EndInit();
+            this.groupBox2.ResumeLayout(false);
             this.ResumeLayout(false);
-            this.PerformLayout();
+
         }
+
+        #endregion
+
+        private System.Windows.Forms.DataGridView dataGridViewProjeler;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.DataGridView dataGridViewUrunler;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.DataGridViewButtonColumn btnUrunListesi;
     }
 }
