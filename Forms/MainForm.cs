@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace StokTakipOtomasyonu.Forms
@@ -15,14 +16,37 @@ namespace StokTakipOtomasyonu.Forms
             _yetki = yetki;
             YetkiKontrol();
             this.FormClosed += MainForm_FormClosed;
+            ApplyModernTheme();
+        }
+
+        private void ApplyModernTheme()
+        {
+            // Form arka plan rengi
+            this.BackColor = Color.FromArgb(240, 240, 240);
+
+            // Başlık çubuğu
+            this.Text = "Stok Takip Otomasyonu - Ana Menü";
+            this.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 162);
+
+            // Tüm groupbox'lar için stil
+            foreach (Control control in this.Controls)
+            {
+                if (control is GroupBox groupBox)
+                {
+                    groupBox.BackColor = Color.White;
+                    groupBox.ForeColor = Color.FromArgb(64, 64, 64);
+                    groupBox.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
+                }
+            }
         }
 
         private void YetkiKontrol()
         {
             if (_yetki == 2) // Standart kullanıcı
             {
-                btnDepoDuzenle.Enabled = false;
+                btnDepoDuzenle.Enabled = true;
                 btnProjeEkle.Enabled = false;
+                groupBox7.Enabled = false; // Yönetici işlemlerini gizle
             }
         }
 
@@ -84,6 +108,16 @@ namespace StokTakipOtomasyonu.Forms
         private void btnCikis_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        private void btnUrunBilgiGuncelle_Click(object sender, EventArgs e)
+        {
+            new UrunBilgiForm().ShowDialog();
+        }
+
+        private void btnKullaniciIslemleri_Click(object sender, EventArgs e)
+        {
+            new KullaniciForm().ShowDialog();
         }
     }
 }
