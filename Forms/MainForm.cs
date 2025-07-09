@@ -46,6 +46,8 @@ namespace StokTakipOtomasyonu.Forms
             {
                 btnDepoDuzenle.Enabled = true;
                 btnProjeEkle.Enabled = false;
+                btnProjeMontaj.Enabled = false;
+                btnKullaniciIslemleri.Enabled = false;
                 groupBox7.Enabled = false; // Yönetici işlemlerini gizle
             }
         }

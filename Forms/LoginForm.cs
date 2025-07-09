@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
+using System.Drawing;
+using System.IO;
 using MySql.Data.MySqlClient;
 using StokTakipOtomasyonu.Helpers;
 
@@ -10,6 +12,52 @@ namespace StokTakipOtomasyonu.Forms
         public LoginForm()
         {
             InitializeComponent();
+            LoadLogo();
+        }
+
+        private void LoadLogo()
+        {
+            try
+            {
+                // 1. Önce çalışma dizininden yükleme denemesi
+                string exePath = Application.StartupPath;
+                string imagePath = Path.Combine(exePath, "Resources", "isp_logo.png");
+
+                if (File.Exists(imagePath))
+                {
+                    pictureBoxLogo.Image = Image.FromFile(imagePath);
+                }
+                else
+                {
+                    // 2. Embedded resource olarak yükleme
+                    var assembly = System.Reflection.Assembly.GetExecutingAssembly();
+                    string resourceName = "StokTakipOtomasyonu.Resources.isp_logo.png";
+
+                    using (Stream stream = assembly.GetManifestResourceStream(resourceName))
+                    {
+                        if (stream != null)
+                        {
+                            pictureBoxLogo.Image = Image.FromStream(stream);
+                        }
+                        else
+                        {
+                            // 3. Logo bulunamazsa uyarı mesajı
+                            pictureBoxLogo.BackColor = Color.LightGray;
+                            pictureBoxLogo.Image = null;
+                            Console.WriteLine("Logo dosyası bulunamadı: " + resourceName);
+                        }
+                    }
+                }
+
+                pictureBoxLogo.SizeMode = PictureBoxSizeMode.Zoom;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Logo yüklenirken hata oluştu: " + ex.Message,
+                              "Hata",
+                              MessageBoxButtons.OK,
+                              MessageBoxIcon.Warning);
+            }
         }
 
         private void btnGiris_Click(object sender, EventArgs e)
@@ -19,6 +67,14 @@ namespace StokTakipOtomasyonu.Forms
 
             try
             {
+                if (string.IsNullOrWhiteSpace(txtKullaniciAdi.Text) ||
+                    string.IsNullOrWhiteSpace(txtSifre.Text))
+                {
+                    MessageBox.Show("Kullanıcı adı ve şifre boş olamaz!", "Uyarı",
+                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
                 var dt = DatabaseHelper.ExecuteQuery(query,
                     new MySqlParameter("@kadi", txtKullaniciAdi.Text),
                     new MySqlParameter("@sifre", txtSifre.Text));
@@ -47,6 +103,14 @@ namespace StokTakipOtomasyonu.Forms
         private void btnIptal_Click(object sender, EventArgs e)
         {
             Application.Exit();
+        }
+
+        private void txtSifre_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                btnGiris.PerformClick();
+            }
         }
     }
 }

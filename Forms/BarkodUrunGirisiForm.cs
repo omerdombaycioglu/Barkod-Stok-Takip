@@ -2,6 +2,7 @@
 using StokTakipOtomasyonu.Helpers;
 using System;
 using System.Data;
+using System.Management; // WMI için bu namespace'i ekleyin
 using System.Windows.Forms;
 
 namespace StokTakipOtomasyonu.Forms
@@ -9,19 +10,60 @@ namespace StokTakipOtomasyonu.Forms
     public partial class BarkodUrunGirisiForm : Form
     {
         private int _kullaniciId;
+        private bool _barkodOkuyucuBagli = false;
 
         public BarkodUrunGirisiForm(int kullaniciId)
         {
             InitializeComponent();
             _kullaniciId = kullaniciId;
+            BarkodOkuyucuKontrol();
+        }
+
+        private void BarkodOkuyucuKontrol()
+        {
+            try
+            {
+                // WMI kullanarak bağlı HID aygıtlarını sorgula
+                var searcher = new ManagementObjectSearcher(
+                    "SELECT * FROM Win32_PnPEntity WHERE Name LIKE '%HID%'");
+
+                foreach (var device in searcher.Get())
+                {
+                    string deviceName = device["Name"]?.ToString() ?? "";
+                    if (deviceName.Contains("Scanner") ||
+                        deviceName.Contains("Barcode") ||
+                        deviceName.Contains("Okuyucu"))
+                    {
+                        _barkodOkuyucuBagli = true;
+                        break;
+                    }
+                }
+
+                if (!_barkodOkuyucuBagli)
+                {
+                    MessageBox.Show("Barkod okuyucu bağlı değil! Manuel giriş yapabilirsiniz.",
+                        "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Barkod okuyucu kontrolü sırasında hata: " + ex.Message,
+                    "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void btnBarkodOku_Click(object sender, EventArgs e)
         {
+            BarkodOku();
+        }
+
+        private void BarkodOku()
+        {
             string barkod = txtBarkod.Text.Trim();
             if (string.IsNullOrEmpty(barkod))
             {
-                MessageBox.Show("Lütfen barkod giriniz!", "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Lütfen barkod giriniz!", "Uyarı",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -37,16 +79,22 @@ namespace StokTakipOtomasyonu.Forms
                     lblMevcutMiktar.Text = dt.Rows[0]["miktar"].ToString();
                     txtMiktar.Enabled = true;
                     btnKaydet.Enabled = true;
+
+                    // Default miktarı 1 yap
+                    if (string.IsNullOrEmpty(txtMiktar.Text))
+                        txtMiktar.Text = "1";
                 }
                 else
                 {
-                    MessageBox.Show("Barkod ile eşleşen ürün bulunamadı!", "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show("Barkod ile eşleşen ürün bulunamadı!", "Uyarı",
+                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     Temizle();
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Hata: " + ex.Message, "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Hata: " + ex.Message, "Hata",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -64,7 +112,8 @@ namespace StokTakipOtomasyonu.Forms
         {
             if (!int.TryParse(txtMiktar.Text, out int miktar) || miktar <= 0)
             {
-                MessageBox.Show("Geçerli bir miktar giriniz!", "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Geçerli bir miktar giriniz!", "Uyarı",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -80,7 +129,7 @@ namespace StokTakipOtomasyonu.Forms
                     {
                         try
                         {
-                            // Ürün ID'sini al - Doğrudan MySqlCommand kullanarak
+                            // Ürün ID'sini al
                             string urunIdQuery = "SELECT urun_id FROM urunler WHERE urun_barkod = @barkod";
                             var urunIdCmd = new MySqlCommand(urunIdQuery, conn, transaction);
                             urunIdCmd.Parameters.AddWithValue("@barkod", barkod);
@@ -88,20 +137,21 @@ namespace StokTakipOtomasyonu.Forms
 
                             if (urunIdObj == null)
                             {
-                                MessageBox.Show("Ürün bulunamadı!", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                MessageBox.Show("Ürün bulunamadı!", "Hata",
+                                    MessageBoxButtons.OK, MessageBoxIcon.Error);
                                 return;
                             }
 
                             int urunId = Convert.ToInt32(urunIdObj);
 
-                            // Stok güncelleme - Doğrudan MySqlCommand kullanarak
+                            // Stok güncelleme
                             string updateQuery = "UPDATE urunler SET miktar = miktar + @miktar WHERE urun_id = @urunId";
                             var updateCmd = new MySqlCommand(updateQuery, conn, transaction);
                             updateCmd.Parameters.AddWithValue("@miktar", miktar);
                             updateCmd.Parameters.AddWithValue("@urunId", urunId);
                             updateCmd.ExecuteNonQuery();
 
-                            // Hareket kaydı - Doğrudan MySqlCommand kullanarak
+                            // Hareket kaydı
                             string insertQuery = @"INSERT INTO urun_hareketleri 
                                         (urun_id, hareket_turu, miktar, kullanici_id, aciklama, islem_turu_id) 
                                         VALUES 
@@ -117,6 +167,8 @@ namespace StokTakipOtomasyonu.Forms
                             MessageBox.Show("Ürün girişi başarıyla kaydedildi!", "Bilgi",
                                 MessageBoxButtons.OK, MessageBoxIcon.Information);
                             Temizle();
+                            txtBarkod.Text = "";
+                            txtBarkod.Focus();
                         }
                         catch (Exception ex)
                         {
@@ -129,13 +181,23 @@ namespace StokTakipOtomasyonu.Forms
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Hata: " + ex.Message, "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Hata: " + ex.Message, "Hata",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
         private void btnIptal_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        private void txtBarkod_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                e.SuppressKeyPress = true; // Enter sesini engelle
+                BarkodOku();
+            }
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using MySql.Data.MySqlClient;
+using StokTakipOtomasyonu.Forms;
 using StokTakipOtomasyonu.Helpers;
 using System;
 using System.Data;
@@ -20,6 +21,9 @@ namespace StokTakipOtomasyonu.Forms
             IslemTurleriniYukle();
             ProjeleriYukle();
             cmbProjeler.Enabled = false;
+
+            // Event handlers
+            cmbProjeler.SelectedIndexChanged += cmbProjeler_SelectedIndexChanged; // Yeni eklenen satır
         }
 
         private void IslemTurleriniYukle()
@@ -164,6 +168,41 @@ namespace StokTakipOtomasyonu.Forms
             dgvProjelerdekiUrunler.DataSource = null;
         }
 
+        private void cmbProjeler_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (cmbProjeler.SelectedValue != null)
+            {
+                // Seçilen projenin tanımını al
+                int projeId = Convert.ToInt32(cmbProjeler.SelectedValue);
+                string query = "SELECT proje_tanimi FROM projeler WHERE proje_id = @projeId";
+
+                try
+                {
+                    DataTable dt = DatabaseHelper.ExecuteQuery(query,
+                        new MySqlParameter("@projeId", projeId));
+
+                    if (dt.Rows.Count > 0)
+                    {
+                        string projeTanimi = dt.Rows[0]["proje_tanimi"].ToString();
+
+                        // Açıklama alanına ekle (varsa mevcut açıklamayı silmeden)
+                        if (string.IsNullOrWhiteSpace(txtAciklama.Text))
+                        {
+                            txtAciklama.Text = $" {projeTanimi}";
+                        }
+                        else if (!txtAciklama.Text.Contains(projeTanimi))
+                        {
+                            txtAciklama.Text = $"Proje: {projeTanimi}\n{txtAciklama.Text}";
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Proje bilgisi alınırken hata oluştu: " + ex.Message,
+                        "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        }
         private void btnKaydet_Click(object sender, EventArgs e)
         {
             if (_secilenUrunId == 0)
@@ -327,4 +366,5 @@ namespace StokTakipOtomasyonu.Forms
         }
     }
 }
+
 
