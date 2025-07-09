@@ -32,7 +32,7 @@ namespace StokTakipOtomasyonu.Forms
             _excelData.Columns.Add("tip_no");
             _excelData.Columns.Add("siparis_no");
             _excelData.Columns.Add("aciklama");
-            _excelData.Columns.Add("urun_kodu");
+            _excelData.Columns.Add("urun_no");
             _excelData.Columns.Add("marka");
             _excelData.Columns.Add("miktar", typeof(int));
             _excelData.Columns.Add("stok_miktari", typeof(int));
@@ -120,9 +120,9 @@ namespace StokTakipOtomasyonu.Forms
                 DataRow dataRow = _excelData.NewRow();
 
                 dataRow["tip_no"] = row.GetCell(0)?.ToString()?.Trim();
-                dataRow["siparis_no"] = row.GetCell(1)?.ToString()?.Trim();
+                dataRow["siparis_no"] = row.GetCell(1)?.ToString()?.Trim(); // 2. sütun (siparis_no)
                 dataRow["aciklama"] = row.GetCell(2)?.ToString()?.Trim();
-                dataRow["urun_kodu"] = row.GetCell(3)?.ToString()?.Trim();
+                dataRow["urun_no"] = row.GetCell(3)?.ToString()?.Trim();
                 dataRow["marka"] = row.GetCell(4)?.ToString()?.Trim();
 
                 if (row.GetCell(5) != null)
@@ -142,11 +142,11 @@ namespace StokTakipOtomasyonu.Forms
         {
             foreach (DataRow row in _excelData.Rows)
             {
-                string urunKodu = row["urun_kodu"].ToString();
+                string siparisNo = row["siparis_no"].ToString(); // Artık siparis_no'yu kullanıyoruz
                 int miktar = Convert.ToInt32(row["miktar"]);
 
                 string query = "SELECT miktar, kritik_seviye FROM urunler WHERE urun_kodu = @urun_kodu";
-                var parameters = new[] { new MySqlParameter("@urun_kodu", urunKodu) };
+                var parameters = new[] { new MySqlParameter("@urun_kodu", siparisNo) };
 
                 using (var dt = DatabaseHelper.ExecuteQuery(query, parameters))
                 {
@@ -239,23 +239,25 @@ namespace StokTakipOtomasyonu.Forms
                             // Ürünleri işle
                             foreach (DataRow row in _excelData.Rows)
                             {
-                                string urunKodu = row["urun_kodu"].ToString();
+                                string siparisNo = row["siparis_no"].ToString(); // 2. sütun (siparis_no)
+                                string aciklama = row["aciklama"].ToString();
+                                string marka = row["marka"].ToString();
                                 int miktar = Convert.ToInt32(row["miktar"]);
                                 bool isNew = Convert.ToBoolean(row["is_new"]);
 
                                 int urunId;
                                 if (isNew)
                                 {
-                                    // Yeni ürünü ekle
+                                    // Yeni ürünü ekle (siparis_no'yu urun_kodu olarak kaydediyoruz)
                                     query = @"INSERT INTO urunler (urun_kodu, urun_adi, aciklama, urun_marka, miktar) 
                                               VALUES (@urun_kodu, @urun_adi, @aciklama, @marka, 0); 
                                               SELECT LAST_INSERT_ID();";
                                     parameters = new[]
                                     {
-                                        new MySqlParameter("@urun_kodu", urunKodu),
-                                        new MySqlParameter("@urun_adi", row["aciklama"].ToString()),
-                                        new MySqlParameter("@aciklama", row["aciklama"].ToString()),
-                                        new MySqlParameter("@marka", row["marka"].ToString())
+                                        new MySqlParameter("@urun_kodu", siparisNo), // 2. sütun
+                                        new MySqlParameter("@urun_adi", aciklama),   // 3. sütun
+                                        new MySqlParameter("@aciklama", aciklama),   // 3. sütun
+                                        new MySqlParameter("@marka", marka)          // 5. sütun
                                     };
 
                                     urunId = Convert.ToInt32(DatabaseHelper.ExecuteScalar(query, transaction, parameters));
@@ -264,7 +266,7 @@ namespace StokTakipOtomasyonu.Forms
                                 {
                                     // Var olan ürünün ID'sini al
                                     query = "SELECT urun_id FROM urunler WHERE urun_kodu = @urun_kodu";
-                                    parameters = new[] { new MySqlParameter("@urun_kodu", urunKodu) };
+                                    parameters = new[] { new MySqlParameter("@urun_kodu", siparisNo) };
                                     urunId = Convert.ToInt32(DatabaseHelper.ExecuteScalar(query, transaction, parameters));
                                 }
 
