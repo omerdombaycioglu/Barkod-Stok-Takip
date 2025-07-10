@@ -42,37 +42,41 @@
             // 
             this.lblKullaniciAdi.AutoSize = true;
             this.lblKullaniciAdi.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
-            this.lblKullaniciAdi.Location = new System.Drawing.Point(30, 120);
+            this.lblKullaniciAdi.Location = new System.Drawing.Point(40, 148);
+            this.lblKullaniciAdi.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblKullaniciAdi.Name = "lblKullaniciAdi";
-            this.lblKullaniciAdi.Size = new System.Drawing.Size(80, 15);
+            this.lblKullaniciAdi.Size = new System.Drawing.Size(90, 18);
             this.lblKullaniciAdi.TabIndex = 0;
             this.lblKullaniciAdi.Text = "Kullanıcı Adı:";
             // 
             // txtKullaniciAdi
             // 
             this.txtKullaniciAdi.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
-            this.txtKullaniciAdi.Location = new System.Drawing.Point(120, 117);
+            this.txtKullaniciAdi.Location = new System.Drawing.Point(160, 144);
+            this.txtKullaniciAdi.Margin = new System.Windows.Forms.Padding(4);
             this.txtKullaniciAdi.Name = "txtKullaniciAdi";
-            this.txtKullaniciAdi.Size = new System.Drawing.Size(150, 21);
+            this.txtKullaniciAdi.Size = new System.Drawing.Size(199, 24);
             this.txtKullaniciAdi.TabIndex = 1;
             // 
             // lblSifre
             // 
             this.lblSifre.AutoSize = true;
             this.lblSifre.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
-            this.lblSifre.Location = new System.Drawing.Point(30, 160);
+            this.lblSifre.Location = new System.Drawing.Point(40, 197);
+            this.lblSifre.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblSifre.Name = "lblSifre";
-            this.lblSifre.Size = new System.Drawing.Size(36, 15);
+            this.lblSifre.Size = new System.Drawing.Size(42, 18);
             this.lblSifre.TabIndex = 2;
             this.lblSifre.Text = "Şifre:";
             // 
             // txtSifre
             // 
             this.txtSifre.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
-            this.txtSifre.Location = new System.Drawing.Point(120, 157);
+            this.txtSifre.Location = new System.Drawing.Point(160, 193);
+            this.txtSifre.Margin = new System.Windows.Forms.Padding(4);
             this.txtSifre.Name = "txtSifre";
             this.txtSifre.PasswordChar = '*';
-            this.txtSifre.Size = new System.Drawing.Size(150, 21);
+            this.txtSifre.Size = new System.Drawing.Size(199, 24);
             this.txtSifre.TabIndex = 2;
             this.txtSifre.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtSifre_KeyDown);
             // 
@@ -82,9 +86,10 @@
             this.btnGiris.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnGiris.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
             this.btnGiris.ForeColor = System.Drawing.Color.White;
-            this.btnGiris.Location = new System.Drawing.Point(120, 200);
+            this.btnGiris.Location = new System.Drawing.Point(160, 246);
+            this.btnGiris.Margin = new System.Windows.Forms.Padding(4);
             this.btnGiris.Name = "btnGiris";
-            this.btnGiris.Size = new System.Drawing.Size(70, 30);
+            this.btnGiris.Size = new System.Drawing.Size(93, 37);
             this.btnGiris.TabIndex = 3;
             this.btnGiris.Text = "Giriş";
             this.btnGiris.UseVisualStyleBackColor = false;
@@ -96,9 +101,10 @@
             this.btnIptal.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnIptal.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
             this.btnIptal.ForeColor = System.Drawing.Color.White;
-            this.btnIptal.Location = new System.Drawing.Point(200, 200);
+            this.btnIptal.Location = new System.Drawing.Point(267, 246);
+            this.btnIptal.Margin = new System.Windows.Forms.Padding(4);
             this.btnIptal.Name = "btnIptal";
-            this.btnIptal.Size = new System.Drawing.Size(70, 30);
+            this.btnIptal.Size = new System.Drawing.Size(93, 37);
             this.btnIptal.TabIndex = 4;
             this.btnIptal.Text = "İptal";
             this.btnIptal.UseVisualStyleBackColor = false;
@@ -108,19 +114,21 @@
             // 
             this.pictureBoxLogo.BackColor = System.Drawing.Color.Transparent;
             this.pictureBoxLogo.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pictureBoxLogo.Location = new System.Drawing.Point(90, 20);
+            this.pictureBoxLogo.Image = global::IspBarkodStok.Properties.Resources.isp_logo1;
+            this.pictureBoxLogo.Location = new System.Drawing.Point(99, 13);
+            this.pictureBoxLogo.Margin = new System.Windows.Forms.Padding(4);
             this.pictureBoxLogo.Name = "pictureBoxLogo";
-            this.pictureBoxLogo.Size = new System.Drawing.Size(120, 80);
+            this.pictureBoxLogo.Size = new System.Drawing.Size(218, 111);
             this.pictureBoxLogo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBoxLogo.TabIndex = 5;
             this.pictureBoxLogo.TabStop = false;
             // 
             // LoginForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.ClientSize = new System.Drawing.Size(300, 250);
+            this.ClientSize = new System.Drawing.Size(400, 308);
             this.Controls.Add(this.pictureBoxLogo);
             this.Controls.Add(this.btnIptal);
             this.Controls.Add(this.btnGiris);
@@ -129,6 +137,7 @@
             this.Controls.Add(this.lblSifre);
             this.Controls.Add(this.lblKullaniciAdi);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "LoginForm";

@@ -190,7 +190,7 @@
             this.btnProjeMontaj.Name = "btnProjeMontaj";
             this.btnProjeMontaj.Size = new System.Drawing.Size(200, 40);
             this.btnProjeMontaj.TabIndex = 1;
-            this.btnProjeMontaj.Text = "   Projelerim";
+            this.btnProjeMontaj.Text = "Proje Ürün Kontrol";
             this.btnProjeMontaj.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnProjeMontaj.UseVisualStyleBackColor = false;
             this.btnProjeMontaj.Click += new System.EventHandler(this.btnProjeMontaj_Click);

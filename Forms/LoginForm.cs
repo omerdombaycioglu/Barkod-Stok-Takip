@@ -63,7 +63,7 @@ namespace StokTakipOtomasyonu.Forms
         private void btnGiris_Click(object sender, EventArgs e)
         {
             string query = "SELECT kullanici_id, kullanici_yetki FROM kullanicilar " +
-                         "WHERE kullanici_adi = @kadi AND sifre = SHA2(@sifre, 256) AND aktif = 1";
+                         "WHERE kullanici_adi = @kadi AND sifre = @sifre AND aktif = 1";
 
             try
             {
@@ -113,4 +113,4 @@ namespace StokTakipOtomasyonu.Forms
             }
         }
     }
-} 
+}
