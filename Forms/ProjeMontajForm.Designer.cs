@@ -18,7 +18,11 @@
         private void InitializeComponent()
         {
             this.dataGridViewProjeler = new System.Windows.Forms.DataGridView();
+            this.proje_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.proje_kodu = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.proje_tanimi = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.btnUrunListesi = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.btnSil = new System.Windows.Forms.DataGridViewButtonColumn();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.dataGridViewUrunler = new System.Windows.Forms.DataGridView();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
@@ -34,7 +38,11 @@
             this.dataGridViewProjeler.AllowUserToDeleteRows = false;
             this.dataGridViewProjeler.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridViewProjeler.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.btnUrunListesi});
+            this.proje_id,
+            this.proje_kodu,
+            this.proje_tanimi,
+            this.btnUrunListesi,
+            this.btnSil});
             this.dataGridViewProjeler.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridViewProjeler.Location = new System.Drawing.Point(3, 19);
             this.dataGridViewProjeler.Name = "dataGridViewProjeler";
@@ -43,6 +51,28 @@
             this.dataGridViewProjeler.TabIndex = 0;
             this.dataGridViewProjeler.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewProjeler_CellContentClick);
             // 
+            // proje_id
+            // 
+            this.proje_id.DataPropertyName = "proje_id";
+            this.proje_id.HeaderText = "proje_id";
+            this.proje_id.Name = "proje_id";
+            this.proje_id.ReadOnly = true;
+            this.proje_id.Visible = false;
+            // 
+            // proje_kodu
+            // 
+            this.proje_kodu.DataPropertyName = "proje_kodu";
+            this.proje_kodu.HeaderText = "Proje Kodu";
+            this.proje_kodu.Name = "proje_kodu";
+            this.proje_kodu.ReadOnly = true;
+            // 
+            // proje_tanimi
+            // 
+            this.proje_tanimi.DataPropertyName = "proje_tanimi";
+            this.proje_tanimi.HeaderText = "Proje Tanımı";
+            this.proje_tanimi.Name = "proje_tanimi";
+            this.proje_tanimi.ReadOnly = true;
+            // 
             // btnUrunListesi
             // 
             this.btnUrunListesi.HeaderText = "Ürün Listesi";
@@ -50,6 +80,14 @@
             this.btnUrunListesi.ReadOnly = true;
             this.btnUrunListesi.Text = "Ürünleri Göster";
             this.btnUrunListesi.UseColumnTextForButtonValue = true;
+            // 
+            // btnSil
+            // 
+            this.btnSil.HeaderText = "Sil";
+            this.btnSil.Name = "btnSil";
+            this.btnSil.ReadOnly = true;
+            this.btnSil.Text = "Sil";
+            this.btnSil.UseColumnTextForButtonValue = true;
             // 
             // groupBox1
             // 
@@ -110,6 +148,10 @@
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.DataGridView dataGridViewUrunler;
         private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.DataGridViewTextBoxColumn proje_id;
+        private System.Windows.Forms.DataGridViewTextBoxColumn proje_kodu;
+        private System.Windows.Forms.DataGridViewTextBoxColumn proje_tanimi;
         private System.Windows.Forms.DataGridViewButtonColumn btnUrunListesi;
+        private System.Windows.Forms.DataGridViewButtonColumn btnSil;
     }
 }

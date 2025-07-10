@@ -66,10 +66,52 @@ namespace StokTakipOtomasyonu.Forms
 
         private void dataGridViewProjeler_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (e.ColumnIndex == dataGridViewProjeler.Columns["btnUrunListesi"].Index && e.RowIndex >= 0)
+            if (e.RowIndex < 0) return;
+
+            var senderGrid = (DataGridView)sender;
+
+            if (senderGrid.Columns[e.ColumnIndex] is DataGridViewButtonColumn && e.RowIndex >= 0)
             {
                 int projeId = Convert.ToInt32(dataGridViewProjeler.Rows[e.RowIndex].Cells["proje_id"].Value);
-                LoadProjectProducts(projeId);
+
+                if (senderGrid.Columns[e.ColumnIndex].Name == "btnUrunListesi")
+                {
+                    LoadProjectProducts(projeId);
+                }
+                else if (senderGrid.Columns[e.ColumnIndex].Name == "btnSil")
+                {
+                    DeleteProject(projeId);
+                }
+            }
+        }
+
+        private void DeleteProject(int projeId)
+        {
+            try
+            {
+                var result = MessageBox.Show("Projeyi silmek istediğinize emin misiniz? Bu işlem geri alınamaz!",
+                    "Onay", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+
+                if (result == DialogResult.Yes)
+                {
+                    // Önce proje ürünlerini sil
+                    string deleteProductsQuery = "DELETE FROM proje_urunleri WHERE proje_id = @proje_id";
+                    var productParams = new[] { new MySqlParameter("@proje_id", projeId) };
+                    DatabaseHelper.ExecuteNonQuery(deleteProductsQuery, productParams);
+
+                    // Sonra projeyi sil (aktif=0 yaparak)
+                    string deleteProjectQuery = "UPDATE projeler SET aktif = 0 WHERE proje_id = @proje_id";
+                    var projectParams = new[] { new MySqlParameter("@proje_id", projeId) };
+                    DatabaseHelper.ExecuteNonQuery(deleteProjectQuery, projectParams);
+
+                    MessageBox.Show("Proje ve ilişkili ürünler başarıyla silindi.", "Bilgi", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    LoadProjects();
+                    dataGridViewUrunler.DataSource = null;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Proje silinirken hata oluştu: {ex.Message}", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

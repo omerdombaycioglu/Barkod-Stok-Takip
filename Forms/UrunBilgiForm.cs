@@ -2,15 +2,32 @@
 using System.Windows.Forms;
 using MySql.Data.MySqlClient;
 using StokTakipOtomasyonu.Helpers;
+using System.Data;
+using System.Drawing;
 
 namespace StokTakipOtomasyonu.Forms
 {
     public partial class UrunBilgiForm : Form
     {
+        private DataTable originalData;
+
         public UrunBilgiForm()
         {
             InitializeComponent();
+            ConfigureDataGridView();
             LoadUrunler();
+        }
+
+        private void ConfigureDataGridView()
+        {
+            dataGridViewUrunler.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            dataGridViewUrunler.DefaultCellStyle.Font = new System.Drawing.Font("Segoe UI", 9F); // System.Drawing ekleyin
+            dataGridViewUrunler.ColumnHeadersDefaultCellStyle.Font = new System.Drawing.Font("Segoe UI", 9F, FontStyle.Bold);
+            dataGridViewUrunler.EnableHeadersVisualStyles = false;
+            dataGridViewUrunler.ColumnHeadersDefaultCellStyle.BackColor = System.Drawing.Color.FromArgb(51, 122, 183);
+            dataGridViewUrunler.ColumnHeadersDefaultCellStyle.ForeColor = System.Drawing.Color.White;
+            dataGridViewUrunler.RowHeadersVisible = false;
+            dataGridViewUrunler.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
         }
 
         private void LoadUrunler()
@@ -18,8 +35,8 @@ namespace StokTakipOtomasyonu.Forms
             try
             {
                 string query = "SELECT urun_id, urun_adi, urun_kodu, urun_barkod, urun_marka, urun_no, miktar, kritik_seviye FROM urunler";
-                var dt = DatabaseHelper.ExecuteQuery(query);
-                dataGridViewUrunler.DataSource = dt;
+                originalData = DatabaseHelper.ExecuteQuery(query);
+                dataGridViewUrunler.DataSource = originalData;
             }
             catch (Exception ex)
             {
@@ -65,6 +82,7 @@ namespace StokTakipOtomasyonu.Forms
                             }
                             transaction.Commit();
                             MessageBox.Show("Değişiklikler başarıyla kaydedildi.", "Başarılı", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            LoadUrunler(); // Verileri yenile
                         }
                         catch (Exception ex)
                         {
@@ -83,6 +101,17 @@ namespace StokTakipOtomasyonu.Forms
         private void btnIptal_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        private void txtArama_TextChanged(object sender, EventArgs e)
+        {
+            if (originalData != null)
+            {
+                string searchText = txtArama.Text.ToLower();
+                DataView dv = originalData.DefaultView;
+                dv.RowFilter = $"urun_adi LIKE '%{searchText}%' OR urun_kodu LIKE '%{searchText}%' OR urun_barkod LIKE '%{searchText}%'";
+                dataGridViewUrunler.DataSource = dv.ToTable();
+            }
         }
     }
 }
