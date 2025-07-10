@@ -18,11 +18,10 @@
         private void InitializeComponent()
         {
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.btnManuelUrunGirisi = new System.Windows.Forms.Button();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.btnManuelUrunCikisi = new System.Windows.Forms.Button();
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.btnUrunListele = new System.Windows.Forms.Button();
+            this.btnManuelUrunCikisi = new System.Windows.Forms.Button();
+            this.btnExcelIslem = new System.Windows.Forms.Button();
+            this.btnManuelUrunGirisi = new System.Windows.Forms.Button();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
             this.btnProjeEkle = new System.Windows.Forms.Button();
             this.btnProjeMontaj = new System.Windows.Forms.Button();
@@ -33,13 +32,10 @@
             this.btnKullaniciIslemleri = new System.Windows.Forms.Button();
             this.btnSonIslemler = new System.Windows.Forms.Button();
             this.btnCikis = new System.Windows.Forms.Button();
-            this.btnExcelIslem = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.groupBox1.SuspendLayout();
-            this.groupBox2.SuspendLayout();
-            this.groupBox3.SuspendLayout();
             this.groupBox5.SuspendLayout();
             this.groupBox6.SuspendLayout();
             this.groupBox7.SuspendLayout();
@@ -50,16 +46,79 @@
             // groupBox1
             // 
             this.groupBox1.BackColor = System.Drawing.Color.White;
+            this.groupBox1.Controls.Add(this.btnUrunListele);
+            this.groupBox1.Controls.Add(this.btnManuelUrunCikisi);
+            this.groupBox1.Controls.Add(this.btnExcelIslem);
             this.groupBox1.Controls.Add(this.btnManuelUrunGirisi);
             this.groupBox1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.groupBox1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
             this.groupBox1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.groupBox1.Location = new System.Drawing.Point(30, 100);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(250, 100);
+            this.groupBox1.Size = new System.Drawing.Size(250, 217);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Ürün Giriş İşlemleri";
+            this.groupBox1.Text = "Ürün İşlemleri";
+            // 
+            // btnUrunListele
+            // 
+            this.btnUrunListele.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(128)))));
+            this.btnUrunListele.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnUrunListele.FlatAppearance.BorderSize = 0;
+            this.btnUrunListele.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(153)))), ((int)(((byte)(133)))));
+            this.btnUrunListele.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(153)))), ((int)(((byte)(133)))));
+            this.btnUrunListele.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnUrunListele.Font = new System.Drawing.Font("Segoe UI", 10F);
+            this.btnUrunListele.ForeColor = System.Drawing.Color.White;
+            this.btnUrunListele.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnUrunListele.Location = new System.Drawing.Point(25, 122);
+            this.btnUrunListele.Name = "btnUrunListele";
+            this.btnUrunListele.Size = new System.Drawing.Size(200, 40);
+            this.btnUrunListele.TabIndex = 0;
+            this.btnUrunListele.Text = "Ürün Listele/Ara/Filtrele";
+            this.btnUrunListele.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnUrunListele.UseVisualStyleBackColor = false;
+            this.btnUrunListele.Click += new System.EventHandler(this.btnUrunListele_Click);
+            // 
+            // btnManuelUrunCikisi
+            // 
+            this.btnManuelUrunCikisi.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(128)))));
+            this.btnManuelUrunCikisi.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnManuelUrunCikisi.FlatAppearance.BorderSize = 0;
+            this.btnManuelUrunCikisi.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(153)))), ((int)(((byte)(133)))));
+            this.btnManuelUrunCikisi.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(153)))), ((int)(((byte)(133)))));
+            this.btnManuelUrunCikisi.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnManuelUrunCikisi.Font = new System.Drawing.Font("Segoe UI", 10F);
+            this.btnManuelUrunCikisi.ForeColor = System.Drawing.Color.White;
+            this.btnManuelUrunCikisi.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnManuelUrunCikisi.Location = new System.Drawing.Point(25, 76);
+            this.btnManuelUrunCikisi.Name = "btnManuelUrunCikisi";
+            this.btnManuelUrunCikisi.Size = new System.Drawing.Size(200, 40);
+            this.btnManuelUrunCikisi.TabIndex = 0;
+            this.btnManuelUrunCikisi.Text = "Ürün Çıkışı";
+            this.btnManuelUrunCikisi.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnManuelUrunCikisi.UseVisualStyleBackColor = false;
+            this.btnManuelUrunCikisi.Click += new System.EventHandler(this.btnManuelUrunCikisi_Click);
+            // 
+            // btnExcelIslem
+            // 
+            this.btnExcelIslem.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(128)))));
+            this.btnExcelIslem.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnExcelIslem.FlatAppearance.BorderSize = 0;
+            this.btnExcelIslem.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(153)))), ((int)(((byte)(133)))));
+            this.btnExcelIslem.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(153)))), ((int)(((byte)(133)))));
+            this.btnExcelIslem.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnExcelIslem.Font = new System.Drawing.Font("Segoe UI", 10F);
+            this.btnExcelIslem.ForeColor = System.Drawing.Color.White;
+            this.btnExcelIslem.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnExcelIslem.Location = new System.Drawing.Point(25, 168);
+            this.btnExcelIslem.Name = "btnExcelIslem";
+            this.btnExcelIslem.Size = new System.Drawing.Size(200, 40);
+            this.btnExcelIslem.TabIndex = 1;
+            this.btnExcelIslem.Text = "Excel ile Ürün Giriş/Çıkış";
+            this.btnExcelIslem.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnExcelIslem.UseVisualStyleBackColor = false;
+            this.btnExcelIslem.Click += new System.EventHandler(this.btnExcelIslem_Click);
             // 
             // btnManuelUrunGirisi
             // 
@@ -81,74 +140,6 @@
             this.btnManuelUrunGirisi.UseVisualStyleBackColor = false;
             this.btnManuelUrunGirisi.Click += new System.EventHandler(this.btnManuelUrunGirisi_Click);
             // 
-            // groupBox2
-            // 
-            this.groupBox2.BackColor = System.Drawing.Color.White;
-            this.groupBox2.Controls.Add(this.btnManuelUrunCikisi);
-            this.groupBox2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.groupBox2.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
-            this.groupBox2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.groupBox2.Location = new System.Drawing.Point(320, 100);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(250, 100);
-            this.groupBox2.TabIndex = 1;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Ürün Çıkış İşlemleri";
-            // 
-            // btnManuelUrunCikisi
-            // 
-            this.btnManuelUrunCikisi.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(128)))));
-            this.btnManuelUrunCikisi.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnManuelUrunCikisi.FlatAppearance.BorderSize = 0;
-            this.btnManuelUrunCikisi.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(153)))), ((int)(((byte)(133)))));
-            this.btnManuelUrunCikisi.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(153)))), ((int)(((byte)(133)))));
-            this.btnManuelUrunCikisi.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnManuelUrunCikisi.Font = new System.Drawing.Font("Segoe UI", 10F);
-            this.btnManuelUrunCikisi.ForeColor = System.Drawing.Color.White;
-            this.btnManuelUrunCikisi.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnManuelUrunCikisi.Location = new System.Drawing.Point(25, 30);
-            this.btnManuelUrunCikisi.Name = "btnManuelUrunCikisi";
-            this.btnManuelUrunCikisi.Size = new System.Drawing.Size(200, 40);
-            this.btnManuelUrunCikisi.TabIndex = 0;
-            this.btnManuelUrunCikisi.Text = "Ürün Çıkışı";
-            this.btnManuelUrunCikisi.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.btnManuelUrunCikisi.UseVisualStyleBackColor = false;
-            this.btnManuelUrunCikisi.Click += new System.EventHandler(this.btnManuelUrunCikisi_Click);
-            // 
-            // groupBox3
-            // 
-            this.groupBox3.BackColor = System.Drawing.Color.White;
-            this.groupBox3.Controls.Add(this.btnUrunListele);
-            this.groupBox3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.groupBox3.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
-            this.groupBox3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.groupBox3.Location = new System.Drawing.Point(610, 100);
-            this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(250, 97);
-            this.groupBox3.TabIndex = 2;
-            this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "Ürün Listeleme";
-            // 
-            // btnUrunListele
-            // 
-            this.btnUrunListele.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(128)))));
-            this.btnUrunListele.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnUrunListele.FlatAppearance.BorderSize = 0;
-            this.btnUrunListele.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(153)))), ((int)(((byte)(133)))));
-            this.btnUrunListele.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(153)))), ((int)(((byte)(133)))));
-            this.btnUrunListele.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnUrunListele.Font = new System.Drawing.Font("Segoe UI", 10F);
-            this.btnUrunListele.ForeColor = System.Drawing.Color.White;
-            this.btnUrunListele.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnUrunListele.Location = new System.Drawing.Point(25, 30);
-            this.btnUrunListele.Name = "btnUrunListele";
-            this.btnUrunListele.Size = new System.Drawing.Size(200, 40);
-            this.btnUrunListele.TabIndex = 0;
-            this.btnUrunListele.Text = "   Ürün Listele/Ara/Filtrele";
-            this.btnUrunListele.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.btnUrunListele.UseVisualStyleBackColor = false;
-            this.btnUrunListele.Click += new System.EventHandler(this.btnUrunListele_Click);
-            // 
             // groupBox5
             // 
             this.groupBox5.BackColor = System.Drawing.Color.White;
@@ -157,7 +148,7 @@
             this.groupBox5.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.groupBox5.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
             this.groupBox5.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.groupBox5.Location = new System.Drawing.Point(30, 220);
+            this.groupBox5.Location = new System.Drawing.Point(298, 112);
             this.groupBox5.Name = "groupBox5";
             this.groupBox5.Size = new System.Drawing.Size(250, 150);
             this.groupBox5.TabIndex = 3;
@@ -211,9 +202,9 @@
             this.groupBox6.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.groupBox6.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
             this.groupBox6.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.groupBox6.Location = new System.Drawing.Point(320, 220);
+            this.groupBox6.Location = new System.Drawing.Point(30, 341);
             this.groupBox6.Name = "groupBox6";
-            this.groupBox6.Size = new System.Drawing.Size(250, 97);
+            this.groupBox6.Size = new System.Drawing.Size(250, 111);
             this.groupBox6.TabIndex = 4;
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "Depo İşlemleri";
@@ -229,7 +220,7 @@
             this.btnDepoDuzenle.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.btnDepoDuzenle.ForeColor = System.Drawing.Color.White;
             this.btnDepoDuzenle.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnDepoDuzenle.Location = new System.Drawing.Point(25, 30);
+            this.btnDepoDuzenle.Location = new System.Drawing.Point(25, 41);
             this.btnDepoDuzenle.Name = "btnDepoDuzenle";
             this.btnDepoDuzenle.Size = new System.Drawing.Size(200, 40);
             this.btnDepoDuzenle.TabIndex = 0;
@@ -246,12 +237,12 @@
             this.groupBox7.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.groupBox7.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
             this.groupBox7.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.groupBox7.Location = new System.Drawing.Point(610, 220);
+            this.groupBox7.Location = new System.Drawing.Point(298, 295);
             this.groupBox7.Name = "groupBox7";
-            this.groupBox7.Size = new System.Drawing.Size(250, 150);
+            this.groupBox7.Size = new System.Drawing.Size(250, 157);
             this.groupBox7.TabIndex = 5;
             this.groupBox7.TabStop = false;
-            this.groupBox7.Text = "Kullanıcı / Ürün İşlemleri";
+            this.groupBox7.Text = "Yönetici İşlemleri";
             // 
             // btnUrunBilgiGuncelle
             // 
@@ -264,7 +255,7 @@
             this.btnUrunBilgiGuncelle.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.btnUrunBilgiGuncelle.ForeColor = System.Drawing.Color.White;
             this.btnUrunBilgiGuncelle.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnUrunBilgiGuncelle.Location = new System.Drawing.Point(25, 30);
+            this.btnUrunBilgiGuncelle.Location = new System.Drawing.Point(25, 97);
             this.btnUrunBilgiGuncelle.Name = "btnUrunBilgiGuncelle";
             this.btnUrunBilgiGuncelle.Size = new System.Drawing.Size(200, 40);
             this.btnUrunBilgiGuncelle.TabIndex = 0;
@@ -284,7 +275,7 @@
             this.btnKullaniciIslemleri.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.btnKullaniciIslemleri.ForeColor = System.Drawing.Color.White;
             this.btnKullaniciIslemleri.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnKullaniciIslemleri.Location = new System.Drawing.Point(25, 80);
+            this.btnKullaniciIslemleri.Location = new System.Drawing.Point(25, 44);
             this.btnKullaniciIslemleri.Name = "btnKullaniciIslemleri";
             this.btnKullaniciIslemleri.Size = new System.Drawing.Size(200, 40);
             this.btnKullaniciIslemleri.TabIndex = 1;
@@ -304,7 +295,7 @@
             this.btnSonIslemler.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.btnSonIslemler.ForeColor = System.Drawing.Color.White;
             this.btnSonIslemler.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnSonIslemler.Location = new System.Drawing.Point(554, 390);
+            this.btnSonIslemler.Location = new System.Drawing.Point(242, 458);
             this.btnSonIslemler.Name = "btnSonIslemler";
             this.btnSonIslemler.Size = new System.Drawing.Size(150, 40);
             this.btnSonIslemler.TabIndex = 6;
@@ -324,7 +315,7 @@
             this.btnCikis.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.btnCikis.ForeColor = System.Drawing.Color.White;
             this.btnCikis.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnCikis.Location = new System.Drawing.Point(710, 390);
+            this.btnCikis.Location = new System.Drawing.Point(398, 458);
             this.btnCikis.Name = "btnCikis";
             this.btnCikis.Size = new System.Drawing.Size(150, 40);
             this.btnCikis.TabIndex = 7;
@@ -333,53 +324,34 @@
             this.btnCikis.UseVisualStyleBackColor = false;
             this.btnCikis.Click += new System.EventHandler(this.btnCikis_Click);
             // 
-            // btnExcelIslem
-            // 
-            this.btnExcelIslem.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(128)))));
-            this.btnExcelIslem.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnExcelIslem.FlatAppearance.BorderSize = 0;
-            this.btnExcelIslem.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(153)))), ((int)(((byte)(133)))));
-            this.btnExcelIslem.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(153)))), ((int)(((byte)(133)))));
-            this.btnExcelIslem.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnExcelIslem.Font = new System.Drawing.Font("Segoe UI", 10F);
-            this.btnExcelIslem.ForeColor = System.Drawing.Color.White;
-            this.btnExcelIslem.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnExcelIslem.Location = new System.Drawing.Point(348, 390);
-            this.btnExcelIslem.Name = "btnExcelIslem";
-            this.btnExcelIslem.Size = new System.Drawing.Size(200, 40);
-            this.btnExcelIslem.TabIndex = 1;
-            this.btnExcelIslem.Text = "   Excel dosyasını içe aktar";
-            this.btnExcelIslem.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.btnExcelIslem.UseVisualStyleBackColor = false;
-            this.btnExcelIslem.Click += new System.EventHandler(this.btnExcelIslem_Click);
-            // 
             // panel1
             // 
-            this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(153)))), ((int)(((byte)(133)))));
+            this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(210)))), ((int)(((byte)(210)))));
             this.panel1.Controls.Add(this.label1);
             this.panel1.Controls.Add(this.pictureBox1);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(900, 80);
+            this.panel1.Size = new System.Drawing.Size(577, 80);
             this.panel1.TabIndex = 8;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Segoe UI", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
-            this.label1.ForeColor = System.Drawing.Color.White;
-            this.label1.Location = new System.Drawing.Point(80, 25);
+            this.label1.ForeColor = System.Drawing.Color.DimGray;
+            this.label1.Location = new System.Drawing.Point(209, 26);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(352, 41);
+            this.label1.Size = new System.Drawing.Size(314, 41);
             this.label1.TabIndex = 1;
             this.label1.Text = "ISP Group Stok Takip";
             // 
             // pictureBox1
             // 
-            this.pictureBox1.Location = new System.Drawing.Point(20, 15);
+            this.pictureBox1.Image = global::IspBarkodStok.Properties.Resources.isp_logo1;
+            this.pictureBox1.Location = new System.Drawing.Point(0, 3);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(50, 50);
+            this.pictureBox1.Size = new System.Drawing.Size(244, 77);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
@@ -387,12 +359,9 @@
             // MainForm
             // 
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
-            this.ClientSize = new System.Drawing.Size(900, 450);
+            this.ClientSize = new System.Drawing.Size(577, 524);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.groupBox1);
-            this.Controls.Add(this.btnExcelIslem);
-            this.Controls.Add(this.groupBox2);
-            this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox5);
             this.Controls.Add(this.groupBox6);
             this.Controls.Add(this.groupBox7);
@@ -405,8 +374,6 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Stok Takip Otomasyonu - Ana Menü";
             this.groupBox1.ResumeLayout(false);
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox3.ResumeLayout(false);
             this.groupBox5.ResumeLayout(false);
             this.groupBox6.ResumeLayout(false);
             this.groupBox7.ResumeLayout(false);
@@ -420,8 +387,6 @@
         #endregion
 
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.GroupBox groupBox5;
         private System.Windows.Forms.GroupBox groupBox6;
         private System.Windows.Forms.GroupBox groupBox7;
