@@ -19,10 +19,8 @@
         {
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.btnManuelUrunGirisi = new System.Windows.Forms.Button();
-            this.btnBarkodUrunGirisi = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.btnManuelUrunCikisi = new System.Windows.Forms.Button();
-            this.btnBarkodUrunCikisi = new System.Windows.Forms.Button();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.btnUrunListele = new System.Windows.Forms.Button();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
@@ -53,13 +51,12 @@
             // 
             this.groupBox1.BackColor = System.Drawing.Color.White;
             this.groupBox1.Controls.Add(this.btnManuelUrunGirisi);
-            this.groupBox1.Controls.Add(this.btnBarkodUrunGirisi);
             this.groupBox1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.groupBox1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
             this.groupBox1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.groupBox1.Location = new System.Drawing.Point(30, 100);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(250, 150);
+            this.groupBox1.Size = new System.Drawing.Size(250, 100);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Ürün Giriş İşlemleri";
@@ -79,42 +76,21 @@
             this.btnManuelUrunGirisi.Name = "btnManuelUrunGirisi";
             this.btnManuelUrunGirisi.Size = new System.Drawing.Size(200, 40);
             this.btnManuelUrunGirisi.TabIndex = 0;
-            this.btnManuelUrunGirisi.Text = "   Manuel Ürün Girişi";
+            this.btnManuelUrunGirisi.Text = "Ürün Girişi";
             this.btnManuelUrunGirisi.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnManuelUrunGirisi.UseVisualStyleBackColor = false;
             this.btnManuelUrunGirisi.Click += new System.EventHandler(this.btnManuelUrunGirisi_Click);
-            // 
-            // btnBarkodUrunGirisi
-            // 
-            this.btnBarkodUrunGirisi.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(128)))));
-            this.btnBarkodUrunGirisi.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnBarkodUrunGirisi.FlatAppearance.BorderSize = 0;
-            this.btnBarkodUrunGirisi.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(153)))), ((int)(((byte)(133)))));
-            this.btnBarkodUrunGirisi.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(153)))), ((int)(((byte)(133)))));
-            this.btnBarkodUrunGirisi.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnBarkodUrunGirisi.Font = new System.Drawing.Font("Segoe UI", 10F);
-            this.btnBarkodUrunGirisi.ForeColor = System.Drawing.Color.White;
-            this.btnBarkodUrunGirisi.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnBarkodUrunGirisi.Location = new System.Drawing.Point(25, 80);
-            this.btnBarkodUrunGirisi.Name = "btnBarkodUrunGirisi";
-            this.btnBarkodUrunGirisi.Size = new System.Drawing.Size(200, 40);
-            this.btnBarkodUrunGirisi.TabIndex = 1;
-            this.btnBarkodUrunGirisi.Text = "   Barkodlu Ürün Girişi";
-            this.btnBarkodUrunGirisi.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.btnBarkodUrunGirisi.UseVisualStyleBackColor = false;
-            this.btnBarkodUrunGirisi.Click += new System.EventHandler(this.btnBarkodUrunGirisi_Click);
             // 
             // groupBox2
             // 
             this.groupBox2.BackColor = System.Drawing.Color.White;
             this.groupBox2.Controls.Add(this.btnManuelUrunCikisi);
-            this.groupBox2.Controls.Add(this.btnBarkodUrunCikisi);
             this.groupBox2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.groupBox2.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
             this.groupBox2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.groupBox2.Location = new System.Drawing.Point(320, 100);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(250, 150);
+            this.groupBox2.Size = new System.Drawing.Size(250, 100);
             this.groupBox2.TabIndex = 1;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Ürün Çıkış İşlemleri";
@@ -134,30 +110,10 @@
             this.btnManuelUrunCikisi.Name = "btnManuelUrunCikisi";
             this.btnManuelUrunCikisi.Size = new System.Drawing.Size(200, 40);
             this.btnManuelUrunCikisi.TabIndex = 0;
-            this.btnManuelUrunCikisi.Text = "   Manuel Ürün Çıkışı";
+            this.btnManuelUrunCikisi.Text = "Ürün Çıkışı";
             this.btnManuelUrunCikisi.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnManuelUrunCikisi.UseVisualStyleBackColor = false;
             this.btnManuelUrunCikisi.Click += new System.EventHandler(this.btnManuelUrunCikisi_Click);
-            // 
-            // btnBarkodUrunCikisi
-            // 
-            this.btnBarkodUrunCikisi.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(128)))));
-            this.btnBarkodUrunCikisi.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnBarkodUrunCikisi.FlatAppearance.BorderSize = 0;
-            this.btnBarkodUrunCikisi.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(153)))), ((int)(((byte)(133)))));
-            this.btnBarkodUrunCikisi.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(153)))), ((int)(((byte)(133)))));
-            this.btnBarkodUrunCikisi.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnBarkodUrunCikisi.Font = new System.Drawing.Font("Segoe UI", 10F);
-            this.btnBarkodUrunCikisi.ForeColor = System.Drawing.Color.White;
-            this.btnBarkodUrunCikisi.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnBarkodUrunCikisi.Location = new System.Drawing.Point(25, 80);
-            this.btnBarkodUrunCikisi.Name = "btnBarkodUrunCikisi";
-            this.btnBarkodUrunCikisi.Size = new System.Drawing.Size(200, 40);
-            this.btnBarkodUrunCikisi.TabIndex = 1;
-            this.btnBarkodUrunCikisi.Text = "   Barkodlu Ürün Çıkışı";
-            this.btnBarkodUrunCikisi.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.btnBarkodUrunCikisi.UseVisualStyleBackColor = false;
-            this.btnBarkodUrunCikisi.Click += new System.EventHandler(this.btnBarkodUrunCikisi_Click);
             // 
             // groupBox3
             // 
@@ -188,7 +144,7 @@
             this.btnUrunListele.Name = "btnUrunListele";
             this.btnUrunListele.Size = new System.Drawing.Size(200, 40);
             this.btnUrunListele.TabIndex = 0;
-            this.btnUrunListele.Text = "   Ürünleri Listele";
+            this.btnUrunListele.Text = "   Ürün Listele/Ara/Filtrele";
             this.btnUrunListele.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnUrunListele.UseVisualStyleBackColor = false;
             this.btnUrunListele.Click += new System.EventHandler(this.btnUrunListele_Click);
@@ -201,7 +157,7 @@
             this.groupBox5.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.groupBox5.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
             this.groupBox5.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.groupBox5.Location = new System.Drawing.Point(30, 270);
+            this.groupBox5.Location = new System.Drawing.Point(30, 220);
             this.groupBox5.Name = "groupBox5";
             this.groupBox5.Size = new System.Drawing.Size(250, 150);
             this.groupBox5.TabIndex = 3;
@@ -255,12 +211,12 @@
             this.groupBox6.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.groupBox6.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
             this.groupBox6.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.groupBox6.Location = new System.Drawing.Point(320, 270);
+            this.groupBox6.Location = new System.Drawing.Point(320, 220);
             this.groupBox6.Name = "groupBox6";
             this.groupBox6.Size = new System.Drawing.Size(250, 97);
             this.groupBox6.TabIndex = 4;
             this.groupBox6.TabStop = false;
-            this.groupBox6.Text = "Depo / İşlem Kayıtları";
+            this.groupBox6.Text = "Depo İşlemleri";
             // 
             // btnDepoDuzenle
             // 
@@ -359,7 +315,7 @@
             // 
             // btnCikis
             // 
-            this.btnCikis.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(128)))));
+            this.btnCikis.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(80)))), ((int)(((byte)(80)))));
             this.btnCikis.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnCikis.FlatAppearance.BorderSize = 0;
             this.btnCikis.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(153)))), ((int)(((byte)(133)))));
@@ -399,7 +355,7 @@
             // 
             // panel1
             // 
-            this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(52)))), ((int)(((byte)(152)))), ((int)(((byte)(219)))));
+            this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(153)))), ((int)(((byte)(133)))));
             this.panel1.Controls.Add(this.label1);
             this.panel1.Controls.Add(this.pictureBox1);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
@@ -470,9 +426,7 @@
         private System.Windows.Forms.GroupBox groupBox6;
         private System.Windows.Forms.GroupBox groupBox7;
         private System.Windows.Forms.Button btnManuelUrunGirisi;
-        private System.Windows.Forms.Button btnBarkodUrunGirisi;
         private System.Windows.Forms.Button btnManuelUrunCikisi;
-        private System.Windows.Forms.Button btnBarkodUrunCikisi;
         private System.Windows.Forms.Button btnUrunListele;
         private System.Windows.Forms.Button btnExcelIslem;
         private System.Windows.Forms.Button btnProjeEkle;

@@ -25,7 +25,7 @@ namespace StokTakipOtomasyonu.Forms
             this.BackColor = Color.FromArgb(240, 240, 240);
 
             // Başlık çubuğu
-            this.Text = "Stok Takip Otomasyonu - Ana Menü";
+            this.Text = "ISP Group Stok Takip - Ana Menü";
             this.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 162);
 
             // Tüm groupbox'lar için stil
@@ -62,19 +62,9 @@ namespace StokTakipOtomasyonu.Forms
             new ManuelUrunGirisiForm(_kullaniciId).ShowDialog();
         }
 
-        private void btnBarkodUrunGirisi_Click(object sender, EventArgs e)
-        {
-            new BarkodUrunGirisiForm(_kullaniciId).ShowDialog();
-        }
-
         private void btnManuelUrunCikisi_Click(object sender, EventArgs e)
         {
             new ManuelUrunCikisiForm(_kullaniciId).ShowDialog();
-        }
-
-        private void btnBarkodUrunCikisi_Click(object sender, EventArgs e)
-        {
-            new BarkodUrunCikisiForm(_kullaniciId).ShowDialog();
         }
 
         private void btnUrunListele_Click(object sender, EventArgs e)

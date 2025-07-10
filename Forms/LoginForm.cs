@@ -113,4 +113,4 @@ namespace StokTakipOtomasyonu.Forms
             }
         }
     }
-}
+} 
