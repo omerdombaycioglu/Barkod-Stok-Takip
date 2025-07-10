@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 ﻿using System;
-=======
-using System;
->>>>>>> bacd17d730d78d8558226f5af1be11d92d94d3f6
 using System.Data;
 using System.Windows.Forms;
 using MySql.Data.MySqlClient;

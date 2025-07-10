@@ -1,4 +1,4 @@
-namespace StokTakipOtomasyonu.Forms
+﻿namespace StokTakipOtomasyonu.Forms
 {
     partial class KullaniciForm
     {
