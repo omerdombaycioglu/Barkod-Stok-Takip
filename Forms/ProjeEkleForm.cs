@@ -15,40 +15,14 @@ namespace StokTakipOtomasyonu.Forms
         private readonly string _connectionString = "server=localhost;user=root;database=stok_takip_otomasyonu;password=;";
         private int _kullaniciId;
         private int _projeId;
+        private DataTable _excelData;
 
         public ProjeEkleForm(int kullaniciId)
         {
             InitializeComponent();
             _kullaniciId = kullaniciId;
-            btnYukle.Enabled = false;
-            btnYukle.Visible = false;
-        }
-
-        private void btnDevamEt_Click(object sender, EventArgs e)
-        {
-            if (string.IsNullOrWhiteSpace(txtProjeKodu.Text) || string.IsNullOrWhiteSpace(txtProjeTanimi.Text))
-            {
-                MessageBox.Show("Proje kodu ve tanımı boş olamaz.", "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            using (MySqlConnection conn = new MySqlConnection(_connectionString))
-            {
-                conn.Open();
-                string insertQuery = "INSERT INTO projeler (proje_kodu, proje_tanimi, olusturan_id) VALUES (@kod, @tanimi, @olusturan)";
-                MySqlCommand cmd = new MySqlCommand(insertQuery, conn);
-                cmd.Parameters.AddWithValue("@kod", txtProjeKodu.Text.Trim());
-                cmd.Parameters.AddWithValue("@tanimi", txtProjeTanimi.Text.Trim());
-                cmd.Parameters.AddWithValue("@olusturan", _kullaniciId);
-                cmd.ExecuteNonQuery();
-                _projeId = (int)cmd.LastInsertedId;
-            }
-
-            btnYukle.Visible = true;
-            btnYukle.Enabled = true;
-            txtProjeKodu.Enabled = false;
-            txtProjeTanimi.Enabled = false;
-            btnDevamEt.Enabled = false;
+            btnKaydet.Visible = false;
+            btnTamEkran.Visible = false;
         }
 
         private void btnYukle_Click(object sender, EventArgs e)
@@ -64,9 +38,9 @@ namespace StokTakipOtomasyonu.Forms
             table.Columns.Add("Ürün No");
             table.Columns.Add("Marka");
             table.Columns.Add("Miktar", typeof(int));
-            table.Columns.Add("Stok Durumu");
             table.Columns.Add("Stoktaki Miktar", typeof(int));
             table.Columns.Add("Gereken Minimum Miktar", typeof(int));
+            table.Columns.Add("Stok Durumu");
 
             using (FileStream fs = new FileStream(ofd.FileName, FileMode.Open, FileAccess.Read))
             {
@@ -79,33 +53,42 @@ namespace StokTakipOtomasyonu.Forms
                     for (int i = 6; i <= sheet.LastRowNum; i++)
                     {
                         IRow row = sheet.GetRow(i);
-                        if (row == null || row.Cells.TrueForAll(c => string.IsNullOrWhiteSpace(c.ToString()))) continue;
+                        if (row == null || row.Cells.TrueForAll(c => string.IsNullOrWhiteSpace(c?.ToString()))) continue;
 
                         string tipNo = row.GetCell(0)?.ToString();
                         string siparisNo = row.GetCell(1)?.ToString();
                         string aciklama = row.GetCell(2)?.ToString();
                         string urunNo = row.GetCell(3)?.ToString();
                         string marka = row.GetCell(4)?.ToString();
-                        int miktar = 0;
-                        if (int.TryParse(row.GetCell(5)?.ToString(), out int parsed)) miktar = parsed;
 
-                        int urunId = -1;
-                        bool urunVar = false;
-                        int stoktakiMiktar = 0;
-                        int gerekenMinimum = 0;
+                        int miktar = 0;
+                        try
+                        {
+                            var cell = row.GetCell(5);
+                            if (cell != null && cell.CellType == CellType.Numeric)
+                                miktar = (int)cell.NumericCellValue;
+                            else if (cell != null && cell.CellType == CellType.String)
+                                int.TryParse(cell.StringCellValue, out miktar);
+                        }
+                        catch { miktar = 0; }
+
+                        int stokMiktar = 0;
                         string stokDurum = "Yetersiz";
 
                         string checkQuery = "SELECT urun_id, miktar FROM urunler WHERE urun_kodu = @kod";
                         MySqlCommand cmd = new MySqlCommand(checkQuery, conn);
                         cmd.Parameters.AddWithValue("@kod", siparisNo);
+
+                        int urunId = -1;
+                        bool urunVar = false;
+
                         using (var reader = cmd.ExecuteReader())
                         {
                             if (reader.Read())
                             {
                                 urunId = reader.GetInt32("urun_id");
-                                stoktakiMiktar = reader.GetInt32("miktar");
-                                gerekenMinimum = stoktakiMiktar - miktar;
-                                if (stoktakiMiktar >= miktar) stokDurum = "Yeterli";
+                                stokMiktar = reader.GetInt32("miktar");
+                                stokDurum = stokMiktar >= miktar ? "Yeterli" : "Yetersiz";
                                 urunVar = true;
                             }
                         }
@@ -118,25 +101,17 @@ namespace StokTakipOtomasyonu.Forms
                             insertCmd.Parameters.AddWithValue("@adi", aciklama);
                             insertCmd.Parameters.AddWithValue("@marka", marka);
                             urunId = Convert.ToInt32(insertCmd.ExecuteScalar());
-                            stoktakiMiktar = 0;
-                            gerekenMinimum = 0 - miktar;
                         }
 
-                        string insertProjeUrun = "INSERT INTO proje_urunleri (proje_id, urun_id, miktar, user_id) VALUES (@proje, @urun, @miktar, @kullanici)";
-                        MySqlCommand projecmd = new MySqlCommand(insertProjeUrun, conn);
-                        projecmd.Parameters.AddWithValue("@proje", _projeId);
-                        projecmd.Parameters.AddWithValue("@urun", urunId);
-                        projecmd.Parameters.AddWithValue("@miktar", miktar);
-                        projecmd.Parameters.AddWithValue("@kullanici", _kullaniciId);
-                        projecmd.ExecuteNonQuery();
+                        int gerekenMiktar = Math.Max(0, miktar - stokMiktar);
 
-                        table.Rows.Add(tipNo, siparisNo, aciklama, urunNo, marka, miktar, stokDurum, stoktakiMiktar, gerekenMinimum);
+                        table.Rows.Add(tipNo, siparisNo, aciklama, urunNo, marka, miktar, stokMiktar, gerekenMiktar, stokDurum);
                     }
                 }
             }
 
+            _excelData = table;
             dgvUrunler.DataSource = table;
-            dgvUrunler.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
 
             foreach (DataGridViewRow row in dgvUrunler.Rows)
             {
@@ -145,23 +120,87 @@ namespace StokTakipOtomasyonu.Forms
                 else
                     row.DefaultCellStyle.BackColor = Color.LightCoral;
             }
+
+            btnKaydet.Visible = true;
+            btnTamEkran.Visible = true;
         }
+
+        private void btnKaydet_Click(object sender, EventArgs e)
+        {
+            if (_excelData == null || _excelData.Rows.Count == 0)
+            {
+                MessageBox.Show("Önce Excel dosyasını yüklemelisiniz.");
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(txtProjeKodu.Text) || string.IsNullOrWhiteSpace(txtProjeTanimi.Text))
+            {
+                MessageBox.Show("Proje bilgilerini girin.");
+                return;
+            }
+
+            using (MySqlConnection conn = new MySqlConnection(_connectionString))
+            {
+                conn.Open();
+                string insertProje = "INSERT INTO projeler (proje_kodu, proje_tanimi, olusturan_id) VALUES (@kod, @tanimi, @olusturan); SELECT LAST_INSERT_ID();";
+                MySqlCommand cmd = new MySqlCommand(insertProje, conn);
+                cmd.Parameters.AddWithValue("@kod", txtProjeKodu.Text.Trim());
+                cmd.Parameters.AddWithValue("@tanimi", txtProjeTanimi.Text.Trim());
+                cmd.Parameters.AddWithValue("@olusturan", _kullaniciId);
+                _projeId = Convert.ToInt32(cmd.ExecuteScalar());
+
+                foreach (DataRow row in _excelData.Rows)
+                {
+                    string siparisNo = row["Sipariş No"].ToString();
+                    int miktar = Convert.ToInt32(row["Miktar"]);
+
+                    string getIdQuery = "SELECT urun_id FROM urunler WHERE urun_kodu = @kod";
+                    MySqlCommand getIdCmd = new MySqlCommand(getIdQuery, conn);
+                    getIdCmd.Parameters.AddWithValue("@kod", siparisNo);
+                    int urunId = Convert.ToInt32(getIdCmd.ExecuteScalar());
+
+                    string insertProjeUrun = "INSERT INTO proje_urunleri (proje_id, urun_id, miktar, user_id) VALUES (@proje, @urun, @miktar, @kullanici)";
+                    MySqlCommand insertCmd = new MySqlCommand(insertProjeUrun, conn);
+                    insertCmd.Parameters.AddWithValue("@proje", _projeId);
+                    insertCmd.Parameters.AddWithValue("@urun", urunId);
+                    insertCmd.Parameters.AddWithValue("@miktar", miktar);
+                    insertCmd.Parameters.AddWithValue("@kullanici", _kullaniciId);
+                    insertCmd.ExecuteNonQuery();
+                }
+            }
+
+            MessageBox.Show("Proje ve ürünler başarıyla kaydedildi.");
+        }
+
         private void btnTamEkran_Click(object sender, EventArgs e)
         {
-            Form tamEkranForm = new Form();
-            tamEkranForm.Text = "Tam Ekran Ürün Listesi";
-            tamEkranForm.WindowState = FormWindowState.Maximized;
+            Form tamEkranForm = new Form
+            {
+                WindowState = FormWindowState.Maximized,
+                Text = "Tam Ekran Ürün Listesi"
+            };
 
-            DataGridView dgvTamEkran = new DataGridView();
-            dgvTamEkran.Dock = DockStyle.Fill;
-            dgvTamEkran.DataSource = dgvUrunler.DataSource;
-            dgvTamEkran.ReadOnly = true;
-            dgvTamEkran.AllowUserToAddRows = false;
-            dgvTamEkran.AllowUserToDeleteRows = false;
-            dgvTamEkran.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+            DataGridView dgvTamEkran = new DataGridView
+            {
+                Dock = DockStyle.Fill,
+                ReadOnly = true,
+                AllowUserToAddRows = false,
+                AllowUserToDeleteRows = false,
+                DataSource = dgvUrunler.DataSource
+            };
 
             tamEkranForm.Controls.Add(dgvTamEkran);
-            tamEkranForm.ShowDialog();
+            tamEkranForm.Show();
+
+            // Renkleri tekrar uygula
+            foreach (DataGridViewRow row in dgvTamEkran.Rows)
+            {
+                string durum = row.Cells["Stok Durumu"]?.Value?.ToString();
+                if (durum == "Yeterli")
+                    row.DefaultCellStyle.BackColor = Color.LightGreen;
+                else if (durum == "Yetersiz")
+                    row.DefaultCellStyle.BackColor = Color.LightCoral;
+            }
         }
 
     }
