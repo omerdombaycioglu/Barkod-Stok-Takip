@@ -1,370 +1,112 @@
-﻿using MySql.Data.MySqlClient;
-using StokTakipOtomasyonu.Forms;
-using StokTakipOtomasyonu.Helpers;
-using System;
+﻿using System;
 using System.Data;
+using System.Drawing;
+using System.Threading.Tasks;
 using System.Windows.Forms;
+using MySql.Data.MySqlClient;
 
 namespace StokTakipOtomasyonu.Forms
 {
     public partial class ManuelUrunCikisiForm : Form
     {
-        private int _kullaniciId;
-        private int _secilenUrunId = 0;
-        private int _mevcutStok = 0;
-        private int _projelerdekiToplam = 0;
+        private readonly int _kullaniciId;
+        private readonly string _connectionString = "server=localhost;user=root;database=stok_takip_otomasyonu;password=;";
 
         public ManuelUrunCikisiForm(int kullaniciId)
         {
             InitializeComponent();
             _kullaniciId = kullaniciId;
-            IslemTurleriniYukle();
-            ProjeleriYukle();
-            cmbProjeler.Enabled = false;
+            txtIslemTuru.Text = "Stok";
+            txtBarkod.Focus();
+            this.StartPosition = FormStartPosition.CenterParent;
 
-            // Event handlers
-            cmbProjeler.SelectedIndexChanged += cmbProjeler_SelectedIndexChanged; // Yeni eklenen satır
         }
 
-        private void IslemTurleriniYukle()
+        // 1. Metodu asenkron hale getir
+        private async void txtBarkod_KeyDown(object sender, KeyEventArgs e)
         {
-            try
-            {
-                string query = "SELECT islem_turu_id, tanim FROM islem_turu";
-                DataTable dt = DatabaseHelper.ExecuteQuery(query);
+            if (e.KeyCode != Keys.Enter) return;
 
-                cmbIslemTuru.DisplayMember = "tanim";
-                cmbIslemTuru.ValueMember = "islem_turu_id";
-                cmbIslemTuru.DataSource = dt;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("İşlem türleri yüklenirken hata oluştu: " + ex.Message,
-                    "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
+            string barkod = txtBarkod.Text.Trim();
+            int miktar = (int)nudMiktar.Value;
 
-        private void ProjeleriYukle()
-        {
-            try
+            if (string.IsNullOrEmpty(barkod))
             {
-                string query = "SELECT proje_id, CONCAT(proje_kodu, ' - ', proje_tanimi) AS proje_bilgisi FROM projeler WHERE aktif = 1";
-                DataTable dt = DatabaseHelper.ExecuteQuery(query);
-
-                cmbProjeler.DisplayMember = "proje_bilgisi";
-                cmbProjeler.ValueMember = "proje_id";
-                cmbProjeler.DataSource = dt;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Projeler yüklenirken hata oluştu: " + ex.Message,
-                    "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-        private void cmbIslemTuru_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (cmbIslemTuru.SelectedItem != null && cmbIslemTuru.SelectedValue != null)
-            {
-                int islemTuruId;
-                if (int.TryParse(cmbIslemTuru.SelectedValue.ToString(), out islemTuruId))
-                {
-                    cmbProjeler.Enabled = (islemTuruId == 1); // Sadece proje işlem türünde aktif
-                }
-            }
-        }
-
-        private void btnBarkodAra_Click(object sender, EventArgs e)
-        {
-            if (string.IsNullOrWhiteSpace(txtBarkod.Text))
-            {
-                MessageBox.Show("Lütfen bir barkod numarası giriniz!",
-                    "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                await ShowMessageAsync("Lütfen bir barkod girin.", false);
                 return;
             }
 
             try
             {
-                // Ürün bilgilerini ve stok miktarını getir
-                string urunQuery = @"SELECT urun_id, urun_adi, urun_kodu, miktar 
-                                   FROM urunler 
-                                   WHERE urun_barkod = @barkod";
-                DataTable urunDt = DatabaseHelper.ExecuteQuery(urunQuery,
-                    new MySqlParameter("@barkod", txtBarkod.Text));
-
-                if (urunDt.Rows.Count == 0)
+                using (MySqlConnection conn = new MySqlConnection(_connectionString))
                 {
-                    MessageBox.Show("Bu barkod numarasına ait ürün bulunamadı!",
-                        "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    Temizle();
-                    return;
-                }
+                    await conn.OpenAsync();
 
-                DataRow urunRow = urunDt.Rows[0];
-                _secilenUrunId = Convert.ToInt32(urunRow["urun_id"]);
-                _mevcutStok = Convert.ToInt32(urunRow["miktar"]);
+                    MySqlCommand cmd = new MySqlCommand("SELECT urun_id, urun_adi FROM urunler WHERE urun_barkod = @barkod", conn);
+                    cmd.Parameters.AddWithValue("@barkod", barkod);
 
-                // Projelerdeki toplam miktarı getir
-                string projeQuery = @"SELECT IFNULL(SUM(miktar), 0) AS toplam 
-                                    FROM proje_urunleri 
-                                    WHERE urun_id = @urunId";
-                DataTable projeDt = DatabaseHelper.ExecuteQuery(projeQuery,
-                    new MySqlParameter("@urunId", _secilenUrunId));
+                    int urunId = 0;
+                    string urunAdi = "";
 
-                _projelerdekiToplam = Convert.ToInt32(projeDt.Rows[0]["toplam"]);
-
-                // Bilgileri göster
-                lblUrunBilgisi.Text = $"{urunRow["urun_adi"]} - {urunRow["urun_kodu"]}";
-                lblStokMiktari.Text = $"Stok: {_mevcutStok}";
-                lblProjedekiMiktar.Text = $"Projelerdeki Toplam: {_projelerdekiToplam}";
-
-                // Projelerdeki bu ürünleri listele
-                ProjedekiUrunleriListele(_secilenUrunId);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Ürün bilgileri getirilirken hata oluştu: " + ex.Message,
-                    "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-        private void ProjedekiUrunleriListele(int urunId)
-        {
-            try
-            {
-                string query = @"SELECT p.proje_kodu, p.proje_tanimi, pu.miktar
-                       FROM proje_urunleri pu
-                       JOIN projeler p ON pu.proje_id = p.proje_id
-                       WHERE pu.urun_id = @urunId AND pu.miktar > 0"; // Sadece miktarı > 0 olanları getir
-
-                DataTable dt = DatabaseHelper.ExecuteQuery(query,
-                    new MySqlParameter("@urunId", urunId));
-
-                dgvProjelerdekiUrunler.DataSource = dt;
-
-                // Eğer hiç kayıt yoksa bir mesaj göster
-                if (dt.Rows.Count == 0)
-                {
-                    lblProjedekiMiktar.Text = "Projelerde bu ürün bulunmamaktadır";
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Projelerdeki ürünler listelenirken hata oluştu: " + ex.Message,
-                    "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-        private void Temizle()
-        {
-            lblUrunBilgisi.Text = "Ürün Bilgisi:";
-            lblStokMiktari.Text = "Stok:";
-            lblProjedekiMiktar.Text = "Projelerdeki Toplam:";
-            txtMiktar.Clear();
-            txtAciklama.Clear();
-            _secilenUrunId = 0;
-            _mevcutStok = 0;
-            _projelerdekiToplam = 0;
-            dgvProjelerdekiUrunler.DataSource = null;
-        }
-
-        private void cmbProjeler_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (cmbProjeler.SelectedValue != null)
-            {
-                // Seçilen projenin tanımını al
-                int projeId = Convert.ToInt32(cmbProjeler.SelectedValue);
-                string query = "SELECT proje_tanimi FROM projeler WHERE proje_id = @projeId";
-
-                try
-                {
-                    DataTable dt = DatabaseHelper.ExecuteQuery(query,
-                        new MySqlParameter("@projeId", projeId));
-
-                    if (dt.Rows.Count > 0)
+                    using (var reader = await cmd.ExecuteReaderAsync())
                     {
-                        string projeTanimi = dt.Rows[0]["proje_tanimi"].ToString();
-
-                        // Açıklama alanına ekle (varsa mevcut açıklamayı silmeden)
-                        if (string.IsNullOrWhiteSpace(txtAciklama.Text))
+                        if (await reader.ReadAsync())
                         {
-                            txtAciklama.Text = $" {projeTanimi}";
+                            urunId = Convert.ToInt32(reader["urun_id"]);
+                            urunAdi = reader["urun_adi"].ToString();
                         }
-                        else if (!txtAciklama.Text.Contains(projeTanimi))
+                        else
                         {
-                            txtAciklama.Text = $"Proje: {projeTanimi}\n{txtAciklama.Text}";
+                            await ShowMessageAsync("Ürün bulunamadı.", false);
+                            return;
                         }
                     }
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("Proje bilgisi alınırken hata oluştu: " + ex.Message,
-                        "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            }
-        }
-        private void btnKaydet_Click(object sender, EventArgs e)
-        {
-            if (_secilenUrunId == 0)
-            {
-                MessageBox.Show("Lütfen önce bir ürün seçiniz!",
-                    "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
 
-            if (string.IsNullOrEmpty(txtMiktar.Text) || cmbIslemTuru.SelectedIndex == -1)
-            {
-                MessageBox.Show("Lütfen tüm alanları doldurun!",
-                    "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
+                    // Güncelleme komutları
+                    string query = @"
+                INSERT INTO urun_hareketleri (urun_id, hareket_turu, miktar, kullanici_id, islem_turu_id)
+                VALUES (@uid, 'Cikis', @miktar, @kullanici_id, 0);
+                UPDATE urunler SET miktar = miktar - @miktar WHERE urun_id = @uid;
+            ";
 
-            if (!int.TryParse(txtMiktar.Text, out int miktar) || miktar <= 0)
-            {
-                MessageBox.Show("Geçerli bir miktar giriniz!",
-                    "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
+                    MySqlCommand updateCmd = new MySqlCommand(query, conn);
+                    updateCmd.Parameters.AddWithValue("@uid", urunId);
+                    updateCmd.Parameters.AddWithValue("@miktar", miktar);
+                    updateCmd.Parameters.AddWithValue("@kullanici_id", _kullaniciId);
 
-            int islemTuruId;
-            if (!int.TryParse(cmbIslemTuru.SelectedValue?.ToString(), out islemTuruId))
-            {
-                MessageBox.Show("Geçersiz işlem türü seçimi!",
-                    "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
+                    await updateCmd.ExecuteNonQueryAsync();
 
-            int? projeId = null;
-            if (islemTuruId == 1) // Proje işlemi ise
-            {
-                if (cmbProjeler.SelectedIndex == -1)
-                {
-                    MessageBox.Show("Lütfen bir proje seçiniz!",
-                        "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
-                }
+                    txtBarkod.Clear();
+                    nudMiktar.Value = 1;
+                    txtBarkod.Focus();
 
-                if (!int.TryParse(cmbProjeler.SelectedValue?.ToString(), out int tempProjeId))
-                {
-                    MessageBox.Show("Geçersiz proje seçimi!",
-                        "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-                projeId = tempProjeId;
-
-                // Projedeki mevcut miktarı kontrol et
-                int projedekiMiktar = ProjedekiUrunMiktariniGetir(projeId.Value, _secilenUrunId);
-                if (projedekiMiktar < miktar)
-                {
-                    MessageBox.Show($"Projede yeterli miktarda ürün yok! Projedeki miktar: {projedekiMiktar}",
-                        "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
-                }
-            }
-            else if (islemTuruId == 0 || islemTuruId == 2) // Stok veya Hurda/İade işlemi ise
-            {
-                if (_mevcutStok < miktar)
-                {
-                    MessageBox.Show($"Yetersiz stok! Mevcut stok: {_mevcutStok}",
-                        "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
-                }
-            }
-
-            string aciklama = txtAciklama.Text;
-
-            try
-            {
-                using (var conn = DatabaseHelper.GetConnection())
-                {
-                    conn.Open();
-                    using (var transaction = conn.BeginTransaction())
-                    {
-                        try
-                        {
-                            // Stok güncelleme (stok veya hurda/iade işlemlerinde)
-                            if (islemTuruId == 0 || islemTuruId == 2) // Stok veya Hurda/İade
-                            {
-                                string updateQuery = "UPDATE urunler SET miktar = miktar - @miktar WHERE urun_id = @urunId";
-                                var updateCmd = new MySqlCommand(updateQuery, conn, transaction);
-                                updateCmd.Parameters.AddWithValue("@miktar", miktar);
-                                updateCmd.Parameters.AddWithValue("@urunId", _secilenUrunId);
-                                updateCmd.ExecuteNonQuery();
-                            }
-                            // Proje güncelleme (sadece proje işlemlerinde)
-                            else if (islemTuruId == 1 && projeId.HasValue) // Proje
-                            {
-                                string projeUpdateQuery = @"UPDATE proje_urunleri 
-                                                 SET miktar = miktar - @miktar 
-                                                 WHERE proje_id = @projeId AND urun_id = @urunId";
-                                var projeUpdateCmd = new MySqlCommand(projeUpdateQuery, conn, transaction);
-                                projeUpdateCmd.Parameters.AddWithValue("@miktar", miktar);
-                                projeUpdateCmd.Parameters.AddWithValue("@projeId", projeId.Value);
-                                projeUpdateCmd.Parameters.AddWithValue("@urunId", _secilenUrunId);
-                                projeUpdateCmd.ExecuteNonQuery();
-                            }
-
-                            // Hareket kaydı
-                            string insertQuery = @"INSERT INTO urun_hareketleri 
-                                        (urun_id, hareket_turu, miktar, kullanici_id, aciklama, islem_turu_id) 
-                                        VALUES 
-                                        (@urunId, 'Cikis', @miktar, @kullaniciId, @aciklama, @islemTuruId)";
-                            var insertCmd = new MySqlCommand(insertQuery, conn, transaction);
-                            insertCmd.Parameters.AddWithValue("@urunId", _secilenUrunId);
-                            insertCmd.Parameters.AddWithValue("@miktar", miktar);
-                            insertCmd.Parameters.AddWithValue("@kullaniciId", _kullaniciId);
-                            insertCmd.Parameters.AddWithValue("@aciklama", aciklama);
-                            insertCmd.Parameters.AddWithValue("@islemTuruId", islemTuruId);
-                            insertCmd.ExecuteNonQuery();
-
-                            transaction.Commit();
-                            MessageBox.Show("Ürün çıkışı başarıyla kaydedildi!",
-                                "Bilgi", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                            Temizle();
-                        }
-                        catch (Exception ex)
-                        {
-                            transaction.Rollback();
-                            MessageBox.Show("Hata: " + ex.Message,
-                                "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        }
-                    }
+                    await ShowMessageAsync($"{urunAdi} ürününden {miktar} adet stok çıkışı yapıldı.", true);
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Hata: " + ex.Message,
-                    "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                await ShowMessageAsync("Hata: " + ex.Message, false);
             }
         }
 
-        private int ProjedekiUrunMiktariniGetir(int projeId, int urunId)
+        private async Task ShowMessageAsync(string message, bool success)
         {
-            try
-            {
-                string query = @"SELECT miktar FROM proje_urunleri 
-                               WHERE proje_id = @projeId AND urun_id = @urunId";
-                DataTable dt = DatabaseHelper.ExecuteQuery(query,
-                    new MySqlParameter("@projeId", projeId),
-                    new MySqlParameter("@urunId", urunId));
-
-                if (dt.Rows.Count > 0)
-                {
-                    return Convert.ToInt32(dt.Rows[0]["miktar"]);
-                }
-                return 0;
-            }
-            catch
-            {
-                return 0;
-            }
+            lblBasariMesaji.Text = message;
+            lblBasariMesaji.ForeColor = success ? Color.Green : Color.Red;
+            lblBasariMesaji.Visible = true;
+            await Task.Delay(2000);
+            lblBasariMesaji.Visible = false;
         }
 
-        private void btnIptal_Click(object sender, EventArgs e)
+
+
+        private async void ShowMessage(string message, bool success)
         {
-            this.Close();
+            lblBasariMesaji.Text = message;
+            lblBasariMesaji.ForeColor = success ? Color.Green : Color.Red;
+            lblBasariMesaji.Visible = true;
+            await Task.Delay(2000);
+            lblBasariMesaji.Visible = false;
         }
     }
 }
-
-

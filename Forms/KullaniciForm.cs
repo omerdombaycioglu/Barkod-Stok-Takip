@@ -3,7 +3,7 @@ using System.Data;
 using System.Windows.Forms;
 using MySql.Data.MySqlClient;
 using StokTakipOtomasyonu.Helpers;
-using System.Drawing;   
+using System.Drawing;
 
 namespace StokTakipOtomasyonu.Forms
 {

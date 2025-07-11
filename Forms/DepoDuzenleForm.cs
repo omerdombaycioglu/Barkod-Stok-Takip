@@ -299,11 +299,11 @@ namespace StokTakipOtomasyonu.Forms
                     DataTable dt = new DataTable();
                     adapter.Fill(dt);
 
-                    dgvDepoKonumlari.DataSource = dt;        
+                    dgvDepoKonumlari.DataSource = dt;
                     depodakiToplamMiktar = dt.AsEnumerable().Sum(row => Convert.ToInt32(row["miktar"]));
                     lblDepodakiToplam.Text = $"Depoda: {depodakiToplamMiktar}";
 
-                    
+
                     if (depodakiToplamMiktar > urunToplamMiktar)
                     {
                         lblUyari.Visible = true;
