@@ -13,6 +13,8 @@
         private System.Windows.Forms.Label lblUrunKodu;
         private System.Windows.Forms.Button btnKaydet;
         private System.Windows.Forms.Label lblBasariMesaji;
+        private System.Windows.Forms.TextBox txtYeniUrunAdi;
+        private System.Windows.Forms.Label lblYeniUrunAdi;
 
         protected override void Dispose(bool disposing)
         {
@@ -33,120 +35,112 @@
             this.lblUrunKodu = new System.Windows.Forms.Label();
             this.btnKaydet = new System.Windows.Forms.Button();
             this.lblBasariMesaji = new System.Windows.Forms.Label();
+            this.txtYeniUrunAdi = new System.Windows.Forms.TextBox();
+            this.lblYeniUrunAdi = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.nudMiktar)).BeginInit();
             this.SuspendLayout();
-            // 
+
             // txtBarkod
-            // 
             this.txtBarkod.Location = new System.Drawing.Point(130, 30);
             this.txtBarkod.Name = "txtBarkod";
             this.txtBarkod.Size = new System.Drawing.Size(200, 22);
             this.txtBarkod.TabIndex = 0;
-            // 
+
             // txtIslemTuru
-            // 
             this.txtIslemTuru.Location = new System.Drawing.Point(130, 70);
             this.txtIslemTuru.Name = "txtIslemTuru";
             this.txtIslemTuru.ReadOnly = true;
             this.txtIslemTuru.Size = new System.Drawing.Size(200, 22);
             this.txtIslemTuru.TabIndex = 1;
-            // 
+
             // nudMiktar
-            // 
             this.nudMiktar.Location = new System.Drawing.Point(130, 110);
-            this.nudMiktar.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.nudMiktar.Maximum = new decimal(new int[] {
-            10000,
-            0,
-            0,
-            0});
+            this.nudMiktar.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
+            this.nudMiktar.Maximum = new decimal(new int[] { 10000, 0, 0, 0 });
             this.nudMiktar.Name = "nudMiktar";
             this.nudMiktar.Size = new System.Drawing.Size(200, 22);
             this.nudMiktar.TabIndex = 2;
-            this.nudMiktar.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            // 
+            this.nudMiktar.Value = new decimal(new int[] { 1, 0, 0, 0 });
+
             // txtUrunKodu
-            // 
             this.txtUrunKodu.Location = new System.Drawing.Point(130, 150);
             this.txtUrunKodu.Name = "txtUrunKodu";
             this.txtUrunKodu.Size = new System.Drawing.Size(200, 22);
             this.txtUrunKodu.TabIndex = 3;
-            // 
+
             // lblBarkod
-            // 
             this.lblBarkod.AutoSize = true;
             this.lblBarkod.Location = new System.Drawing.Point(30, 33);
             this.lblBarkod.Name = "lblBarkod";
             this.lblBarkod.Size = new System.Drawing.Size(53, 17);
             this.lblBarkod.TabIndex = 4;
             this.lblBarkod.Text = "Barkod:";
-            // 
+
             // lblIslemTuru
-            // 
             this.lblIslemTuru.AutoSize = true;
             this.lblIslemTuru.Location = new System.Drawing.Point(30, 73);
             this.lblIslemTuru.Name = "lblIslemTuru";
             this.lblIslemTuru.Size = new System.Drawing.Size(74, 17);
             this.lblIslemTuru.TabIndex = 5;
             this.lblIslemTuru.Text = "İşlem Türü:";
-            // 
+
             // lblMiktar
-            // 
             this.lblMiktar.AutoSize = true;
             this.lblMiktar.Location = new System.Drawing.Point(30, 113);
             this.lblMiktar.Name = "lblMiktar";
             this.lblMiktar.Size = new System.Drawing.Size(49, 17);
             this.lblMiktar.TabIndex = 6;
             this.lblMiktar.Text = "Miktar:";
-            // 
+
             // lblUrunKodu
-            // 
             this.lblUrunKodu.AutoSize = true;
             this.lblUrunKodu.Location = new System.Drawing.Point(30, 153);
             this.lblUrunKodu.Name = "lblUrunKodu";
             this.lblUrunKodu.Size = new System.Drawing.Size(76, 17);
             this.lblUrunKodu.TabIndex = 7;
             this.lblUrunKodu.Text = "Ürün Kodu:";
-            // 
+
             // btnKaydet
-            // 
-            this.btnKaydet.Location = new System.Drawing.Point(130, 190);
+            this.btnKaydet.Location = new System.Drawing.Point(130, 260);
             this.btnKaydet.Name = "btnKaydet";
             this.btnKaydet.Size = new System.Drawing.Size(200, 30);
-            this.btnKaydet.TabIndex = 4;
+            this.btnKaydet.TabIndex = 6;
             this.btnKaydet.Text = "Ürün Girişi Yap";
             this.btnKaydet.UseVisualStyleBackColor = true;
             this.btnKaydet.Click += new System.EventHandler(this.btnKaydet_Click);
-            // 
+
             // lblBasariMesaji
-            // 
-            // 
-            // lblBasariMesaji
-            // 
             this.lblBasariMesaji.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this.lblBasariMesaji.ForeColor = System.Drawing.Color.Green;
-            this.lblBasariMesaji.Location = new System.Drawing.Point(20, 245); // bir tık aşağıda
+            this.lblBasariMesaji.Location = new System.Drawing.Point(20, 305);
             this.lblBasariMesaji.Name = "lblBasariMesaji";
             this.lblBasariMesaji.Size = new System.Drawing.Size(380, 40);
-            this.lblBasariMesaji.AutoSize = false;
             this.lblBasariMesaji.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.lblBasariMesaji.Visible = false;
             this.lblBasariMesaji.MaximumSize = new System.Drawing.Size(380, 60);
 
-            // 
+            // txtYeniUrunAdi
+            this.txtYeniUrunAdi.Location = new System.Drawing.Point(130, 190);
+            this.txtYeniUrunAdi.Name = "txtYeniUrunAdi";
+            this.txtYeniUrunAdi.Size = new System.Drawing.Size(200, 22);
+            this.txtYeniUrunAdi.TabIndex = 4;
+            this.txtYeniUrunAdi.Visible = false;
+
+            // lblYeniUrunAdi
+            this.lblYeniUrunAdi.AutoSize = true;
+            this.lblYeniUrunAdi.Location = new System.Drawing.Point(30, 193);
+            this.lblYeniUrunAdi.Name = "lblYeniUrunAdi";
+            this.lblYeniUrunAdi.Size = new System.Drawing.Size(94, 17);
+            this.lblYeniUrunAdi.TabIndex = 10;
+            this.lblYeniUrunAdi.Text = "Yeni Ürün Adı:";
+            this.lblYeniUrunAdi.Visible = false;
+
             // ManuelUrunGirisiForm
-            // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(420, 350);
+            this.ClientSize = new System.Drawing.Size(420, 370);
+            this.Controls.Add(this.lblYeniUrunAdi);
+            this.Controls.Add(this.txtYeniUrunAdi);
             this.Controls.Add(this.lblBasariMesaji);
             this.Controls.Add(this.btnKaydet);
             this.Controls.Add(this.lblUrunKodu);

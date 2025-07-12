@@ -19,14 +19,24 @@ namespace StokTakipOtomasyonu.Forms
             txtIslemTuru.Text = "Stok";
             txtBarkod.Focus();
             this.StartPosition = FormStartPosition.CenterParent;
-
         }
 
-        // 1. Metodu asenkron hale getir
         private async void txtBarkod_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode != Keys.Enter) return;
+            if (e.KeyCode == Keys.Enter)
+            {
+                await UrunCikisIslemiAsync();
+                e.SuppressKeyPress = true;
+            }
+        }
 
+        private async void btnKaydet_Click(object sender, EventArgs e)
+        {
+            await UrunCikisIslemiAsync();
+        }
+
+        private async Task UrunCikisIslemiAsync()
+        {
             string barkod = txtBarkod.Text.Trim();
             int miktar = (int)nudMiktar.Value;
 
@@ -62,12 +72,10 @@ namespace StokTakipOtomasyonu.Forms
                         }
                     }
 
-                    // Güncelleme komutları
                     string query = @"
-                INSERT INTO urun_hareketleri (urun_id, hareket_turu, miktar, kullanici_id, islem_turu_id)
-                VALUES (@uid, 'Cikis', @miktar, @kullanici_id, 0);
-                UPDATE urunler SET miktar = miktar - @miktar WHERE urun_id = @uid;
-            ";
+                        INSERT INTO urun_hareketleri (urun_id, hareket_turu, miktar, kullanici_id, islem_turu_id)
+                        VALUES (@uid, 'Cikis', @miktar, @kullanici_id, 0);
+                        UPDATE urunler SET miktar = miktar - @miktar WHERE urun_id = @uid;";
 
                     MySqlCommand updateCmd = new MySqlCommand(query, conn);
                     updateCmd.Parameters.AddWithValue("@uid", urunId);
@@ -90,17 +98,6 @@ namespace StokTakipOtomasyonu.Forms
         }
 
         private async Task ShowMessageAsync(string message, bool success)
-        {
-            lblBasariMesaji.Text = message;
-            lblBasariMesaji.ForeColor = success ? Color.Green : Color.Red;
-            lblBasariMesaji.Visible = true;
-            await Task.Delay(2000);
-            lblBasariMesaji.Visible = false;
-        }
-
-
-
-        private async void ShowMessage(string message, bool success)
         {
             lblBasariMesaji.Text = message;
             lblBasariMesaji.ForeColor = success ? Color.Green : Color.Red;

@@ -11,6 +11,7 @@
         private System.Windows.Forms.Label lblMiktar;
         private System.Windows.Forms.NumericUpDown nudMiktar;
         private System.Windows.Forms.Label lblBasariMesaji;
+        private System.Windows.Forms.Button btnKaydet;
 
         protected override void Dispose(bool disposing)
         {
@@ -27,6 +28,7 @@
             this.lblMiktar = new System.Windows.Forms.Label();
             this.nudMiktar = new System.Windows.Forms.NumericUpDown();
             this.lblBasariMesaji = new System.Windows.Forms.Label();
+            this.btnKaydet = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.nudMiktar)).BeginInit();
             this.SuspendLayout();
             //
@@ -82,22 +84,32 @@
             //
             this.lblBasariMesaji.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this.lblBasariMesaji.ForeColor = System.Drawing.Color.Green;
-            this.lblBasariMesaji.Location = new System.Drawing.Point(30, 150);
+            this.lblBasariMesaji.Location = new System.Drawing.Point(30, 190);
             this.lblBasariMesaji.Name = "lblBasariMesaji";
             this.lblBasariMesaji.Size = new System.Drawing.Size(290, 40);
             this.lblBasariMesaji.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.lblBasariMesaji.Visible = false;
             //
+            // btnKaydet
+            //
+            this.btnKaydet.Location = new System.Drawing.Point(120, 150);
+            this.btnKaydet.Name = "btnKaydet";
+            this.btnKaydet.Size = new System.Drawing.Size(200, 30);
+            this.btnKaydet.Text = "Kaydet";
+            this.btnKaydet.UseVisualStyleBackColor = true;
+            this.btnKaydet.Click += new System.EventHandler(this.btnKaydet_Click);
+            //
             // ManuelUrunCikisiForm
             //
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
-            this.ClientSize = new System.Drawing.Size(360, 220);
+            this.ClientSize = new System.Drawing.Size(360, 250);
             this.Controls.Add(this.lblBarkod);
             this.Controls.Add(this.txtBarkod);
             this.Controls.Add(this.lblIslemTuru);
             this.Controls.Add(this.txtIslemTuru);
             this.Controls.Add(this.lblMiktar);
             this.Controls.Add(this.nudMiktar);
+            this.Controls.Add(this.btnKaydet);
             this.Controls.Add(this.lblBasariMesaji);
             this.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.Name = "ManuelUrunCikisiForm";
