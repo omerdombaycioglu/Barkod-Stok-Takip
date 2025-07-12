@@ -50,6 +50,13 @@ namespace StokTakipOtomasyonu.Forms
             }
 
             dgvProjeUrunler.DataSource = _tumUrunler;
+            dgvProjeUrunler.Columns["urun_id"].Visible = false;
+
+            foreach (DataGridViewRow gridRow in dgvProjeUrunler.Rows)
+            {
+                if (gridRow.Cells["tamamlandi"].Value?.ToString() == "✔")
+                    gridRow.DefaultCellStyle.BackColor = Color.LightGreen;
+            }
         }
 
         private void LoadKullanilanUrunler()
@@ -69,7 +76,8 @@ namespace StokTakipOtomasyonu.Forms
             if (e.KeyCode != Keys.Enter) return;
 
             string barkod = txtBarkod.Text.Trim();
-            if (string.IsNullOrEmpty(barkod)) return;
+            int miktar = (int)nudMiktar.Value;
+            if (string.IsNullOrEmpty(barkod) || miktar <= 0) return;
 
             string query = "SELECT urun_id FROM urunler WHERE urun_barkod = @barkod";
             object result = DatabaseHelper.ExecuteScalar(query, new MySqlParameter("@barkod", barkod));
@@ -95,22 +103,44 @@ namespace StokTakipOtomasyonu.Forms
             int gerekli = Convert.ToInt32(row["gerekli_miktar"]);
             int kullanilan = Convert.ToInt32(row["kullanilan_miktar"]);
 
-            if (kullanilan >= gerekli)
+            if (kullanilan + miktar > gerekli)
             {
-                MessageBox.Show("Bu ürün için gerekli miktar zaten tamamlandı.", "Bilgi", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("Girilen miktar, gerekli miktarı aşıyor.", "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 txtBarkod.Clear();
                 return;
             }
 
-            string insert = @"INSERT INTO proje_hareketleri (proje_id, urun_id, miktar, kullanici_id) VALUES (@pid, @uid, 1, @kid)";
-            DatabaseHelper.ExecuteNonQuery(insert,
+            // 1. proje_hareketleri tablosuna ekle
+            string insertProje = @"INSERT INTO proje_hareketleri 
+        (proje_id, urun_id, miktar, kullanici_id) 
+        VALUES (@pid, @uid, @miktar, @kid)";
+            DatabaseHelper.ExecuteNonQuery(insertProje,
                 new MySqlParameter("@pid", _projeId),
                 new MySqlParameter("@uid", urunId),
+                new MySqlParameter("@miktar", miktar),
                 new MySqlParameter("@kid", _kullaniciId));
 
+            // 2. urunler tablosundan stok düş
+            string stokDus = @"UPDATE urunler SET miktar = miktar - @miktar WHERE urun_id = @uid";
+            DatabaseHelper.ExecuteNonQuery(stokDus,
+                new MySqlParameter("@miktar", miktar),
+                new MySqlParameter("@uid", urunId));
+
+            // 3. urun_hareketleri tablosuna kayıt (Stok Çıkış)
+            string insertStok = @"INSERT INTO urun_hareketleri 
+        (urun_id, hareket_turu, miktar, kullanici_id, islem_turu_id, proje_id) 
+        VALUES (@uid, 'Cikis', @miktar, @kid, 1, @pid)";
+            DatabaseHelper.ExecuteNonQuery(insertStok,
+                new MySqlParameter("@uid", urunId),
+                new MySqlParameter("@miktar", miktar),
+                new MySqlParameter("@kid", _kullaniciId),
+                new MySqlParameter("@pid", _projeId));
+
             txtBarkod.Clear();
+            nudMiktar.Value = 1;
             LoadProjeUrunleri();
             LoadKullanilanUrunler();
         }
+
     }
 }
