@@ -16,6 +16,7 @@ namespace StokTakipOtomasyonu.Forms
             _yetki = yetki;
             YetkiKontrol();
             this.FormClosed += MainForm_FormClosed;
+            this.Load += MainForm_Load;
             ApplyModernTheme();
         }
 
@@ -46,11 +47,62 @@ namespace StokTakipOtomasyonu.Forms
             {
                 btnDepoDuzenle.Enabled = true;
                 btnProjeEkle.Enabled = false;
-                btnProjeMontaj.Enabled = false;
                 btnKullaniciIslemleri.Enabled = false;
                 groupBox7.Enabled = false; // Yönetici işlemlerini gizle
             }
         }
+        private void MainForm_Load(object sender, EventArgs e)
+        {
+            // Tüm butonları kontrol et
+            foreach (Control ctrl in this.Controls)
+            {
+                if (ctrl is GroupBox group)
+                {
+                    foreach (Control item in group.Controls)
+                    {
+                        if (item is Button btn)
+                        {
+                            ButonStilGuncelle(btn);
+                            btn.EnabledChanged += (s, ev) => ButonStilGuncelle(btn);
+                        }
+                    }
+                }
+                else if (ctrl is Button btn)
+                {
+                    ButonStilGuncelle(btn);
+                    btn.EnabledChanged += (s, ev) => ButonStilGuncelle(btn);
+                }
+            }
+        }
+
+        private void ButonStilGuncelle(Button btn)
+        {
+            if (!btn.Enabled)
+            {
+                if (!btn.Text.StartsWith("🔒 ")) // Kilit zaten yoksa ekle
+                    btn.Text = "🔒 " + btn.Text;
+
+                btn.BackColor = Color.FromArgb(200, 200, 200);
+                btn.ForeColor = Color.FromArgb(100, 100, 100);
+                btn.FlatStyle = FlatStyle.Flat;
+                btn.FlatAppearance.BorderSize = 1;
+                btn.FlatAppearance.BorderColor = Color.DarkGray;
+                btn.Cursor = Cursors.No;
+            }
+            else
+            {
+                if (btn.Text.StartsWith("🔒 "))
+                    btn.Text = btn.Text.Substring(2); // Kilidi kaldır
+
+                btn.BackColor = Color.FromArgb(128, 128, 128);
+                btn.ForeColor = Color.White;
+                btn.FlatAppearance.BorderSize = 0;
+                btn.FlatStyle = FlatStyle.Flat;
+                btn.Cursor = Cursors.Hand;
+            }
+        }
+
+
 
         private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
         {
