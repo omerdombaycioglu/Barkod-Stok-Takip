@@ -6,10 +6,7 @@
 
         protected override void Dispose(bool disposing)
         {
-            if (disposing && (components != null))
-            {
-                components.Dispose();
-            }
+            if (disposing && (components != null)) components.Dispose();
             base.Dispose(disposing);
         }
 
@@ -17,6 +14,8 @@
 
         private void InitializeComponent()
         {
+            this.panelTop = new System.Windows.Forms.Panel();
+            this.lblBaslik = new System.Windows.Forms.Label();
             this.txtProjeKodu = new System.Windows.Forms.TextBox();
             this.txtProjeTanimi = new System.Windows.Forms.TextBox();
             this.btnYukle = new System.Windows.Forms.Button();
@@ -26,107 +25,114 @@
             this.btnKaydet = new System.Windows.Forms.Button();
             this.btnTamEkran = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dgvUrunler)).BeginInit();
+            this.panelTop.SuspendLayout();
             this.SuspendLayout();
-            // 
+
+            // panelTop
+            this.panelTop.BackColor = System.Drawing.Color.FromArgb(210, 210, 210);
+            this.panelTop.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panelTop.Size = new System.Drawing.Size(1080, 60);
+            this.panelTop.Controls.Add(this.lblBaslik);
+
+            // lblBaslik
+            this.lblBaslik.AutoSize = true;
+            this.lblBaslik.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold);
+            this.lblBaslik.ForeColor = System.Drawing.Color.DimGray;
+            this.lblBaslik.Location = new System.Drawing.Point(20, 15);
+            this.lblBaslik.Text = "Proje Ekle";
+
             // txtProjeKodu
-            // 
-            this.txtProjeKodu.Location = new System.Drawing.Point(150, 30);
-            this.txtProjeKodu.Name = "txtProjeKodu";
+            this.txtProjeKodu.Location = new System.Drawing.Point(150, 80);
             this.txtProjeKodu.Size = new System.Drawing.Size(200, 22);
-            this.txtProjeKodu.TabIndex = 0;
-            // 
+
             // txtProjeTanimi
-            // 
-            this.txtProjeTanimi.Location = new System.Drawing.Point(150, 70);
-            this.txtProjeTanimi.Name = "txtProjeTanimi";
+            this.txtProjeTanimi.Location = new System.Drawing.Point(150, 120);
             this.txtProjeTanimi.Size = new System.Drawing.Size(400, 22);
-            this.txtProjeTanimi.TabIndex = 1;
-            // 
+
             // btnYukle
-            // 
-            this.btnYukle.Location = new System.Drawing.Point(150, 110);
-            this.btnYukle.Name = "btnYukle";
-            this.btnYukle.Size = new System.Drawing.Size(150, 30);
-            this.btnYukle.TabIndex = 2;
+            this.btnYukle.Location = new System.Drawing.Point(150, 160);
+            this.btnYukle.Size = new System.Drawing.Size(200, 30);
             this.btnYukle.Text = "Özet Ürün Listesi Yükle";
-            this.btnYukle.UseVisualStyleBackColor = true;
+            this.btnYukle.BackColor = System.Drawing.Color.FromArgb(128, 128, 128);
+            this.btnYukle.ForeColor = System.Drawing.Color.White;
+            this.btnYukle.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnYukle.FlatAppearance.BorderSize = 0;
+            this.btnYukle.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(0, 153, 133);
+            this.btnYukle.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(0, 153, 133);
             this.btnYukle.Click += new System.EventHandler(this.btnYukle_Click);
-            // 
+
             // lblProjeKodu
-            // 
             this.lblProjeKodu.AutoSize = true;
-            this.lblProjeKodu.Location = new System.Drawing.Point(50, 33);
-            this.lblProjeKodu.Name = "lblProjeKodu";
-            this.lblProjeKodu.Size = new System.Drawing.Size(79, 17);
-            this.lblProjeKodu.TabIndex = 3;
+            this.lblProjeKodu.Location = new System.Drawing.Point(50, 83);
             this.lblProjeKodu.Text = "Proje Kodu";
-            // 
+
             // lblProjeTanimi
-            // 
             this.lblProjeTanimi.AutoSize = true;
-            this.lblProjeTanimi.Location = new System.Drawing.Point(50, 73);
-            this.lblProjeTanimi.Name = "lblProjeTanimi";
-            this.lblProjeTanimi.Size = new System.Drawing.Size(88, 17);
-            this.lblProjeTanimi.TabIndex = 4;
+            this.lblProjeTanimi.Location = new System.Drawing.Point(50, 123);
             this.lblProjeTanimi.Text = "Proje Tanımı";
-            // 
+
             // dgvUrunler
-            // 
+            this.dgvUrunler.Location = new System.Drawing.Point(30, 210);
+            this.dgvUrunler.Size = new System.Drawing.Size(1000, 260);
+            this.dgvUrunler.ReadOnly = true;
             this.dgvUrunler.AllowUserToAddRows = false;
             this.dgvUrunler.AllowUserToDeleteRows = false;
             this.dgvUrunler.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvUrunler.Location = new System.Drawing.Point(30, 160);
-            this.dgvUrunler.Name = "dgvUrunler";
-            this.dgvUrunler.ReadOnly = true;
-            this.dgvUrunler.RowTemplate.Height = 24;
-            this.dgvUrunler.Size = new System.Drawing.Size(1000, 300);
-            this.dgvUrunler.TabIndex = 5;
-            // 
+
             // btnKaydet
-            // 
-            this.btnKaydet.Location = new System.Drawing.Point(320, 110);
-            this.btnKaydet.Name = "btnKaydet";
+            this.btnKaydet.Location = new System.Drawing.Point(370, 160);
             this.btnKaydet.Size = new System.Drawing.Size(100, 30);
-            this.btnKaydet.TabIndex = 6;
             this.btnKaydet.Text = "Kaydet";
-            this.btnKaydet.UseVisualStyleBackColor = true;
-            this.btnKaydet.Click += new System.EventHandler(this.btnKaydet_Click);
             this.btnKaydet.Visible = false;
-            // 
+            this.btnKaydet.BackColor = System.Drawing.Color.FromArgb(128, 128, 128);
+            this.btnKaydet.ForeColor = System.Drawing.Color.White;
+            this.btnKaydet.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnKaydet.FlatAppearance.BorderSize = 0;
+            this.btnKaydet.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(0, 153, 133);
+            this.btnKaydet.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(0, 153, 133);
+            this.btnKaydet.Click += new System.EventHandler(this.btnKaydet_Click);
+
             // btnTamEkran
-            // 
-            this.btnTamEkran.Location = new System.Drawing.Point(440, 110);
-            this.btnTamEkran.Name = "btnTamEkran";
-            this.btnTamEkran.Size = new System.Drawing.Size(150, 30);
-            this.btnTamEkran.TabIndex = 7;
+            this.btnTamEkran.Location = new System.Drawing.Point(490, 160);
+            this.btnTamEkran.Size = new System.Drawing.Size(200, 30);
             this.btnTamEkran.Text = "Tam Ekran Görüntüle";
-            this.btnTamEkran.UseVisualStyleBackColor = true;
-            this.btnTamEkran.Click += new System.EventHandler(this.btnTamEkran_Click);
             this.btnTamEkran.Visible = false;
-            // 
+            this.btnTamEkran.BackColor = System.Drawing.Color.FromArgb(80, 80, 80);
+            this.btnTamEkran.ForeColor = System.Drawing.Color.White;
+            this.btnTamEkran.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnTamEkran.FlatAppearance.BorderSize = 0;
+            this.btnTamEkran.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(0, 153, 133);
+            this.btnTamEkran.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(0, 153, 133);
+            this.btnTamEkran.Click += new System.EventHandler(this.btnTamEkran_Click);
+
             // ProjeEkleForm
-            // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1080, 500);
-            this.Controls.Add(this.btnTamEkran);
-            this.Controls.Add(this.btnKaydet);
-            this.Controls.Add(this.dgvUrunler);
-            this.Controls.Add(this.lblProjeTanimi);
-            this.Controls.Add(this.lblProjeKodu);
-            this.Controls.Add(this.btnYukle);
-            this.Controls.Add(this.txtProjeTanimi);
+            this.BackColor = System.Drawing.Color.FromArgb(240, 240, 240);
+            this.Controls.Add(this.panelTop);
             this.Controls.Add(this.txtProjeKodu);
+            this.Controls.Add(this.txtProjeTanimi);
+            this.Controls.Add(this.btnYukle);
+            this.Controls.Add(this.lblProjeKodu);
+            this.Controls.Add(this.lblProjeTanimi);
+            this.Controls.Add(this.dgvUrunler);
+            this.Controls.Add(this.btnKaydet);
+            this.Controls.Add(this.btnTamEkran);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "ProjeEkleForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Proje Ekle";
             ((System.ComponentModel.ISupportInitialize)(this.dgvUrunler)).EndInit();
+            this.panelTop.ResumeLayout(false);
+            this.panelTop.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
         }
 
         #endregion
 
+        private System.Windows.Forms.Panel panelTop;
+        private System.Windows.Forms.Label lblBaslik;
         private System.Windows.Forms.TextBox txtProjeKodu;
         private System.Windows.Forms.TextBox txtProjeTanimi;
         private System.Windows.Forms.Button btnYukle;

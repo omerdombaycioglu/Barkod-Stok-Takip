@@ -16,7 +16,7 @@ namespace StokTakipOtomasyonu.Forms
         {
             InitializeComponent();
             _kullaniciId = kullaniciId;
-            txtIslemTuru.Text = "Stok";
+            cmbIslemTuru.SelectedIndex = 0;
             txtBarkod.Focus();
             this.StartPosition = FormStartPosition.CenterParent;
         }
@@ -52,11 +52,12 @@ namespace StokTakipOtomasyonu.Forms
                 {
                     await conn.OpenAsync();
 
-                    MySqlCommand cmd = new MySqlCommand("SELECT urun_id, urun_adi FROM urunler WHERE urun_barkod = @barkod", conn);
+                    MySqlCommand cmd = new MySqlCommand("SELECT urun_id, urun_adi, miktar FROM urunler WHERE urun_barkod = @barkod", conn);
                     cmd.Parameters.AddWithValue("@barkod", barkod);
 
                     int urunId = 0;
                     string urunAdi = "";
+                    int stokMiktari = 0;
 
                     using (var reader = await cmd.ExecuteReaderAsync())
                     {
@@ -64,6 +65,7 @@ namespace StokTakipOtomasyonu.Forms
                         {
                             urunId = Convert.ToInt32(reader["urun_id"]);
                             urunAdi = reader["urun_adi"].ToString();
+                            stokMiktari = Convert.ToInt32(reader["miktar"]);
                         }
                         else
                         {
@@ -72,15 +74,23 @@ namespace StokTakipOtomasyonu.Forms
                         }
                     }
 
+                    // 🛑 Stok kontrolü
+                    if (stokMiktari < miktar)
+                    {
+                        await ShowMessageAsync($"Yetersiz stok: Stokta sadece {stokMiktari} adet var.", false);
+                        return;
+                    }
+
                     string query = @"
-                        INSERT INTO urun_hareketleri (urun_id, hareket_turu, miktar, kullanici_id, islem_turu_id)
-                        VALUES (@uid, 'Cikis', @miktar, @kullanici_id, 0);
-                        UPDATE urunler SET miktar = miktar - @miktar WHERE urun_id = @uid;";
+                INSERT INTO urun_hareketleri (urun_id, hareket_turu, miktar, kullanici_id, islem_turu_id)
+                VALUES (@uid, 'Cikis', @miktar, @kullanici_id, @islem_turu_id);
+                UPDATE urunler SET miktar = miktar - @miktar WHERE urun_id = @uid;";
 
                     MySqlCommand updateCmd = new MySqlCommand(query, conn);
                     updateCmd.Parameters.AddWithValue("@uid", urunId);
                     updateCmd.Parameters.AddWithValue("@miktar", miktar);
                     updateCmd.Parameters.AddWithValue("@kullanici_id", _kullaniciId);
+                    updateCmd.Parameters.AddWithValue("@islem_turu_id", cmbIslemTuru.SelectedIndex == 0 ? 0 : 2);
 
                     await updateCmd.ExecuteNonQueryAsync();
 
@@ -88,7 +98,7 @@ namespace StokTakipOtomasyonu.Forms
                     nudMiktar.Value = 1;
                     txtBarkod.Focus();
 
-                    await ShowMessageAsync($"{urunAdi} ürününden {miktar} adet stok çıkışı yapıldı.", true);
+                    await ShowMessageAsync($"{urunAdi} ürününden {miktar} adet çıkış yapıldı.", true);
                 }
             }
             catch (Exception ex)
@@ -96,6 +106,7 @@ namespace StokTakipOtomasyonu.Forms
                 await ShowMessageAsync("Hata: " + ex.Message, false);
             }
         }
+
 
         private async Task ShowMessageAsync(string message, bool success)
         {

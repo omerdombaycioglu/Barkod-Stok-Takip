@@ -15,6 +15,8 @@
         private System.Windows.Forms.Label lblBasariMesaji;
         private System.Windows.Forms.TextBox txtYeniUrunAdi;
         private System.Windows.Forms.Label lblYeniUrunAdi;
+        private System.Windows.Forms.Panel panelTop;
+        private System.Windows.Forms.Label lblBaslik;
 
         protected override void Dispose(bool disposing)
         {
@@ -37,125 +39,115 @@
             this.lblBasariMesaji = new System.Windows.Forms.Label();
             this.txtYeniUrunAdi = new System.Windows.Forms.TextBox();
             this.lblYeniUrunAdi = new System.Windows.Forms.Label();
+            this.panelTop = new System.Windows.Forms.Panel();
+            this.lblBaslik = new System.Windows.Forms.Label();
+
             ((System.ComponentModel.ISupportInitialize)(this.nudMiktar)).BeginInit();
+            this.panelTop.SuspendLayout();
             this.SuspendLayout();
 
+            // Panel
+            this.panelTop.BackColor = System.Drawing.Color.FromArgb(210, 210, 210);
+            this.panelTop.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panelTop.Size = new System.Drawing.Size(440, 60);
+            this.panelTop.Controls.Add(this.lblBaslik);
+
+            // Başlık
+            this.lblBaslik.Text = "Manuel Ürün Girişi";
+            this.lblBaslik.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold);
+            this.lblBaslik.ForeColor = System.Drawing.Color.DimGray;
+            this.lblBaslik.Location = new System.Drawing.Point(20, 15);
+            this.lblBaslik.AutoSize = true;
+
+            // Genel Form
+            this.BackColor = System.Drawing.Color.FromArgb(240, 240, 240);
+            this.ClientSize = new System.Drawing.Size(440, 400);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.MaximizeBox = false;
+
             // txtBarkod
-            this.txtBarkod.Location = new System.Drawing.Point(130, 30);
-            this.txtBarkod.Name = "txtBarkod";
-            this.txtBarkod.Size = new System.Drawing.Size(200, 22);
-            this.txtBarkod.TabIndex = 0;
+            this.txtBarkod.Location = new System.Drawing.Point(160, 80);
+            this.txtBarkod.Size = new System.Drawing.Size(220, 22);
 
             // txtIslemTuru
-            this.txtIslemTuru.Location = new System.Drawing.Point(130, 70);
-            this.txtIslemTuru.Name = "txtIslemTuru";
+            this.txtIslemTuru.Location = new System.Drawing.Point(160, 115);
+            this.txtIslemTuru.Size = new System.Drawing.Size(220, 22);
             this.txtIslemTuru.ReadOnly = true;
-            this.txtIslemTuru.Size = new System.Drawing.Size(200, 22);
-            this.txtIslemTuru.TabIndex = 1;
 
             // nudMiktar
-            this.nudMiktar.Location = new System.Drawing.Point(130, 110);
-            this.nudMiktar.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
-            this.nudMiktar.Maximum = new decimal(new int[] { 10000, 0, 0, 0 });
-            this.nudMiktar.Name = "nudMiktar";
-            this.nudMiktar.Size = new System.Drawing.Size(200, 22);
-            this.nudMiktar.TabIndex = 2;
-            this.nudMiktar.Value = new decimal(new int[] { 1, 0, 0, 0 });
+            this.nudMiktar.Location = new System.Drawing.Point(160, 150);
+            this.nudMiktar.Minimum = 1;
+            this.nudMiktar.Maximum = 10000;
+            this.nudMiktar.Value = 1;
+            this.nudMiktar.Size = new System.Drawing.Size(220, 22);
 
             // txtUrunKodu
-            this.txtUrunKodu.Location = new System.Drawing.Point(130, 150);
-            this.txtUrunKodu.Name = "txtUrunKodu";
-            this.txtUrunKodu.Size = new System.Drawing.Size(200, 22);
-            this.txtUrunKodu.TabIndex = 3;
+            this.txtUrunKodu.Location = new System.Drawing.Point(160, 185);
+            this.txtUrunKodu.Size = new System.Drawing.Size(220, 22);
 
-            // lblBarkod
-            this.lblBarkod.AutoSize = true;
-            this.lblBarkod.Location = new System.Drawing.Point(30, 33);
-            this.lblBarkod.Name = "lblBarkod";
-            this.lblBarkod.Size = new System.Drawing.Size(53, 17);
-            this.lblBarkod.TabIndex = 4;
-            this.lblBarkod.Text = "Barkod:";
-
-            // lblIslemTuru
-            this.lblIslemTuru.AutoSize = true;
-            this.lblIslemTuru.Location = new System.Drawing.Point(30, 73);
-            this.lblIslemTuru.Name = "lblIslemTuru";
-            this.lblIslemTuru.Size = new System.Drawing.Size(74, 17);
-            this.lblIslemTuru.TabIndex = 5;
-            this.lblIslemTuru.Text = "İşlem Türü:";
-
-            // lblMiktar
-            this.lblMiktar.AutoSize = true;
-            this.lblMiktar.Location = new System.Drawing.Point(30, 113);
-            this.lblMiktar.Name = "lblMiktar";
-            this.lblMiktar.Size = new System.Drawing.Size(49, 17);
-            this.lblMiktar.TabIndex = 6;
-            this.lblMiktar.Text = "Miktar:";
-
-            // lblUrunKodu
-            this.lblUrunKodu.AutoSize = true;
-            this.lblUrunKodu.Location = new System.Drawing.Point(30, 153);
-            this.lblUrunKodu.Name = "lblUrunKodu";
-            this.lblUrunKodu.Size = new System.Drawing.Size(76, 17);
-            this.lblUrunKodu.TabIndex = 7;
-            this.lblUrunKodu.Text = "Ürün Kodu:";
+            // txtYeniUrunAdi
+            this.txtYeniUrunAdi.Location = new System.Drawing.Point(160, 220);
+            this.txtYeniUrunAdi.Size = new System.Drawing.Size(220, 22);
+            this.txtYeniUrunAdi.Visible = false;
 
             // btnKaydet
-            this.btnKaydet.Location = new System.Drawing.Point(130, 260);
-            this.btnKaydet.Name = "btnKaydet";
-            this.btnKaydet.Size = new System.Drawing.Size(200, 30);
-            this.btnKaydet.TabIndex = 6;
             this.btnKaydet.Text = "Ürün Girişi Yap";
-            this.btnKaydet.UseVisualStyleBackColor = true;
+            this.btnKaydet.Location = new System.Drawing.Point(160, 260);
+            this.btnKaydet.Size = new System.Drawing.Size(220, 40);
+            this.btnKaydet.BackColor = System.Drawing.Color.FromArgb(128, 128, 128);
+            this.btnKaydet.ForeColor = System.Drawing.Color.White;
+            this.btnKaydet.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnKaydet.FlatAppearance.BorderSize = 0;
+            this.btnKaydet.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(0, 153, 133);
+            this.btnKaydet.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(0, 153, 133);
             this.btnKaydet.Click += new System.EventHandler(this.btnKaydet_Click);
 
             // lblBasariMesaji
             this.lblBasariMesaji.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this.lblBasariMesaji.ForeColor = System.Drawing.Color.Green;
-            this.lblBasariMesaji.Location = new System.Drawing.Point(20, 305);
-            this.lblBasariMesaji.Name = "lblBasariMesaji";
-            this.lblBasariMesaji.Size = new System.Drawing.Size(380, 40);
+            this.lblBasariMesaji.Location = new System.Drawing.Point(20, 315);
+            this.lblBasariMesaji.Size = new System.Drawing.Size(400, 40);
             this.lblBasariMesaji.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.lblBasariMesaji.Visible = false;
-            this.lblBasariMesaji.MaximumSize = new System.Drawing.Size(380, 60);
 
-            // txtYeniUrunAdi
-            this.txtYeniUrunAdi.Location = new System.Drawing.Point(130, 190);
-            this.txtYeniUrunAdi.Name = "txtYeniUrunAdi";
-            this.txtYeniUrunAdi.Size = new System.Drawing.Size(200, 22);
-            this.txtYeniUrunAdi.TabIndex = 4;
-            this.txtYeniUrunAdi.Visible = false;
+            // Label'ler
+            void SetupLabel(System.Windows.Forms.Label lbl, string text, int top)
+            {
+                lbl.Text = text;
+                lbl.Location = new System.Drawing.Point(30, top);
+                lbl.Size = new System.Drawing.Size(120, 20);
+                lbl.Font = new System.Drawing.Font("Segoe UI", 9.5F);
+            }
 
-            // lblYeniUrunAdi
-            this.lblYeniUrunAdi.AutoSize = true;
-            this.lblYeniUrunAdi.Location = new System.Drawing.Point(30, 193);
-            this.lblYeniUrunAdi.Name = "lblYeniUrunAdi";
-            this.lblYeniUrunAdi.Size = new System.Drawing.Size(94, 17);
-            this.lblYeniUrunAdi.TabIndex = 10;
-            this.lblYeniUrunAdi.Text = "Yeni Ürün Adı:";
+            SetupLabel(this.lblBarkod, "Barkod:", 83);
+            SetupLabel(this.lblIslemTuru, "İşlem Türü:", 118);
+            SetupLabel(this.lblMiktar, "Miktar:", 153);
+            SetupLabel(this.lblUrunKodu, "Ürün Kodu:", 188);
+            SetupLabel(this.lblYeniUrunAdi, "Yeni Ürün Adı:", 223);
             this.lblYeniUrunAdi.Visible = false;
 
-            // ManuelUrunGirisiForm
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(420, 370);
-            this.Controls.Add(this.lblYeniUrunAdi);
-            this.Controls.Add(this.txtYeniUrunAdi);
-            this.Controls.Add(this.lblBasariMesaji);
-            this.Controls.Add(this.btnKaydet);
-            this.Controls.Add(this.lblUrunKodu);
-            this.Controls.Add(this.lblMiktar);
-            this.Controls.Add(this.lblIslemTuru);
-            this.Controls.Add(this.lblBarkod);
-            this.Controls.Add(this.txtUrunKodu);
-            this.Controls.Add(this.nudMiktar);
-            this.Controls.Add(this.txtIslemTuru);
+            // Controls
+            this.Controls.Add(this.panelTop);
             this.Controls.Add(this.txtBarkod);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.Controls.Add(this.txtIslemTuru);
+            this.Controls.Add(this.nudMiktar);
+            this.Controls.Add(this.txtUrunKodu);
+            this.Controls.Add(this.txtYeniUrunAdi);
+            this.Controls.Add(this.btnKaydet);
+            this.Controls.Add(this.lblBasariMesaji);
+            this.Controls.Add(this.lblBarkod);
+            this.Controls.Add(this.lblIslemTuru);
+            this.Controls.Add(this.lblMiktar);
+            this.Controls.Add(this.lblUrunKodu);
+            this.Controls.Add(this.lblYeniUrunAdi);
+
             this.Name = "ManuelUrunGirisiForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Ürün Girişi";
+
             ((System.ComponentModel.ISupportInitialize)(this.nudMiktar)).EndInit();
+            this.panelTop.ResumeLayout(false);
+            this.panelTop.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
         }

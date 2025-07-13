@@ -25,7 +25,6 @@ namespace StokTakipOtomasyonu.Forms
             mesajTimer.Interval = 2000; // 2 saniye
             mesajTimer.Tick += mesajTimer_Tick;
 
-            // Barkod alanına Enter basıldığında butona tıkla
             txtBarkod.KeyDown += txtBarkod_KeyDown;
 
             // Ürün kodu için otomatik tamamlama
@@ -39,8 +38,14 @@ namespace StokTakipOtomasyonu.Forms
                 string query = "SELECT urun_kodu FROM urunler";
                 var cmd = new MySqlCommand(query, conn);
                 var reader = cmd.ExecuteReader();
+
                 while (reader.Read())
-                    autoSource.Add(reader.GetString("urun_kodu"));
+                {
+                    if (!reader.IsDBNull(reader.GetOrdinal("urun_kodu")))
+                    {
+                        autoSource.Add(reader.GetString("urun_kodu"));
+                    }
+                }
             }
             txtUrunKodu.AutoCompleteCustomSource = autoSource;
         }
@@ -152,7 +157,7 @@ namespace StokTakipOtomasyonu.Forms
                 adCmd.Parameters.AddWithValue("@id", urunId);
                 string urunAdi = adCmd.ExecuteScalar()?.ToString() ?? "(ad yok)";
 
-                // Dinamik mesaj göster
+                // Başarı mesajı
                 lblBasariMesaji.Text = $"✔ {urunAdi} ürününden {miktar} adet stok girişi yapıldı.";
                 lblBasariMesaji.Visible = true;
                 mesajTimer.Start();

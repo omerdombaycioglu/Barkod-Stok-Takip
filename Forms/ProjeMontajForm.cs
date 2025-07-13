@@ -10,12 +10,21 @@ namespace StokTakipOtomasyonu.Forms
     public partial class ProjeMontajForm : Form
     {
         private int _userId;
+        private int _kullaniciYetki;
 
         public ProjeMontajForm(int userId)
         {
             InitializeComponent();
             _userId = userId;
+            _kullaniciYetki = GetKullaniciYetki(_userId);
             ConfigureDataGridView();
+        }
+
+        private int GetKullaniciYetki(int kullaniciId)
+        {
+            string query = "SELECT kullanici_yetki FROM kullanicilar WHERE kullanici_id = @id";
+            object result = DatabaseHelper.ExecuteScalar(query, new MySqlParameter("@id", kullaniciId));
+            return result != null ? Convert.ToInt32(result) : 0;
         }
 
         private void ProjeMontajForm_Load(object sender, EventArgs e)
@@ -29,9 +38,19 @@ namespace StokTakipOtomasyonu.Forms
             dataGridViewProjeler.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dataGridViewProjeler.MultiSelect = false;
             dataGridViewProjeler.RowHeadersVisible = false;
-
-            // Sütunları elle ekle
             dataGridViewProjeler.Columns.Clear();
+
+            if (_kullaniciYetki == 1)
+            {
+                dataGridViewProjeler.Columns.Add(new DataGridViewButtonColumn
+                {
+                    Name = "btnSil",
+                    HeaderText = "",
+                    Text = "X",
+                    UseColumnTextForButtonValue = true,
+                    Width = 30
+                });
+            }
 
             dataGridViewProjeler.Columns.Add(new DataGridViewTextBoxColumn
             {
@@ -80,25 +99,49 @@ namespace StokTakipOtomasyonu.Forms
         {
             string query = "SELECT proje_id, proje_kodu, proje_tanimi FROM projeler WHERE aktif = 1 ORDER BY proje_kodu";
             DataTable dt = DatabaseHelper.ExecuteQuery(query);
-            dataGridViewProjeler.DataSource = dt;
+
+            if (dt.Rows.Count == 0)
+            {
+                dataGridViewProjeler.Visible = false;
+                lblBosProjeMesaji.Visible = true;
+            }
+            else
+            {
+                dataGridViewProjeler.DataSource = dt;
+                dataGridViewProjeler.Visible = true;
+                lblBosProjeMesaji.Visible = false;
+            }
         }
 
         private void dataGridViewProjeler_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (e.RowIndex < 0 || !(dataGridViewProjeler.Columns[e.ColumnIndex] is DataGridViewButtonColumn))
-                return;
+            if (e.RowIndex < 0) return;
 
-            int projeId = Convert.ToInt32(dataGridViewProjeler.Rows[e.RowIndex].Cells["proje_id"].Value);
-            string projeKodu = dataGridViewProjeler.Rows[e.RowIndex].Cells["proje_kodu"].Value.ToString();
+            var column = dataGridViewProjeler.Columns[e.ColumnIndex];
+            var row = dataGridViewProjeler.Rows[e.RowIndex];
 
-            if (dataGridViewProjeler.Columns[e.ColumnIndex].Name == "btnUrunListesi")
+            int projeId = Convert.ToInt32(row.Cells["proje_id"].Value);
+            string projeKodu = row.Cells["proje_kodu"].Value.ToString();
+
+            if (column.Name == "btnUrunListesi")
             {
                 var detayForm = new ProjeMontajDetayForm(projeId, _userId, projeKodu);
                 detayForm.ShowDialog();
             }
-            else if (dataGridViewProjeler.Columns[e.ColumnIndex].Name == "btnIslemGecmisi")
+            else if (column.Name == "btnIslemGecmisi")
             {
                 ShowProjectTransactionHistory(projeId, projeKodu);
+            }
+            else if (column.Name == "btnSil" && _kullaniciYetki == 1)
+            {
+                var result = MessageBox.Show($"Projeyi silmek istiyor musunuz?\n\nProje Kodu: {projeKodu}", "Silme Onayı", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                if (result == DialogResult.Yes)
+                {
+                    string query = "UPDATE projeler SET aktif = 0 WHERE proje_id = @pid";
+                    DatabaseHelper.ExecuteNonQuery(query, new MySqlParameter("@pid", projeId));
+                    LoadProjects();
+                    MessageBox.Show("Proje başarıyla silindi (soft delete).", "Bilgi", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
             }
         }
 
