@@ -32,10 +32,12 @@ namespace StokTakipOtomasyonu.Forms
                                     WHEN uh.islem_turu_id = 2 THEN 'Hurda/İade'
                                     ELSE ''
                                 END AS islem_turu,
+                                p.proje_kodu,
                                 uh.aciklama
                                 FROM urun_hareketleri uh
                                 JOIN urunler u ON uh.urun_id = u.urun_id
                                 JOIN kullanicilar k ON uh.kullanici_id = k.kullanici_id
+                                LEFT JOIN projeler p ON uh.proje_id = p.proje_id
                                 ORDER BY uh.log_date DESC
                                 LIMIT 200";
 
@@ -60,7 +62,6 @@ namespace StokTakipOtomasyonu.Forms
             dataGridView1.RowHeadersVisible = false;
             dataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
 
-            // Kolon başlıklarını Türkçeleştirme
             if (dataGridView1.Columns.Count > 0)
             {
                 dataGridView1.Columns["id"].HeaderText = "ID";
@@ -70,6 +71,7 @@ namespace StokTakipOtomasyonu.Forms
                 dataGridView1.Columns["tarih"].HeaderText = "Tarih";
                 dataGridView1.Columns["kullanici"].HeaderText = "Kullanıcı";
                 dataGridView1.Columns["islem_turu"].HeaderText = "İşlem Türü";
+                dataGridView1.Columns["proje_kodu"].HeaderText = "Proje Kodu";
                 dataGridView1.Columns["aciklama"].HeaderText = "Açıklama";
             }
         }
