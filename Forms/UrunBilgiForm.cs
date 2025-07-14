@@ -22,14 +22,16 @@ namespace StokTakipOtomasyonu.Forms
         private void ConfigureDataGridView()
         {
             dataGridViewUrunler.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            dataGridViewUrunler.DefaultCellStyle.Font = new System.Drawing.Font("Segoe UI", 9F); // System.Drawing ekleyin
-            dataGridViewUrunler.ColumnHeadersDefaultCellStyle.Font = new System.Drawing.Font("Segoe UI", 9F, FontStyle.Bold);
+            dataGridViewUrunler.DefaultCellStyle.Font = new Font("Segoe UI", 9F);
+            dataGridViewUrunler.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
             dataGridViewUrunler.EnableHeadersVisualStyles = false;
-            dataGridViewUrunler.ColumnHeadersDefaultCellStyle.BackColor = System.Drawing.Color.FromArgb(51, 122, 183);
-            dataGridViewUrunler.ColumnHeadersDefaultCellStyle.ForeColor = System.Drawing.Color.White;
+            dataGridViewUrunler.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(51, 122, 183);
+            dataGridViewUrunler.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
             dataGridViewUrunler.RowHeadersVisible = false;
             dataGridViewUrunler.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            
         }
+
 
         private void LoadUrunler()
         {
@@ -38,12 +40,20 @@ namespace StokTakipOtomasyonu.Forms
                 string query = "SELECT urun_id, urun_adi, urun_kodu, urun_barkod, urun_marka, urun_no, miktar, kritik_seviye FROM urunler";
                 originalData = DatabaseHelper.ExecuteQuery(query);
                 dataGridViewUrunler.DataSource = originalData;
+
+                // 🛡️ 'miktar' sütununu sadece okunur yap
+                if (dataGridViewUrunler.Columns.Contains("miktar"))
+                {
+                    dataGridViewUrunler.Columns["miktar"].ReadOnly = true;
+                    dataGridViewUrunler.Columns["miktar"].DefaultCellStyle.BackColor = Color.LightGray; // isteğe bağlı görsel ipucu
+                }
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Ürünler yüklenirken hata oluştu: " + ex.Message, "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
 
         private void btnKaydet_Click(object sender, EventArgs e)
         {
@@ -66,7 +76,6 @@ namespace StokTakipOtomasyonu.Forms
                                                   urun_barkod = @urun_barkod, 
                                                   urun_marka = @urun_marka, 
                                                   urun_no = @urun_no, 
-                                                  miktar = @miktar, 
                                                   kritik_seviye = @kritik_seviye 
                                                   WHERE urun_id = @urun_id";
 
@@ -76,7 +85,6 @@ namespace StokTakipOtomasyonu.Forms
                                         new MySqlParameter("@urun_barkod", row.Cells["urun_barkod"].Value ?? DBNull.Value),
                                         new MySqlParameter("@urun_marka", row.Cells["urun_marka"].Value ?? DBNull.Value),
                                         new MySqlParameter("@urun_no", row.Cells["urun_no"].Value ?? DBNull.Value),
-                                        new MySqlParameter("@miktar", row.Cells["miktar"].Value ?? 0),
                                         new MySqlParameter("@kritik_seviye", row.Cells["kritik_seviye"].Value ?? DBNull.Value),
                                         new MySqlParameter("@urun_id", row.Cells["urun_id"].Value));
                                 }

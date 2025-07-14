@@ -106,7 +106,11 @@ namespace StokTakipOtomasyonu.Forms
 
         private void dgvDepoKonumlari_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (e.RowIndex < 0) return;
+            // Negatif değer varsa hiçbir işlem yapma
+            if (e.RowIndex < 0 || e.ColumnIndex < 0) return;
+
+            // Grid boşsa veya sütun yoksa işlem yapma
+            if (dgvDepoKonumlari.Columns.Count == 0) return;
 
             var columnName = dgvDepoKonumlari.Columns[e.ColumnIndex].Name;
 
@@ -119,6 +123,7 @@ namespace StokTakipOtomasyonu.Forms
                 DepoKonumuSil(e.RowIndex);
             }
         }
+
 
 
         private void DataGridViewAyarla()
