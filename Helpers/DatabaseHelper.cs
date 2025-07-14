@@ -20,52 +20,113 @@ namespace StokTakipOtomasyonu.Helpers
 
         public static DataTable ExecuteQuery(string query, params MySqlParameter[] parameters)
         {
+            return ExecuteQuery(query, null, parameters);
+        }
+
+        public static DataTable ExecuteQuery(string query, MySqlTransaction transaction, params MySqlParameter[] parameters)
+        {
             DataTable dt = new DataTable();
-            using (var conn = GetConnection())
+            try
             {
-                conn.Open();
-                using (var cmd = new MySqlCommand(query, conn))
+                if (transaction != null)
                 {
-                    if (parameters != null) cmd.Parameters.AddRange(parameters);
-                    using (var adapter = new MySqlDataAdapter(cmd))
-                        adapter.Fill(dt);
+                    using (var cmd = new MySqlCommand(query, transaction.Connection, transaction))
+                    {
+                        if (parameters != null) cmd.Parameters.AddRange(parameters);
+                        using (var adapter = new MySqlDataAdapter(cmd))
+                            adapter.Fill(dt);
+                    }
                 }
+                else
+                {
+                    using (var conn = GetConnection())
+                    {
+                        conn.Open();
+                        using (var cmd = new MySqlCommand(query, conn))
+                        {
+                            if (parameters != null) cmd.Parameters.AddRange(parameters);
+                            using (var adapter = new MySqlDataAdapter(cmd))
+                                adapter.Fill(dt);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Sorgu çalıştırma hatası: " + ex.Message, ex);
             }
             return dt;
         }
 
-        public static int ExecuteNonQuery(string query, MySqlTransaction transaction = null, params MySqlParameter[] parameters)
+        public static int ExecuteNonQuery(string query, params MySqlParameter[] parameters)
         {
-            if (transaction != null)
+            return ExecuteNonQuery(query, null, parameters);
+        }
+
+        public static int ExecuteNonQuery(string query, MySqlTransaction transaction, params MySqlParameter[] parameters)
+        {
+            try
             {
-                using (var cmd = new MySqlCommand(query, transaction.Connection, transaction))
+                if (transaction != null)
                 {
-                    if (parameters != null) cmd.Parameters.AddRange(parameters);
-                    return cmd.ExecuteNonQuery();
+                    using (var cmd = new MySqlCommand(query, transaction.Connection, transaction))
+                    {
+                        if (parameters != null) cmd.Parameters.AddRange(parameters);
+                        return cmd.ExecuteNonQuery();
+                    }
+                }
+                else
+                {
+                    using (var conn = GetConnection())
+                    {
+                        conn.Open();
+                        using (var cmd = new MySqlCommand(query, conn))
+                        {
+                            if (parameters != null) cmd.Parameters.AddRange(parameters);
+                            return cmd.ExecuteNonQuery();
+                        }
+                    }
                 }
             }
-
-            using (var conn = GetConnection())
+            catch (Exception ex)
             {
-                conn.Open();
-                using (var cmd = new MySqlCommand(query, conn))
-                {
-                    if (parameters != null) cmd.Parameters.AddRange(parameters);
-                    return cmd.ExecuteNonQuery();
-                }
+                throw new Exception("Sorgu çalıştırma hatası: " + ex.Message, ex);
             }
         }
 
         public static object ExecuteScalar(string query, params MySqlParameter[] parameters)
         {
-            using (var conn = GetConnection())
+            return ExecuteScalar(query, null, parameters);
+        }
+
+        public static object ExecuteScalar(string query, MySqlTransaction transaction, params MySqlParameter[] parameters)
+        {
+            try
             {
-                conn.Open();
-                using (var cmd = new MySqlCommand(query, conn))
+                if (transaction != null)
                 {
-                    if (parameters != null) cmd.Parameters.AddRange(parameters);
-                    return cmd.ExecuteScalar();
+                    using (var cmd = new MySqlCommand(query, transaction.Connection, transaction))
+                    {
+                        if (parameters != null) cmd.Parameters.AddRange(parameters);
+                        return cmd.ExecuteScalar();
+                    }
                 }
+                else
+                {
+                    using (var conn = GetConnection())
+                    {
+                        conn.Open();
+                        using (var cmd = new MySqlCommand(query, conn))
+                        {
+                            if (parameters != null) cmd.Parameters.AddRange(parameters);
+                            return cmd.ExecuteScalar();
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Sorgu çalıştırma hatası: " + ex.Message, ex);
             }
         }
 
@@ -83,6 +144,14 @@ namespace StokTakipOtomasyonu.Helpers
             {
                 return false;
             }
+        }
+
+        public static MySqlTransaction BeginTransaction(MySqlConnection connection)
+        {
+            if (connection.State != ConnectionState.Open)
+                connection.Open();
+
+            return connection.BeginTransaction();
         }
     }
 }
