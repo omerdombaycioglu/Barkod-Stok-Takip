@@ -72,8 +72,8 @@
             // 
             // dgvDepoKonumlari
             // 
-            this.dgvDepoKonumlari.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.dgvDepoKonumlari.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dgvDepoKonumlari.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvDepoKonumlari.Location = new System.Drawing.Point(20, 200);
@@ -109,7 +109,10 @@
             this.lblUyari.ForeColor = System.Drawing.Color.Orange;
             this.lblUyari.Location = new System.Drawing.Point(400, 125);
             this.lblUyari.Name = "lblUyari";
-            this.lblUyari.Size = new System.Drawing.Size(100, 23);
+            this.lblUyari.Size = new System.Drawing.Size(400, 23);            
+            this.lblUyari.AutoSize = false;
+            this.lblUyari.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+
             this.lblUyari.TabIndex = 6;
             // 
             // btnYeniKonumEkle
@@ -160,9 +163,11 @@
             // lblUyari2
             // 
             this.lblUyari2.ForeColor = System.Drawing.Color.Red;
-            this.lblUyari2.Location = new System.Drawing.Point(400, 145);
+            this.lblUyari2.Location = new System.Drawing.Point(400, 125);
             this.lblUyari2.Name = "lblUyari2";
-            this.lblUyari2.Size = new System.Drawing.Size(100, 23);
+            this.lblUyari2.Size = new System.Drawing.Size(400, 23);
+            this.lblUyari2.AutoSize = false;
+            this.lblUyari2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.lblUyari2.TabIndex = 12;
             // 
             // DepoDuzenleForm
