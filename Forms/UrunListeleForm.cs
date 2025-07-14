@@ -98,7 +98,11 @@ namespace StokTakipOtomasyonu
                                 u.urun_marka AS 'Marka',
                                 u.miktar AS 'Stok Miktarı',
                                 u.kritik_seviye AS 'Kritik Seviye',
-                                IFNULL((SELECT SUM(pu.miktar) FROM proje_urunleri pu WHERE pu.urun_id = u.urun_id), 0) AS 'Projelerdeki Miktar',
+                                IFNULL((SELECT SUM(pu.miktar)
+        FROM proje_urunleri pu
+        JOIN projeler p ON pu.proje_id = p.proje_id
+        WHERE pu.urun_id = u.urun_id AND p.aktif = 1), 0) AS 'Projelerdeki Miktar',
+
                                 CASE 
                                     WHEN u.kritik_seviye IS NOT NULL AND u.kritik_seviye > 0 AND u.miktar <= u.kritik_seviye 
                                     THEN 'KRİTİK SEVİYENİN ALTINDA' 

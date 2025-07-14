@@ -34,6 +34,7 @@ namespace StokTakipOtomasyonu.Forms
 
         private void ConfigureDataGridView()
         {
+            dataGridViewProjeler.AllowUserToAddRows = false; // <-- Bu satırı ekle
             dataGridViewProjeler.AutoGenerateColumns = false;
             dataGridViewProjeler.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dataGridViewProjeler.MultiSelect = false;
@@ -94,6 +95,7 @@ namespace StokTakipOtomasyonu.Forms
                 Width = 150
             });
         }
+
 
         private void LoadProjects()
         {

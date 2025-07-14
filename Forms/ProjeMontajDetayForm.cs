@@ -49,7 +49,6 @@ namespace StokTakipOtomasyonu.Forms
                 WHERE pu.proje_id = @pid";
 
             _tumUrunler = DatabaseHelper.ExecuteQuery(query, new MySqlParameter("@pid", _projeId));
-
             _tumUrunler.Columns.Add("tamamlandi", typeof(string));
 
             foreach (DataRow row in _tumUrunler.Rows)
@@ -62,14 +61,10 @@ namespace StokTakipOtomasyonu.Forms
             dgvProjeUrunler.DataSource = _tumUrunler;
             dgvProjeUrunler.Columns["urun_id"].Visible = false;
 
-
-            // Satır renklendirme
             foreach (DataGridViewRow row in dgvProjeUrunler.Rows)
             {
                 if (row.Cells["tamamlandi"].Value?.ToString() == "✔")
-                {
                     row.DefaultCellStyle.BackColor = Color.LightGreen;
-                }
             }
         }
 
@@ -77,6 +72,7 @@ namespace StokTakipOtomasyonu.Forms
         {
             string query = @"
                 SELECT 
+                    ph.id AS hareket_id, 
                     u.urun_kodu, 
                     u.urun_adi, 
                     ph.miktar, 
@@ -133,7 +129,6 @@ namespace StokTakipOtomasyonu.Forms
                 return;
             }
 
-            // Stok kontrolü
             object stokObj = DatabaseHelper.ExecuteScalar("SELECT miktar FROM urunler WHERE urun_id = @id", new MySqlParameter("@id", urunId));
             int stok = Convert.ToInt32(stokObj ?? 0);
 
@@ -144,31 +139,24 @@ namespace StokTakipOtomasyonu.Forms
                 return;
             }
 
-            // Ekle proje_hareketleri
-            string insertQuery = @"INSERT INTO proje_hareketleri (proje_id, urun_id, miktar, kullanici_id) 
-                                   VALUES (@pid, @uid, @miktar, @kid)";
-            DatabaseHelper.ExecuteNonQuery(insertQuery,
+            DatabaseHelper.ExecuteNonQuery(@"INSERT INTO proje_hareketleri (proje_id, urun_id, miktar, kullanici_id) 
+                                             VALUES (@pid, @uid, @miktar, @kid)",
                 new MySqlParameter("@pid", _projeId),
                 new MySqlParameter("@uid", urunId),
                 new MySqlParameter("@miktar", miktar),
                 new MySqlParameter("@kid", _kullaniciId));
 
-            // Ekle urun_hareketleri
-            string urunHareketQuery = @"INSERT INTO urun_hareketleri (urun_id, hareket_turu, miktar, kullanici_id, islem_turu_id, proje_id)
-                                        VALUES (@uid, 'Cikis', @miktar, @kid, 1, @pid)";
-            DatabaseHelper.ExecuteNonQuery(urunHareketQuery,
+            DatabaseHelper.ExecuteNonQuery(@"INSERT INTO urun_hareketleri (urun_id, hareket_turu, miktar, kullanici_id, islem_turu_id, proje_id)
+                                             VALUES (@uid, 'Cikis', @miktar, @kid, 1, @pid)",
                 new MySqlParameter("@uid", urunId),
                 new MySqlParameter("@miktar", miktar),
                 new MySqlParameter("@kid", _kullaniciId),
                 new MySqlParameter("@pid", _projeId));
 
-            // Stoktan düş
-            string updateStok = "UPDATE urunler SET miktar = miktar - @miktar WHERE urun_id = @id";
-            DatabaseHelper.ExecuteNonQuery(updateStok,
+            DatabaseHelper.ExecuteNonQuery("UPDATE urunler SET miktar = miktar - @miktar WHERE urun_id = @id",
                 new MySqlParameter("@miktar", miktar),
                 new MySqlParameter("@id", urunId));
 
-            // Satır animasyonu
             int rowIndex = dgvProjeUrunler.Rows
                 .Cast<DataGridViewRow>()
                 .FirstOrDefault(r => Convert.ToInt32(r.Cells["urun_id"].Value) == urunId)?.Index ?? -1;
@@ -182,7 +170,6 @@ namespace StokTakipOtomasyonu.Forms
                 currentRow.DefaultCellStyle.BackColor = originalColor;
             }
 
-            // Son işlem etiketi
             lblSonIslem.Text = $"Son Giriş: {urunAdi} ürününden {miktar} adet eklendi.";
             lblSonIslem.ForeColor = Color.DarkGreen;
 
@@ -192,19 +179,40 @@ namespace StokTakipOtomasyonu.Forms
             LoadKullanilanUrunler();
         }
 
-        private void dgvProjeUrunler_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        private void BtnGeriAl_Click(object sender, EventArgs e)
         {
+            string query = @"
+                SELECT ph.id AS hareket_id, ph.urun_id, ph.miktar 
+                FROM proje_hareketleri ph
+                WHERE ph.proje_id = @pid
+                ORDER BY ph.islem_tarihi DESC 
+                LIMIT 1";
 
+            DataTable dt = DatabaseHelper.ExecuteQuery(query, new MySqlParameter("@pid", _projeId));
+            if (dt.Rows.Count == 0)
+            {
+                MessageBox.Show("Geri alınabilecek bir işlem yok.", "Bilgi", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            int hareketId = Convert.ToInt32(dt.Rows[0]["hareket_id"]);
+            int urunId = Convert.ToInt32(dt.Rows[0]["urun_id"]);
+            int miktar = Convert.ToInt32(dt.Rows[0]["miktar"]);
+
+            DatabaseHelper.ExecuteNonQuery("DELETE FROM proje_hareketleri WHERE id = @hid", new MySqlParameter("@hid", hareketId));
+            DatabaseHelper.ExecuteNonQuery("UPDATE urunler SET miktar = miktar + @miktar WHERE urun_id = @uid",
+                new MySqlParameter("@miktar", miktar),
+                new MySqlParameter("@uid", urunId));
+
+            lblSonIslem.Text = $"Son işlem geri alındı: Ürün ID {urunId}, miktar {miktar}";
+            lblSonIslem.ForeColor = Color.OrangeRed;
+
+            LoadProjeUrunleri();
+            LoadKullanilanUrunler();
         }
 
-        private void label1_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label2_Click(object sender, EventArgs e)
-        {
-
-        }
+        private void dgvProjeUrunler_CellContentClick(object sender, DataGridViewCellEventArgs e) { }
+        private void label1_Click(object sender, EventArgs e) { }
+        private void label2_Click(object sender, EventArgs e) { }
     }
 }
