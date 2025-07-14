@@ -51,7 +51,7 @@
             this.groupBox1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.groupBox1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
             this.groupBox1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.groupBox1.Location = new System.Drawing.Point(30, 100);
+            this.groupBox1.Location = new System.Drawing.Point(30, 112);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(250, 182);
             this.groupBox1.TabIndex = 0;
@@ -180,7 +180,7 @@
             this.groupBox6.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.groupBox6.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
             this.groupBox6.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.groupBox6.Location = new System.Drawing.Point(30, 294);
+            this.groupBox6.Location = new System.Drawing.Point(30, 314);
             this.groupBox6.Name = "groupBox6";
             this.groupBox6.Size = new System.Drawing.Size(250, 111);
             this.groupBox6.TabIndex = 4;
@@ -310,7 +310,7 @@
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(577, 80);
+            this.panel1.Size = new System.Drawing.Size(577, 106);
             this.panel1.TabIndex = 8;
             // 
             // label1
@@ -318,7 +318,7 @@
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Segoe UI", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
             this.label1.ForeColor = System.Drawing.Color.DimGray;
-            this.label1.Location = new System.Drawing.Point(209, 26);
+            this.label1.Location = new System.Drawing.Point(251, 32);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(314, 41);
             this.label1.TabIndex = 1;
@@ -329,7 +329,7 @@
             this.pictureBox1.Image = global::IspBarkodStok.Properties.Resources.isp_logo1;
             this.pictureBox1.Location = new System.Drawing.Point(0, 0);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(255, 80);
+            this.pictureBox1.Size = new System.Drawing.Size(255, 103);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
