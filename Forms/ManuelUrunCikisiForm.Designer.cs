@@ -45,7 +45,7 @@
             this.panelTop.Controls.Add(this.lblBaslik);
 
             // Başlık
-            this.lblBaslik.Text = "Manuel Ürün Çıkışı";
+            this.lblBaslik.Text = "Ürün Çıkışı";
             this.lblBaslik.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold);
             this.lblBaslik.ForeColor = System.Drawing.Color.DimGray;
             this.lblBaslik.Location = new System.Drawing.Point(20, 15);
@@ -94,7 +94,7 @@
             this.nudMiktar.Size = new System.Drawing.Size(220, 25);
 
             // btnKaydet
-            this.btnKaydet.Text = "Kaydet";
+            this.btnKaydet.Text = "Ürün Çıkışı Yap";
             this.btnKaydet.Location = new System.Drawing.Point(130, 185);
             this.btnKaydet.Size = new System.Drawing.Size(220, 40);
             this.btnKaydet.BackColor = System.Drawing.Color.FromArgb(128, 128, 128);

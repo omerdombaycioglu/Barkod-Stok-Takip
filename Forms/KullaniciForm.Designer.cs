@@ -41,78 +41,138 @@ namespace StokTakipOtomasyonu.Forms
             this.lblSifre = new System.Windows.Forms.Label();
             this.lblAdSoyad = new System.Windows.Forms.Label();
             this.lblYetki = new System.Windows.Forms.Label();
-
             ((System.ComponentModel.ISupportInitialize)(this.dgvKullanicilar)).BeginInit();
             this.panelTop.SuspendLayout();
             this.SuspendLayout();
-
-            // Panel
-            this.panelTop.BackColor = System.Drawing.Color.LightGray;
-            this.panelTop.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panelTop.Height = 60;
-            this.panelTop.Controls.Add(this.lblBaslik);
-
-            this.lblBaslik.Text = "Kullanıcı Yönetimi";
-            this.lblBaslik.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold);
-            this.lblBaslik.Location = new System.Drawing.Point(20, 15);
-
-            // Grid
-            this.dgvKullanicilar.Anchor = ((System.Windows.Forms.AnchorStyles)
-                ((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                | System.Windows.Forms.AnchorStyles.Left)
-                | System.Windows.Forms.AnchorStyles.Right)));
-            this.dgvKullanicilar.Location = new System.Drawing.Point(20, 70);
-            this.dgvKullanicilar.Size = new System.Drawing.Size(760, 240);
-            this.dgvKullanicilar.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            this.dgvKullanicilar.ReadOnly = false;
+            // 
+            // dgvKullanicilar
+            // 
             this.dgvKullanicilar.AllowUserToAddRows = false;
             this.dgvKullanicilar.AllowUserToDeleteRows = false;
-
-            // Labels
-            this.lblKullaniciAdi.Text = "Kullanıcı Adı:";
-            this.lblKullaniciAdi.Location = new System.Drawing.Point(20, 325);
-            this.lblSifre.Text = "Şifre:";
-            this.lblSifre.Location = new System.Drawing.Point(20, 355);
-            this.lblAdSoyad.Text = "Ad Soyad:";
-            this.lblAdSoyad.Location = new System.Drawing.Point(20, 385);
-            this.lblYetki.Text = "Yetki:";
-            this.lblYetki.Location = new System.Drawing.Point(20, 415);
-
-            // Inputs
+            this.dgvKullanicilar.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dgvKullanicilar.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.dgvKullanicilar.ColumnHeadersHeight = 29;
+            this.dgvKullanicilar.Location = new System.Drawing.Point(20, 70);
+            this.dgvKullanicilar.Name = "dgvKullanicilar";
+            this.dgvKullanicilar.RowHeadersWidth = 51;
+            this.dgvKullanicilar.Size = new System.Drawing.Size(760, 240);
+            this.dgvKullanicilar.TabIndex = 1;
+            // 
+            // txtYeniKullaniciAdi
+            // 
             this.txtYeniKullaniciAdi.Location = new System.Drawing.Point(120, 322);
+            this.txtYeniKullaniciAdi.Name = "txtYeniKullaniciAdi";
             this.txtYeniKullaniciAdi.Size = new System.Drawing.Size(200, 22);
-
+            this.txtYeniKullaniciAdi.TabIndex = 3;
+            // 
+            // txtYeniSifre
+            // 
             this.txtYeniSifre.Location = new System.Drawing.Point(120, 352);
+            this.txtYeniSifre.Name = "txtYeniSifre";
             this.txtYeniSifre.Size = new System.Drawing.Size(200, 22);
-
+            this.txtYeniSifre.TabIndex = 5;
+            // 
+            // txtYeniAdSoyad
+            // 
             this.txtYeniAdSoyad.Location = new System.Drawing.Point(120, 382);
+            this.txtYeniAdSoyad.Name = "txtYeniAdSoyad";
             this.txtYeniAdSoyad.Size = new System.Drawing.Size(200, 22);
-
+            this.txtYeniAdSoyad.TabIndex = 7;
+            // 
+            // cmbYeniYetki
+            // 
+            this.cmbYeniYetki.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbYeniYetki.Items.AddRange(new object[] {
+            "Yönetici",
+            "Standart Kullanıcı"});
             this.cmbYeniYetki.Location = new System.Drawing.Point(120, 412);
-            this.cmbYeniYetki.DropDownStyle = ComboBoxStyle.DropDownList;
-            this.cmbYeniYetki.Size = new System.Drawing.Size(200, 22);
-            this.cmbYeniYetki.Items.AddRange(new object[] { "Yönetici", "Standart Kullanıcı" });
-
-            // Butonlar
-            this.btnYeniKullanici.Text = "Yeni Kullanıcı Ekle";
-            this.btnYeniKullanici.Location = new System.Drawing.Point(350, 322);
-            this.btnYeniKullanici.Size = new System.Drawing.Size(180, 40);
+            this.cmbYeniYetki.Name = "cmbYeniYetki";
+            this.cmbYeniYetki.Size = new System.Drawing.Size(200, 24);
+            this.cmbYeniYetki.TabIndex = 9;
+            // 
+            // btnYeniKullanici
+            // 
             this.btnYeniKullanici.BackColor = System.Drawing.Color.DimGray;
-            this.btnYeniKullanici.ForeColor = System.Drawing.Color.White;
-            this.btnYeniKullanici.FlatStyle = FlatStyle.Flat;
             this.btnYeniKullanici.FlatAppearance.BorderSize = 0;
+            this.btnYeniKullanici.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnYeniKullanici.ForeColor = System.Drawing.Color.White;
+            this.btnYeniKullanici.Location = new System.Drawing.Point(350, 322);
+            this.btnYeniKullanici.Name = "btnYeniKullanici";
+            this.btnYeniKullanici.Size = new System.Drawing.Size(180, 40);
+            this.btnYeniKullanici.TabIndex = 10;
+            this.btnYeniKullanici.Text = "Yeni Kullanıcı Ekle";
+            this.btnYeniKullanici.UseVisualStyleBackColor = false;
             this.btnYeniKullanici.Click += new System.EventHandler(this.btnYeniKullanici_Click);
-
-            this.btnKapat.Text = "Kapat";
-            this.btnKapat.Location = new System.Drawing.Point(350, 372);
-            this.btnKapat.Size = new System.Drawing.Size(180, 40);
+            // 
+            // btnKapat
+            // 
             this.btnKapat.BackColor = System.Drawing.Color.IndianRed;
-            this.btnKapat.ForeColor = System.Drawing.Color.White;
-            this.btnKapat.FlatStyle = FlatStyle.Flat;
             this.btnKapat.FlatAppearance.BorderSize = 0;
+            this.btnKapat.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnKapat.ForeColor = System.Drawing.Color.White;
+            this.btnKapat.Location = new System.Drawing.Point(350, 372);
+            this.btnKapat.Name = "btnKapat";
+            this.btnKapat.Size = new System.Drawing.Size(180, 40);
+            this.btnKapat.TabIndex = 11;
+            this.btnKapat.Text = "Kaydet ve Kapat";
+            this.btnKapat.UseVisualStyleBackColor = false;
             this.btnKapat.Click += new System.EventHandler(this.btnKapat_Click);
-
-            // Form
+            // 
+            // panelTop
+            // 
+            this.panelTop.BackColor = System.Drawing.Color.LightGray;
+            this.panelTop.Controls.Add(this.lblBaslik);
+            this.panelTop.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panelTop.Location = new System.Drawing.Point(0, 0);
+            this.panelTop.Name = "panelTop";
+            this.panelTop.Size = new System.Drawing.Size(800, 60);
+            this.panelTop.TabIndex = 0;
+            // 
+            // lblBaslik
+            // 
+            this.lblBaslik.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold);
+            this.lblBaslik.Location = new System.Drawing.Point(20, 15);
+            this.lblBaslik.Name = "lblBaslik";
+            this.lblBaslik.Size = new System.Drawing.Size(287, 45);
+            this.lblBaslik.TabIndex = 0;
+            this.lblBaslik.Text = "Kullanıcı Yönetimi";
+            // 
+            // lblKullaniciAdi
+            // 
+            this.lblKullaniciAdi.Location = new System.Drawing.Point(20, 325);
+            this.lblKullaniciAdi.Name = "lblKullaniciAdi";
+            this.lblKullaniciAdi.Size = new System.Drawing.Size(100, 23);
+            this.lblKullaniciAdi.TabIndex = 2;
+            this.lblKullaniciAdi.Text = "Kullanıcı Adı:";
+            // 
+            // lblSifre
+            // 
+            this.lblSifre.Location = new System.Drawing.Point(20, 355);
+            this.lblSifre.Name = "lblSifre";
+            this.lblSifre.Size = new System.Drawing.Size(100, 23);
+            this.lblSifre.TabIndex = 4;
+            this.lblSifre.Text = "Şifre:";
+            // 
+            // lblAdSoyad
+            // 
+            this.lblAdSoyad.Location = new System.Drawing.Point(20, 385);
+            this.lblAdSoyad.Name = "lblAdSoyad";
+            this.lblAdSoyad.Size = new System.Drawing.Size(100, 23);
+            this.lblAdSoyad.TabIndex = 6;
+            this.lblAdSoyad.Text = "Ad Soyad:";
+            // 
+            // lblYetki
+            // 
+            this.lblYetki.Location = new System.Drawing.Point(20, 415);
+            this.lblYetki.Name = "lblYetki";
+            this.lblYetki.Size = new System.Drawing.Size(100, 23);
+            this.lblYetki.TabIndex = 8;
+            this.lblYetki.Text = "Yetki:";
+            // 
+            // KullaniciForm
+            // 
             this.BackColor = System.Drawing.Color.WhiteSmoke;
             this.ClientSize = new System.Drawing.Size(800, 470);
             this.Controls.Add(this.panelTop);
@@ -128,14 +188,14 @@ namespace StokTakipOtomasyonu.Forms
             this.Controls.Add(this.btnYeniKullanici);
             this.Controls.Add(this.btnKapat);
             this.Name = "KullaniciForm";
-            this.StartPosition = FormStartPosition.CenterScreen;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Kullanıcı Yönetimi";
             this.Load += new System.EventHandler(this.KullaniciForm_Load);
-
             ((System.ComponentModel.ISupportInitialize)(this.dgvKullanicilar)).EndInit();
             this.panelTop.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
+
         }
     }
 }

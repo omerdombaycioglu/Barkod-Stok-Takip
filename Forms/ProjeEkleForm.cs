@@ -23,6 +23,16 @@ namespace StokTakipOtomasyonu.Forms
             _kullaniciId = kullaniciId;
             btnKaydet.Visible = false;
             btnTamEkran.Visible = false;
+
+            // Yeni buton
+            Button btnExcelCikart = new Button
+            {
+                Text = "Yetersiz Ürünleri Excel'e Çıkart",
+                Location = new Point(btnTamEkran.Right + 10, btnTamEkran.Top),
+                AutoSize = true
+            };
+            btnExcelCikart.Click += BtnExcelCikart_Click;
+            this.Controls.Add(btnExcelCikart);
         }
 
         private void btnYukle_Click(object sender, EventArgs e)
@@ -203,5 +213,69 @@ namespace StokTakipOtomasyonu.Forms
             }
         }
 
+        private void BtnExcelCikart_Click(object sender, EventArgs e)
+        {
+            if (_excelData == null || _excelData.Rows.Count == 0)
+            {
+                MessageBox.Show("Önce Excel dosyasını yüklemelisiniz.");
+                return;
+            }
+
+            string projeKodu = txtProjeKodu.Text.Trim();
+            if (string.IsNullOrWhiteSpace(projeKodu))
+            {
+                MessageBox.Show("Proje kodu boş olamaz.");
+                return;
+            }
+
+            var yetersizUrunler = _excelData.Select("`Stok Durumu` = 'Yetersiz'");
+            if (yetersizUrunler.Length == 0)
+            {
+                MessageBox.Show("Tüm ürünlerin stoğu yeterli.");
+                return;
+            }
+
+            IWorkbook workbook = new XSSFWorkbook();
+            ISheet sheet = workbook.CreateSheet("Stok Dışı Ürünler");
+
+            IRow header = sheet.CreateRow(0);
+            header.CreateCell(0).SetCellValue("Sipariş No");
+            header.CreateCell(1).SetCellValue("Açıklama");
+            header.CreateCell(2).SetCellValue("Marka");
+            header.CreateCell(3).SetCellValue("Projede Gerekli Miktar");
+            header.CreateCell(4).SetCellValue("Stoktaki Miktar");
+            header.CreateCell(5).SetCellValue("Gereken Minimum Miktar");
+            header.CreateCell(6).SetCellValue("Stok Durumu");
+
+            int rowIndex = 1;
+            foreach (var row in yetersizUrunler)
+            {
+                IRow excelRow = sheet.CreateRow(rowIndex++);
+                excelRow.CreateCell(0).SetCellValue(row["Sipariş No"].ToString());
+                excelRow.CreateCell(1).SetCellValue(row["Açıklama"].ToString());
+                excelRow.CreateCell(2).SetCellValue(row["Marka"].ToString());
+                excelRow.CreateCell(3).SetCellValue(Convert.ToInt32(row["Miktar"]));
+                excelRow.CreateCell(4).SetCellValue(Convert.ToInt32(row["Stoktaki Miktar"]));
+                excelRow.CreateCell(5).SetCellValue(Convert.ToInt32(row["Gereken Minimum Miktar"]));
+                excelRow.CreateCell(6).SetCellValue(row["Stok Durumu"].ToString());
+            }
+
+            string fileName = $"{projeKodu}_stokdisiurunler.xlsx";
+            SaveFileDialog sfd = new SaveFileDialog
+            {
+                FileName = fileName,
+                Filter = "Excel Dosyası|*.xlsx"
+            };
+
+            if (sfd.ShowDialog() == DialogResult.OK)
+            {
+                using (var fs = new FileStream(sfd.FileName, FileMode.Create, FileAccess.Write))
+                {
+                    workbook.Write(fs);
+                }
+
+                MessageBox.Show("Yetersiz ürünler başarıyla Excel dosyasına aktarıldı.");
+            }
+        }
     }
 }

@@ -122,12 +122,7 @@ namespace StokTakipOtomasyonu.Forms
         private void btnUrunListele_Click(object sender, EventArgs e)
         {
             new UrunListeleForm().ShowDialog();
-        }
-
-        private void btnExcelIslem_Click(object sender, EventArgs e)
-        {
-            new ExcelIslemForm(_kullaniciId).ShowDialog();
-        }
+        }       
 
         private void btnDepoDuzenle_Click(object sender, EventArgs e)
         {
