@@ -105,6 +105,11 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxLogo)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
+            // Tab order
+            this.txtKullaniciAdi.TabIndex = 0;
+            this.txtSifre.TabIndex = 1;
+            this.btnGiris.TabIndex = 2;
+            this.btnIptal.TabIndex = 3;
         }
 
         #endregion

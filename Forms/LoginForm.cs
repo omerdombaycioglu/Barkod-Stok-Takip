@@ -13,6 +13,9 @@ namespace StokTakipOtomasyonu.Forms
         {
             InitializeComponent();
             LoadLogo();
+
+            // Form tamamen gösterildikten sonra çalışır
+            this.Shown += (s, e) => txtKullaniciAdi.Focus();
         }
 
         private void LoadLogo()
@@ -59,6 +62,16 @@ namespace StokTakipOtomasyonu.Forms
                               MessageBoxIcon.Warning);
             }
         }
+        private void LoginForm_Load(object sender, EventArgs e)
+        {
+            txtKullaniciAdi.TabIndex = 0;
+            txtSifre.TabIndex = 1;
+            btnGiris.TabIndex = 2;
+            btnIptal.TabIndex = 3;
+
+            txtKullaniciAdi.Focus();
+        }
+
 
         private void btnGiris_Click(object sender, EventArgs e)
         {

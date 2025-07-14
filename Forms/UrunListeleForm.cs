@@ -11,11 +11,19 @@ namespace StokTakipOtomasyonu
         private MySqlConnection connection;
         private string connectionString = "server=localhost;database=stok_takip_otomasyonu;uid=root;pwd=;";
         private DataTable dataSourceTable;
+        private Label lblUrunSayisi;
 
         public UrunListeleForm()
         {
             InitializeComponent();
             connection = new MySqlConnection(connectionString);
+
+            lblUrunSayisi = new Label();
+            lblUrunSayisi.Location = new Point(20, dataGridView1.Bottom + 10);
+            lblUrunSayisi.AutoSize = true;
+            lblUrunSayisi.Font = new Font("Segoe UI", 9.5F);
+            this.Controls.Add(lblUrunSayisi);
+
             dataGridView1.CellFormatting += DataGridView1_CellFormatting;
             ProjeleriYukle();
             UrunleriYukle();
@@ -99,10 +107,9 @@ namespace StokTakipOtomasyonu
                                 u.miktar AS 'Stok Miktarı',
                                 u.kritik_seviye AS 'Kritik Seviye',
                                 IFNULL((SELECT SUM(pu.miktar)
-        FROM proje_urunleri pu
-        JOIN projeler p ON pu.proje_id = p.proje_id
-        WHERE pu.urun_id = u.urun_id AND p.aktif = 1), 0) AS 'Projelerdeki Miktar',
-
+                                        FROM proje_urunleri pu
+                                        JOIN projeler p ON pu.proje_id = p.proje_id
+                                        WHERE pu.urun_id = u.urun_id AND p.aktif = 1), 0) AS 'Projelerdeki Miktar',
                                 CASE 
                                     WHEN u.kritik_seviye IS NOT NULL AND u.kritik_seviye > 0 AND u.miktar <= u.kritik_seviye 
                                     THEN 'KRİTİK SEVİYENİN ALTINDA' 
@@ -121,7 +128,6 @@ namespace StokTakipOtomasyonu
                 dataGridView1.Columns["ID"].Visible = false;
                 dataGridView1.Columns["Kritik Seviye"].Visible = false;
 
-                // İşlem Geçmişi butonunu ekle
                 if (!dataGridView1.Columns.Contains("btnIslemGecmisi"))
                 {
                     DataGridViewButtonColumn btnColumn = new DataGridViewButtonColumn();
@@ -130,6 +136,11 @@ namespace StokTakipOtomasyonu
                     btnColumn.Text = "İşlem Geçmişi";
                     btnColumn.UseColumnTextForButtonValue = true;
                     dataGridView1.Columns.Add(btnColumn);
+                }
+
+                if (lblUrunSayisi != null)
+                {
+                    lblUrunSayisi.Text = $"{dataSourceTable.Rows.Count} ürün listelendi.";
                 }
             }
             catch (Exception ex)
@@ -179,7 +190,6 @@ namespace StokTakipOtomasyonu
                 dataGridView1.Columns["ID"].Visible = false;
                 dataGridView1.Columns["Kritik Seviye"].Visible = false;
 
-                // İşlem Geçmişi butonunu ekle
                 if (!dataGridView1.Columns.Contains("btnIslemGecmisi"))
                 {
                     DataGridViewButtonColumn btnColumn = new DataGridViewButtonColumn();
@@ -188,6 +198,11 @@ namespace StokTakipOtomasyonu
                     btnColumn.Text = "İşlem Geçmişi";
                     btnColumn.UseColumnTextForButtonValue = true;
                     dataGridView1.Columns.Add(btnColumn);
+                }
+
+                if (lblUrunSayisi != null)
+                {
+                    lblUrunSayisi.Text = $"{dataSourceTable.Rows.Count} ürün listelendi.";
                 }
             }
             catch (Exception ex)
@@ -200,7 +215,6 @@ namespace StokTakipOtomasyonu
             }
         }
 
-        // Diğer metodlar aynı şekilde kalacak...
         private void btnYenile_Click(object sender, EventArgs e)
         {
             cmbProjeler.SelectedIndex = -1;
@@ -217,10 +231,11 @@ namespace StokTakipOtomasyonu
             string aramaKelimesi = txtArama.Text.Trim();
             if (dataSourceTable != null)
             {
-                dataSourceTable.DefaultView.RowFilter = $"`Ürün Adı` LIKE '%{aramaKelimesi}%' OR " +
-                                          $"`Ürün Kodu` LIKE '%{aramaKelimesi}%' OR " +
-                                          $"`Barkod` LIKE '%{aramaKelimesi}%' OR " +
-                                          $"`Marka` LIKE '%{aramaKelimesi}%'";
+                dataSourceTable.DefaultView.RowFilter =
+                    $"`Ürün Adı` LIKE '%{aramaKelimesi}%' OR " +
+                    $"`Ürün Kodu` LIKE '%{aramaKelimesi}%' OR " +
+                    $"`Barkod` LIKE '%{aramaKelimesi}%' OR " +
+                    $"`Marka` LIKE '%{aramaKelimesi}%'";
             }
         }
 
