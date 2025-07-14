@@ -1,7 +1,8 @@
-﻿using System;
+﻿using StokTakipOtomasyonu.Helpers;
+using System;
 using System.Data;
+using System.Drawing;
 using System.Windows.Forms;
-using StokTakipOtomasyonu.Helpers;
 
 namespace StokTakipOtomasyonu.Forms
 {
@@ -9,6 +10,7 @@ namespace StokTakipOtomasyonu.Forms
     {
         public SonIslemlerForm()
         {
+            this.Icon = new Icon("isp_logo2.ico");
             InitializeComponent();
             LoadSonIslemler();
             ConfigureDataGridView();

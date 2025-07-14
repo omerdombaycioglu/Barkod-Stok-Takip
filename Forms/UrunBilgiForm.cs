@@ -13,6 +13,7 @@ namespace StokTakipOtomasyonu.Forms
 
         public UrunBilgiForm()
         {
+            this.Icon = new Icon("isp_logo2.ico");
             InitializeComponent();
             ConfigureDataGridView();
             LoadUrunler();

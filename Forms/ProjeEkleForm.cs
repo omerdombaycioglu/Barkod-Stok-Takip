@@ -19,6 +19,7 @@ namespace StokTakipOtomasyonu.Forms
 
         public ProjeEkleForm(int kullaniciId)
         {
+            this.Icon = new Icon("isp_logo2.ico");
             InitializeComponent();
             _kullaniciId = kullaniciId;
             btnKaydet.Visible = false;

@@ -19,6 +19,7 @@ namespace StokTakipOtomasyonu.Forms
 
         public ProjeMontajDetayForm(int projeId, int kullaniciId, string projeKodu)
         {
+            this.Icon = new Icon("isp_logo2.ico");
             InitializeComponent();
             _projeId = projeId;
             _kullaniciId = kullaniciId;

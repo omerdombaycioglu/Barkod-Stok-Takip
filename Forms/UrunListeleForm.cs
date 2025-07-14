@@ -15,6 +15,7 @@ namespace StokTakipOtomasyonu
 
         public UrunListeleForm()
         {
+            this.Icon = new Icon("isp_logo2.ico");
             InitializeComponent();
             connection = new MySqlConnection(connectionString);
 

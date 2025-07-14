@@ -14,6 +14,7 @@ namespace StokTakipOtomasyonu.Forms
 
         public ProjeMontajForm(int userId)
         {
+            this.Icon = new Icon("isp_logo2.ico");
             InitializeComponent();
             _userId = userId;
             _kullaniciYetki = GetKullaniciYetki(_userId);

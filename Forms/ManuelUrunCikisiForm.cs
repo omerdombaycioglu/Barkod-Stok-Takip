@@ -14,6 +14,7 @@ namespace StokTakipOtomasyonu.Forms
 
         public ManuelUrunCikisiForm(int kullaniciId)
         {
+            this.Icon = new Icon("isp_logo2.ico");
             InitializeComponent();
             _kullaniciId = kullaniciId;
             cmbIslemTuru.SelectedIndex = 0;

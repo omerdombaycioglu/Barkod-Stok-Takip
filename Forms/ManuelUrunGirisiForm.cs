@@ -1,7 +1,8 @@
-﻿using System;
+﻿using MySql.Data.MySqlClient;
+using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Windows.Forms;
-using MySql.Data.MySqlClient;
 
 namespace StokTakipOtomasyonu.Forms
 {
@@ -13,6 +14,7 @@ namespace StokTakipOtomasyonu.Forms
 
         public ManuelUrunGirisiForm(int kullaniciId)
         {
+            this.Icon = new Icon("isp_logo2.ico");
             InitializeComponent();
             _kullaniciId = kullaniciId;
 

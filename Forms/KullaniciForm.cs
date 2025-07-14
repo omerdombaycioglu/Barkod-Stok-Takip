@@ -11,6 +11,7 @@ namespace StokTakipOtomasyonu.Forms
     {
         public KullaniciForm()
         {
+            this.Icon = new Icon("isp_logo2.ico");
             InitializeComponent();
         }
 

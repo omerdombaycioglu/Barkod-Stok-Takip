@@ -12,6 +12,10 @@ namespace StokTakipOtomasyonu.Forms
         public MainForm(int kullaniciId, int yetki)
         {
             InitializeComponent();
+
+            // Logo burada ayarlanıyor
+            this.Icon = new Icon("isp_logo2.ico");
+
             _kullaniciId = kullaniciId;
             _yetki = yetki;
             YetkiKontrol();
@@ -19,6 +23,7 @@ namespace StokTakipOtomasyonu.Forms
             this.Load += MainForm_Load;
             ApplyModernTheme();
         }
+
 
         private void ApplyModernTheme()
         {
