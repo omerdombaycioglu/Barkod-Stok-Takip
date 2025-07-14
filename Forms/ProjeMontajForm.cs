@@ -151,12 +151,18 @@ namespace StokTakipOtomasyonu.Forms
         private void ShowProjectTransactionHistory(int projeId, string projeKodu)
         {
             string query = @"
-                SELECT u.urun_kodu, u.urun_adi, ph.miktar, k.kullanici_adi, ph.islem_tarihi
-                FROM proje_hareketleri ph
-                JOIN urunler u ON ph.urun_id = u.urun_id
-                JOIN kullanicilar k ON ph.kullanici_id = k.kullanici_id
-                WHERE ph.proje_id = @proje_id
-                ORDER BY ph.islem_tarihi DESC";
+        SELECT 
+            u.urun_kodu, 
+            u.urun_adi, 
+            ph.miktar, 
+            k.kullanici_adi, 
+            ph.islem_tarihi,
+            ph.aktif
+        FROM proje_hareketleri ph
+        JOIN urunler u ON ph.urun_id = u.urun_id
+        JOIN kullanicilar k ON ph.kullanici_id = k.kullanici_id
+        WHERE ph.proje_id = @proje_id
+        ORDER BY ph.islem_tarihi DESC";
 
             var parameters = new[] { new MySqlParameter("@proje_id", projeId) };
             DataTable dt = DatabaseHelper.ExecuteQuery(query, parameters);
@@ -170,10 +176,12 @@ namespace StokTakipOtomasyonu.Forms
             string message = $"Proje: {projeKodu}\n\n";
             foreach (DataRow row in dt.Rows)
             {
-                message += $"[{row["islem_tarihi"]}] {row["kullanici_adi"]} - {row["urun_adi"]} ({row["urun_kodu"]}) x{row["miktar"]}\n";
+                string durum = Convert.ToBoolean(row["aktif"]) ? "" : " (İPTAL EDİLDİ)";
+                message += $"[{row["islem_tarihi"]}] {row["kullanici_adi"]} - {row["urun_adi"]} ({row["urun_kodu"]}) x{row["miktar"]}{durum}\n";
             }
 
             MessageBox.Show(message, "Proje İşlem Geçmişi", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
+
     }
 }

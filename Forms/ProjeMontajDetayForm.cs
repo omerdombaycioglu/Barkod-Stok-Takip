@@ -38,16 +38,16 @@ namespace StokTakipOtomasyonu.Forms
         private void LoadProjeUrunleri()
         {
             string query = @"
-                SELECT 
-                    u.urun_id, 
-                    u.urun_kodu, 
-                    u.urun_adi, 
-                    pu.miktar AS gerekli_miktar,
-                    IFNULL((SELECT SUM(miktar) FROM proje_hareketleri 
-                            WHERE proje_id = pu.proje_id AND urun_id = pu.urun_id), 0) AS kullanilan_miktar
-                FROM proje_urunleri pu
-                JOIN urunler u ON pu.urun_id = u.urun_id
-                WHERE pu.proje_id = @pid";
+        SELECT 
+            u.urun_id, 
+            u.urun_kodu, 
+            u.urun_adi, 
+            pu.miktar AS gerekli_miktar,
+            IFNULL((SELECT SUM(miktar) FROM proje_hareketleri 
+                    WHERE proje_id = pu.proje_id AND urun_id = pu.urun_id AND aktif = 1), 0) AS kullanilan_miktar
+        FROM proje_urunleri pu
+        JOIN urunler u ON pu.urun_id = u.urun_id
+        WHERE pu.proje_id = @pid";
 
             _tumUrunler = DatabaseHelper.ExecuteQuery(query, new MySqlParameter("@pid", _projeId));
             _tumUrunler.Columns.Add("tamamlandi", typeof(string));
@@ -69,23 +69,25 @@ namespace StokTakipOtomasyonu.Forms
             }
         }
 
+
         private void LoadKullanilanUrunler()
         {
             string query = @"
-                SELECT 
-                    ph.id AS hareket_id, 
-                    u.urun_kodu, 
-                    u.urun_adi, 
-                    ph.miktar, 
-                    ph.islem_tarihi
-                FROM proje_hareketleri ph
-                JOIN urunler u ON ph.urun_id = u.urun_id
-                WHERE ph.proje_id = @pid
-                ORDER BY ph.islem_tarihi DESC";
+        SELECT 
+            ph.id AS hareket_id, 
+            u.urun_kodu, 
+            u.urun_adi, 
+            ph.miktar, 
+            ph.islem_tarihi
+        FROM proje_hareketleri ph
+        JOIN urunler u ON ph.urun_id = u.urun_id
+        WHERE ph.proje_id = @pid AND ph.aktif = 1
+        ORDER BY ph.islem_tarihi DESC";
 
             _kullanilanlar = DatabaseHelper.ExecuteQuery(query, new MySqlParameter("@pid", _projeId));
             dgvKullanilanlar.DataSource = _kullanilanlar;
         }
+
 
         private async void txtBarkod_KeyDown(object sender, KeyEventArgs e)
         {
@@ -183,11 +185,11 @@ namespace StokTakipOtomasyonu.Forms
         private void BtnGeriAl_Click(object sender, EventArgs e)
         {
             string query = @"
-                SELECT ph.id AS hareket_id, ph.urun_id, ph.miktar 
-                FROM proje_hareketleri ph
-                WHERE ph.proje_id = @pid
-                ORDER BY ph.islem_tarihi DESC 
-                LIMIT 1";
+        SELECT ph.id AS hareket_id, ph.urun_id, ph.miktar 
+        FROM proje_hareketleri ph
+        WHERE ph.proje_id = @pid AND ph.aktif = 1
+        ORDER BY ph.islem_tarihi DESC 
+        LIMIT 1";
 
             DataTable dt = DatabaseHelper.ExecuteQuery(query, new MySqlParameter("@pid", _projeId));
             if (dt.Rows.Count == 0)
@@ -200,7 +202,7 @@ namespace StokTakipOtomasyonu.Forms
             int urunId = Convert.ToInt32(dt.Rows[0]["urun_id"]);
             int miktar = Convert.ToInt32(dt.Rows[0]["miktar"]);
 
-            DatabaseHelper.ExecuteNonQuery("DELETE FROM proje_hareketleri WHERE id = @hid", new MySqlParameter("@hid", hareketId));
+            DatabaseHelper.ExecuteNonQuery("UPDATE proje_hareketleri SET aktif = 0 WHERE id = @hid", new MySqlParameter("@hid", hareketId));
             DatabaseHelper.ExecuteNonQuery("UPDATE urunler SET miktar = miktar + @miktar WHERE urun_id = @uid",
                 new MySqlParameter("@miktar", miktar),
                 new MySqlParameter("@uid", urunId));
@@ -211,6 +213,7 @@ namespace StokTakipOtomasyonu.Forms
             LoadProjeUrunleri();
             LoadKullanilanUrunler();
         }
+
 
         private void dgvProjeUrunler_CellContentClick(object sender, DataGridViewCellEventArgs e) { }
         private void label1_Click(object sender, EventArgs e) { }

@@ -278,5 +278,10 @@ namespace StokTakipOtomasyonu.Forms
                 MessageBox.Show("Yetersiz ürünler başarıyla Excel dosyasına aktarıldı.");
             }
         }
+
+        private void ProjeEkleForm_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

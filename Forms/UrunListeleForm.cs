@@ -28,6 +28,8 @@ namespace StokTakipOtomasyonu
             dataGridView1.CellFormatting += DataGridView1_CellFormatting;
             ProjeleriYukle();
             UrunleriYukle();
+            this.Shown += (s, e) => txtArama.Focus();
+
         }
 
         private void DataGridView1_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
