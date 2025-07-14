@@ -22,12 +22,12 @@ namespace StokTakipOtomasyonu.Forms
 
             lblBasariMesaji.Visible = false;
             mesajTimer = new Timer();
-            mesajTimer.Interval = 2000; // 2 saniye
+            mesajTimer.Interval = 2000;
             mesajTimer.Tick += mesajTimer_Tick;
 
             txtBarkod.KeyDown += txtBarkod_KeyDown;
+            txtUrunKodu.KeyDown += txtUrunKodu_KeyDown; // EKLENDİ
 
-            // Ürün kodu için otomatik tamamlama
             txtUrunKodu.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
             txtUrunKodu.AutoCompleteSource = AutoCompleteSource.CustomSource;
 
@@ -51,6 +51,15 @@ namespace StokTakipOtomasyonu.Forms
         }
 
         private void txtBarkod_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                btnKaydet.PerformClick();
+                e.SuppressKeyPress = true;
+            }
+        }
+
+        private void txtUrunKodu_KeyDown(object sender, KeyEventArgs e) // EKLENDİ
         {
             if (e.KeyCode == Keys.Enter)
             {
@@ -104,7 +113,6 @@ namespace StokTakipOtomasyonu.Forms
 
                     if (kodResult == null)
                     {
-                        // Yeni ürün ekle
                         var yeniUrunAdi = Microsoft.VisualBasic.Interaction.InputBox("Yeni ürün adı girin:", "Yeni Ürün", "");
                         if (string.IsNullOrWhiteSpace(yeniUrunAdi))
                         {
@@ -134,7 +142,6 @@ namespace StokTakipOtomasyonu.Forms
                     urunId = Convert.ToInt32(result);
                 }
 
-                // Ürün hareketi ekle
                 string hareketEkle = @"INSERT INTO urun_hareketleri 
                     (urun_id, hareket_turu, miktar, kullanici_id, islem_turu_id) 
                     VALUES (@urun_id, 'Giris', @miktar, @kullanici_id, 0)";
@@ -144,20 +151,17 @@ namespace StokTakipOtomasyonu.Forms
                 hareketCmd.Parameters.AddWithValue("@kullanici_id", _kullaniciId);
                 hareketCmd.ExecuteNonQuery();
 
-                // Miktarı güncelle
                 string miktarGuncelle = "UPDATE urunler SET miktar = miktar + @miktar WHERE urun_id = @urun_id";
                 var miktarCmd = new MySqlCommand(miktarGuncelle, conn);
                 miktarCmd.Parameters.AddWithValue("@miktar", miktar);
                 miktarCmd.Parameters.AddWithValue("@urun_id", urunId);
                 miktarCmd.ExecuteNonQuery();
 
-                // Ürün adı al
                 string adSorgu = "SELECT urun_adi FROM urunler WHERE urun_id = @id";
                 var adCmd = new MySqlCommand(adSorgu, conn);
                 adCmd.Parameters.AddWithValue("@id", urunId);
                 string urunAdi = adCmd.ExecuteScalar()?.ToString() ?? "(ad yok)";
 
-                // Başarı mesajı
                 lblBasariMesaji.Text = $"✔ {urunAdi} ürününden {miktar} adet stok girişi yapıldı.";
                 lblBasariMesaji.Visible = true;
                 mesajTimer.Start();
