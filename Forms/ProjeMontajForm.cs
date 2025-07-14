@@ -176,7 +176,7 @@ namespace StokTakipOtomasyonu.Forms
             string message = $"Proje: {projeKodu}\n\n";
             foreach (DataRow row in dt.Rows)
             {
-                string durum = Convert.ToBoolean(row["aktif"]) ? "" : " (İPTAL EDİLDİ)";
+                string durum = Convert.ToBoolean(row["aktif"]) ? "" : " (GERİ ALINAN İŞLEM)";
                 message += $"[{row["islem_tarihi"]}] {row["kullanici_adi"]} - {row["urun_adi"]} ({row["urun_kodu"]}) x{row["miktar"]}{durum}\n";
             }
 
