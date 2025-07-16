@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
+using System.Drawing.Drawing2D;
+
 
 namespace StokTakipOtomasyonu.Forms
 {
@@ -11,8 +13,8 @@ namespace StokTakipOtomasyonu.Forms
 
         public MainForm(int kullaniciId, int yetki)
         {
-            InitializeComponent();
 
+            InitializeComponent();
             // Logo burada ayarlanıyor
             this.Icon = new Icon("isp_logo2.ico");
 
@@ -22,6 +24,7 @@ namespace StokTakipOtomasyonu.Forms
             this.FormClosed += MainForm_FormClosed;
             this.Load += MainForm_Load;
             ApplyModernTheme();
+
         }
 
 
@@ -156,7 +159,7 @@ namespace StokTakipOtomasyonu.Forms
 
         private void btnUrunBilgiGuncelle_Click(object sender, EventArgs e)
         {
-            new UrunBilgiForm().ShowDialog();
+            new UrunBilgiForm(_kullaniciId).ShowDialog();
         }
 
         private void btnKullaniciIslemleri_Click(object sender, EventArgs e)

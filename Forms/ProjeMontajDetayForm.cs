@@ -182,7 +182,7 @@ namespace StokTakipOtomasyonu.Forms
             LoadKullanilanUrunler();
         }
 
-        private void BtnGeriAl_Click(object sender, EventArgs e)
+        private async void BtnGeriAl_Click(object sender, EventArgs e)
         {
             string query = @"
         SELECT ph.id AS hareket_id, ph.urun_id, ph.miktar 
@@ -207,12 +207,22 @@ namespace StokTakipOtomasyonu.Forms
                 new MySqlParameter("@miktar", miktar),
                 new MySqlParameter("@uid", urunId));
 
-            lblSonIslem.Text = $"Son işlem geri alındı: Ürün ID {urunId}, miktar {miktar}";
-            lblSonIslem.ForeColor = Color.OrangeRed;
+            string urunAdi = DatabaseHelper.ExecuteScalar(
+                "SELECT urun_adi FROM urunler WHERE urun_id = @uid",
+                new MySqlParameter("@uid", urunId)
+            )?.ToString() ?? "[Bilinmeyen Ürün]";
+
+            lblSonIslem.Text = $"{miktar} adet {urunAdi} stoklara geri eklendi.";
+            lblSonIslem.ForeColor = Color.Blue;
+
+            await Task.Delay(1000);
+            lblSonIslem.Text = "";
 
             LoadProjeUrunleri();
             LoadKullanilanUrunler();
         }
+
+
 
 
         private void dgvProjeUrunler_CellContentClick(object sender, DataGridViewCellEventArgs e) { }

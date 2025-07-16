@@ -91,7 +91,7 @@ namespace StokTakipOtomasyonu.Forms
         {
             try
             {
-                string query = "SELECT * FROM kullanicilar";
+                string query = "SELECT * FROM kullanicilar WHERE silindi = 0";
                 DataTable dt = DatabaseHelper.ExecuteQuery(query);
                 dgvKullanicilar.DataSource = dt;
             }
@@ -100,6 +100,7 @@ namespace StokTakipOtomasyonu.Forms
                 MessageBox.Show("Kullanıcılar yüklenirken hata oluştu: " + ex.Message, "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
 
         private void dgvKullanicilar_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
@@ -136,22 +137,25 @@ namespace StokTakipOtomasyonu.Forms
                 var row = dgvKullanicilar.Rows[e.RowIndex];
                 var id = row.Cells["kullanici_id"].Value;
 
-                if (MessageBox.Show("Kullanıcıyı silmek istiyor musunuz?", "Onay", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                if (MessageBox.Show("Kullanıcıyı silmek istiyor musunuz? Bu işlem kullanıcıyı gizler ama tamamen silmez.",
+                                    "Silme Onayı", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                 {
                     try
                     {
-                        string query = "DELETE FROM kullanicilar WHERE kullanici_id = @id";
+                        string query = "UPDATE kullanicilar SET silindi = 1 WHERE kullanici_id = @id";
                         var param = new MySqlParameter("@id", id);
                         DatabaseHelper.ExecuteNonQuery(query, param);
                         KullanicilariYukle();
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show("Silme hatası: " + ex.Message);
+                        MessageBox.Show("Silme (gizleme) hatası: " + ex.Message);
                     }
                 }
             }
         }
+
+
 
         private void btnYeniKullanici_Click(object sender, EventArgs e)
         {

@@ -84,7 +84,7 @@ namespace StokTakipOtomasyonu.Forms
             this.lblSonIslem.AutoSize = true;
             this.lblSonIslem.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Italic);
             this.lblSonIslem.ForeColor = System.Drawing.Color.Gray;
-            this.lblSonIslem.Location = new System.Drawing.Point(20, 580);
+            this.lblSonIslem.Location = new System.Drawing.Point(450, 44);
             this.lblSonIslem.Name = "lblSonIslem";
             this.lblSonIslem.Size = new System.Drawing.Size(0, 20);
             this.lblSonIslem.TabIndex = 8;

@@ -33,6 +33,8 @@ namespace StokTakipOtomasyonu.Forms
             dgvDepoKonumlari.AllowUserToAddRows = false;
             dgvDepoKonumlari.DataSource = new DataTable();
             dgvDepoKonumlari.CellClick += dgvDepoKonumlari_CellClick;
+            txtBarkodArama.TextChanged += txtBarkodArama_TextChanged;
+
         }
 
 
@@ -44,21 +46,19 @@ namespace StokTakipOtomasyonu.Forms
                 if (connection.State != ConnectionState.Open)
                     connection.Open();
 
-                string query = "SELECT urun_id, urun_barkod, CONCAT(urun_kodu, ' - ', urun_adi) AS urun_bilgisi FROM urunler WHERE urun_barkod IS NOT NULL ORDER BY urun_adi";
+                string query = @"SELECT urun_id, urun_barkod, urun_kodu, urun_adi, urun_marka,
+                         CONCAT(urun_kodu, ' - ', urun_adi) AS urun_bilgisi 
+                         FROM urunler 
+                         ORDER BY urun_adi";
                 MySqlCommand cmd = new MySqlCommand(query, connection);
                 MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
                 allProducts = new DataTable();
                 adapter.Fill(allProducts);
 
-                txtBarkodArama.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
-                txtBarkodArama.AutoCompleteSource = AutoCompleteSource.CustomSource;
+                txtBarkodArama.AutoCompleteMode = AutoCompleteMode.None;
+                txtBarkodArama.AutoCompleteSource = AutoCompleteSource.None;
+                txtBarkodArama.AutoCompleteCustomSource = null;
 
-                AutoCompleteStringCollection autoComplete = new AutoCompleteStringCollection();
-                foreach (DataRow row in allProducts.Rows)
-                {
-                    autoComplete.Add(row["urun_barkod"].ToString());
-                }
-                txtBarkodArama.AutoCompleteCustomSource = autoComplete;
             }
             catch (Exception ex)
             {
@@ -71,6 +71,7 @@ namespace StokTakipOtomasyonu.Forms
                     connection.Close();
             }
         }
+
 
         private void LoadDepoKonumlari()
         {
@@ -184,13 +185,6 @@ namespace StokTakipOtomasyonu.Forms
             });
         }
 
-        private void txtBarkodArama_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Enter)
-            {
-                BarkodAraVeYukle();
-            }
-        }
         private void UrunBilgileriniYukle(int urunId)
         {
             try
@@ -258,6 +252,94 @@ namespace StokTakipOtomasyonu.Forms
                     connection.Close();
             }
         }
+
+        private void txtBarkodArama_TextChanged(object sender, EventArgs e)
+        {
+            string arama = txtBarkodArama.Text.Trim().ToLower();
+
+            if (string.IsNullOrWhiteSpace(arama))
+            {
+                currentUrunId = -1;
+                lblUrunBilgi.Text = "";
+                dgvDepoKonumlari.DataSource = new DataTable();
+                lblToplamMiktar.Text = "Toplam: 0";
+                lblDepodakiToplam.Text = "Depoda: 0";
+                lblUyari.Visible = false;
+                lblUyari2.Visible = false;
+                return;
+            }
+
+            var eslesenler = allProducts.AsEnumerable()
+                .Where(row =>
+                    row["urun_barkod"].ToString().ToLower().Contains(arama) ||
+                    row["urun_kodu"].ToString().ToLower().Contains(arama) ||
+                    row["urun_adi"].ToString().ToLower().Contains(arama) ||
+                    row["urun_marka"].ToString().ToLower().Contains(arama))
+                .Select(row => Convert.ToInt32(row["urun_id"]))
+                .Distinct()
+                .ToList();
+
+            if (eslesenler.Count == 0)
+            {
+                dgvDepoKonumlari.DataSource = new DataTable();
+                lblUrunBilgi.Text = "Ürün bulunamadı";
+                lblToplamMiktar.Text = "Toplam: 0";
+                lblDepodakiToplam.Text = "Depoda: 0";
+                return;
+            }
+
+            currentUrunId = -1; // Çoklu modda spesifik ürün seçilmiyor
+
+            // Tüm eşleşen ürünlerin depo konumlarını getir
+            try
+            {
+                if (connection.State != ConnectionState.Open)
+                    connection.Open();
+
+                string idListesi = string.Join(",", eslesenler);
+
+                string query = $@"
+            SELECT 
+                CONCAT(u.urun_kodu, ' - ', u.urun_adi) AS urun_bilgisi,
+                d.harf,
+                d.numara,
+                ud.miktar,
+                ud.depo_konum_id
+            FROM urun_depo_konum ud
+            JOIN urunler u ON ud.urun_id = u.urun_id
+            JOIN depo_konum d ON ud.depo_konum_id = d.id
+            WHERE ud.urun_id IN ({idListesi})
+            ORDER BY u.urun_kodu, d.harf, d.numara";
+
+                using (MySqlCommand cmd = new MySqlCommand(query, connection))
+                {
+                    MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
+                    DataTable dt = new DataTable();
+                    adapter.Fill(dt);
+
+                    DataGridViewAyarla();
+                    dgvDepoKonumlari.DataSource = dt;
+
+                    int toplamDepo = dt.AsEnumerable().Sum(r => Convert.ToInt32(r["miktar"]));
+                    lblUrunBilgi.Text = $"Eşleşen {eslesenler.Count} ürün gösteriliyor";
+                    lblToplamMiktar.Text = "";
+                    lblDepodakiToplam.Text = $"Toplam Depoda: {toplamDepo}";
+                    lblUyari.Visible = false;
+                    lblUyari2.Visible = false;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Veri getirilirken hata oluştu: " + ex.Message, "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                if (connection.State == ConnectionState.Open)
+                    connection.Close();
+            }
+        }
+
+
 
         private void DepoKonumuGuncelle(int rowIndex)
         {
@@ -502,6 +584,10 @@ namespace StokTakipOtomasyonu.Forms
             }
         }
 
+        private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 
     public class ComboboxItem

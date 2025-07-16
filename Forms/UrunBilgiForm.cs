@@ -1,9 +1,10 @@
-﻿using System;
-using System.Windows.Forms;
-using MySql.Data.MySqlClient;
+﻿using MySql.Data.MySqlClient;
 using StokTakipOtomasyonu.Helpers;
+using System;
 using System.Data;
 using System.Drawing;
+using System.Linq;
+using System.Windows.Forms;
 
 namespace StokTakipOtomasyonu.Forms
 {
@@ -11,13 +12,17 @@ namespace StokTakipOtomasyonu.Forms
     {
         private DataTable originalData;
 
-        public UrunBilgiForm()
+        private int aktifKullaniciId;
+
+        public UrunBilgiForm(int kullaniciId)
         {
             this.Icon = new Icon("isp_logo2.ico");
             InitializeComponent();
+            aktifKullaniciId = kullaniciId;
             ConfigureDataGridView();
             LoadUrunler();
         }
+
 
         private void ConfigureDataGridView()
         {
@@ -68,44 +73,83 @@ namespace StokTakipOtomasyonu.Forms
                         {
                             foreach (DataGridViewRow row in dataGridViewUrunler.Rows)
                             {
-                                if (!row.IsNewRow)
-                                {
-                                    string query = @"UPDATE urunler SET 
-                                                  urun_adi = @urun_adi, 
-                                                  urun_kodu = @urun_kodu, 
-                                                  urun_barkod = @urun_barkod, 
-                                                  urun_marka = @urun_marka, 
-                                                  urun_no = @urun_no, 
-                                                  kritik_seviye = @kritik_seviye 
-                                                  WHERE urun_id = @urun_id";
+                                if (row.IsNewRow) continue;
 
-                                    DatabaseHelper.ExecuteNonQuery(query, transaction,
+                                int urunId = Convert.ToInt32(row.Cells["urun_id"].Value);
+                                DataRow originalRow = originalData.Select($"urun_id = {urunId}").FirstOrDefault();
+                                if (originalRow == null) continue;
+
+                                string[] kolonlar = { "urun_adi", "urun_kodu", "urun_barkod", "urun_marka", "urun_no", "kritik_seviye" };
+
+                                bool degisiklikVar = false;
+
+                                foreach (string kolon in kolonlar)
+                                {
+                                    object eskiDeger = originalRow[kolon];
+                                    object yeniDeger = row.Cells[kolon].Value ?? DBNull.Value;
+
+                                    if (!object.Equals(eskiDeger, yeniDeger))
+                                    {
+                                        // LOG kaydı
+                                        string logQuery = @"INSERT INTO urun_guncelleme_log 
+                                                    (urun_id, kolon_adi, eski_deger, yeni_deger, degistiren_id) 
+                                                    VALUES (@urun_id, @kolon, @eski, @yeni, @kullanici_id)";
+
+                                        DatabaseHelper.ExecuteNonQuery(logQuery, transaction,
+                                            new MySqlParameter("@urun_id", urunId),
+                                            new MySqlParameter("@kolon", kolon),
+                                            new MySqlParameter("@eski", eskiDeger?.ToString() ?? ""),
+                                            new MySqlParameter("@yeni", yeniDeger?.ToString() ?? ""),
+                                            new MySqlParameter("@kullanici_id", aktifKullaniciId));
+
+                                        degisiklikVar = true;
+                                    }
+                                }
+
+                                if (degisiklikVar)
+                                {
+                                    // Sadece değişiklik varsa güncelle
+                                    string updateQuery = @"UPDATE urunler SET 
+                                                urun_adi = @urun_adi, 
+                                                urun_kodu = @urun_kodu, 
+                                                urun_barkod = @urun_barkod, 
+                                                urun_marka = @urun_marka, 
+                                                urun_no = @urun_no, 
+                                                kritik_seviye = @kritik_seviye 
+                                                WHERE urun_id = @urun_id";
+
+                                    DatabaseHelper.ExecuteNonQuery(updateQuery, transaction,
                                         new MySqlParameter("@urun_adi", row.Cells["urun_adi"].Value ?? DBNull.Value),
                                         new MySqlParameter("@urun_kodu", row.Cells["urun_kodu"].Value ?? DBNull.Value),
                                         new MySqlParameter("@urun_barkod", row.Cells["urun_barkod"].Value ?? DBNull.Value),
                                         new MySqlParameter("@urun_marka", row.Cells["urun_marka"].Value ?? DBNull.Value),
                                         new MySqlParameter("@urun_no", row.Cells["urun_no"].Value ?? DBNull.Value),
                                         new MySqlParameter("@kritik_seviye", row.Cells["kritik_seviye"].Value ?? DBNull.Value),
-                                        new MySqlParameter("@urun_id", row.Cells["urun_id"].Value));
+                                        new MySqlParameter("@urun_id", urunId));
                                 }
                             }
+
                             transaction.Commit();
-                            MessageBox.Show("Değişiklikler başarıyla kaydedildi.", "Başarılı", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                            LoadUrunler(); // Verileri yenile
+                            MessageBox.Show("Değişiklikler ve loglar başarıyla kaydedildi.", "Başarılı", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            LoadUrunler();
                         }
                         catch (Exception ex)
                         {
                             transaction.Rollback();
-                            MessageBox.Show("Kayıt sırasında hata oluştu: " + ex.Message, "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            MessageBox.Show("Transaction hatası:\n" + ex.ToString(), "HATA", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
                     }
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Bağlantı hatası: " + ex.Message, "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Bağlantı hatası:\n" + ex.ToString(), "HATA", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+
+
+
 
         private void btnIptal_Click(object sender, EventArgs e)
         {
@@ -119,8 +163,9 @@ namespace StokTakipOtomasyonu.Forms
                 string searchText = txtArama.Text.ToLower();
                 DataView dv = originalData.DefaultView;
                 dv.RowFilter = $"urun_adi LIKE '%{searchText}%' OR urun_kodu LIKE '%{searchText}%' OR urun_barkod LIKE '%{searchText}%'";
-                dataGridViewUrunler.DataSource = dv.ToTable();
+                dataGridViewUrunler.DataSource = dv; // ✅ DEĞİŞTİRİLDİ
             }
         }
+
     }
 }

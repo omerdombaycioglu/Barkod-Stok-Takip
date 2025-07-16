@@ -73,7 +73,7 @@
             this.btnUrunListele.Name = "btnUrunListele";
             this.btnUrunListele.Size = new System.Drawing.Size(200, 40);
             this.btnUrunListele.TabIndex = 0;
-            this.btnUrunListele.Text = "📋 Ürün Listele/Ara/Filtrele";
+            this.btnUrunListele.Text = "🧾 Ürün Listele/Ara/Filtrele";
             this.btnUrunListele.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnUrunListele.UseVisualStyleBackColor = false;
             this.btnUrunListele.Click += new System.EventHandler(this.btnUrunListele_Click);
@@ -347,6 +347,7 @@
             this.Controls.Add(this.btnCikis);
             this.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+
             this.MaximizeBox = false;
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;

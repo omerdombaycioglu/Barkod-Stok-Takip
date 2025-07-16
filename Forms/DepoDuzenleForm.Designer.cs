@@ -68,7 +68,6 @@
             this.txtBarkodArama.Name = "txtBarkodArama";
             this.txtBarkodArama.Size = new System.Drawing.Size(200, 22);
             this.txtBarkodArama.TabIndex = 2;
-            this.txtBarkodArama.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtBarkodArama_KeyDown);
             // 
             // dgvDepoKonumlari
             // 
@@ -109,7 +108,7 @@
             this.lblUyari.ForeColor = System.Drawing.Color.Orange;
             this.lblUyari.Location = new System.Drawing.Point(400, 125);
             this.lblUyari.Name = "lblUyari";
-            this.lblUyari.Size = new System.Drawing.Size(400, 23);            
+            this.lblUyari.Size = new System.Drawing.Size(400, 23);
             this.lblUyari.AutoSize = false;
             this.lblUyari.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 
