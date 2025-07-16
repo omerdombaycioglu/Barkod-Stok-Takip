@@ -16,6 +16,8 @@ namespace StokTakipOtomasyonu.Forms
         private int currentUrunId = -1;
         private int urunToplamMiktar = 0;
         private int depodakiToplamMiktar = 0;
+        private ListBox lstTamamlayici;
+
 
         public DepoDuzenleForm()
         {
@@ -34,6 +36,18 @@ namespace StokTakipOtomasyonu.Forms
             dgvDepoKonumlari.DataSource = new DataTable();
             dgvDepoKonumlari.CellClick += dgvDepoKonumlari_CellClick;
             txtBarkodArama.TextChanged += txtBarkodArama_TextChanged;
+            lstTamamlayici = new ListBox();
+            lstTamamlayici.Visible = false;
+            lstTamamlayici.Width = txtBarkodArama.Width;
+            lstTamamlayici.Left = txtBarkodArama.Left;
+            lstTamamlayici.Top = txtBarkodArama.Bottom + 2;
+            lstTamamlayici.Font = new Font("Segoe UI", 9F);
+            lstTamamlayici.MouseClick += lstTamamlayici_MouseClick;
+            lstTamamlayici.KeyDown += lstTamamlayici_KeyDown;
+            this.Controls.Add(lstTamamlayici);
+
+
+
 
         }
 
@@ -71,6 +85,30 @@ namespace StokTakipOtomasyonu.Forms
                     connection.Close();
             }
         }
+
+        private void lstTamamlayici_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter && lstTamamlayici.SelectedItem != null)
+            {
+                var secilen = (dynamic)lstTamamlayici.SelectedItem;
+                txtBarkodArama.TextChanged -= txtBarkodArama_TextChanged;
+                txtBarkodArama.Text = secilen.bilgi;
+                txtBarkodArama.TextChanged += txtBarkodArama_TextChanged;
+
+                currentUrunId = Convert.ToInt32(secilen.urun_id);
+                lstTamamlayici.Visible = false;
+
+                UrunBilgileriniYukle(currentUrunId);
+                UrunKonumlariniYukle(currentUrunId);
+                e.Handled = true;
+            }
+            else if (e.KeyCode == Keys.Escape)
+            {
+                lstTamamlayici.Visible = false;
+                e.Handled = true;
+            }
+        }
+
 
 
         private void LoadDepoKonumlari()
@@ -259,85 +297,56 @@ namespace StokTakipOtomasyonu.Forms
 
             if (string.IsNullOrWhiteSpace(arama))
             {
-                currentUrunId = -1;
-                lblUrunBilgi.Text = "";
-                dgvDepoKonumlari.DataSource = new DataTable();
-                lblToplamMiktar.Text = "Toplam: 0";
-                lblDepodakiToplam.Text = "Depoda: 0";
-                lblUyari.Visible = false;
-                lblUyari2.Visible = false;
+                lstTamamlayici.Visible = false;
                 return;
             }
 
-            var eslesenler = allProducts.AsEnumerable()
+            var tamamlayiciListe = allProducts.AsEnumerable()
                 .Where(row =>
                     row["urun_barkod"].ToString().ToLower().Contains(arama) ||
                     row["urun_kodu"].ToString().ToLower().Contains(arama) ||
                     row["urun_adi"].ToString().ToLower().Contains(arama) ||
                     row["urun_marka"].ToString().ToLower().Contains(arama))
-                .Select(row => Convert.ToInt32(row["urun_id"]))
-                .Distinct()
+                .Select(row => new
+                {
+                    urun_id = row["urun_id"],
+                    bilgi = $"{row["urun_kodu"]} - {row["urun_adi"]} ({row["urun_barkod"]})"
+                })
                 .ToList();
 
-            if (eslesenler.Count == 0)
+            if (tamamlayiciListe.Count > 0)
             {
-                dgvDepoKonumlari.DataSource = new DataTable();
-                lblUrunBilgi.Text = "Ürün bulunamadı";
-                lblToplamMiktar.Text = "Toplam: 0";
-                lblDepodakiToplam.Text = "Depoda: 0";
-                return;
+                lstTamamlayici.DataSource = tamamlayiciListe;
+                lstTamamlayici.DisplayMember = "bilgi";
+                lstTamamlayici.ValueMember = "urun_id";
+                lstTamamlayici.Visible = true;
+                lstTamamlayici.BringToFront();
             }
-
-            currentUrunId = -1; // Çoklu modda spesifik ürün seçilmiyor
-
-            // Tüm eşleşen ürünlerin depo konumlarını getir
-            try
+            else
             {
-                if (connection.State != ConnectionState.Open)
-                    connection.Open();
-
-                string idListesi = string.Join(",", eslesenler);
-
-                string query = $@"
-            SELECT 
-                CONCAT(u.urun_kodu, ' - ', u.urun_adi) AS urun_bilgisi,
-                d.harf,
-                d.numara,
-                ud.miktar,
-                ud.depo_konum_id
-            FROM urun_depo_konum ud
-            JOIN urunler u ON ud.urun_id = u.urun_id
-            JOIN depo_konum d ON ud.depo_konum_id = d.id
-            WHERE ud.urun_id IN ({idListesi})
-            ORDER BY u.urun_kodu, d.harf, d.numara";
-
-                using (MySqlCommand cmd = new MySqlCommand(query, connection))
-                {
-                    MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
-                    DataTable dt = new DataTable();
-                    adapter.Fill(dt);
-
-                    DataGridViewAyarla();
-                    dgvDepoKonumlari.DataSource = dt;
-
-                    int toplamDepo = dt.AsEnumerable().Sum(r => Convert.ToInt32(r["miktar"]));
-                    lblUrunBilgi.Text = $"Eşleşen {eslesenler.Count} ürün gösteriliyor";
-                    lblToplamMiktar.Text = "";
-                    lblDepodakiToplam.Text = $"Toplam Depoda: {toplamDepo}";
-                    lblUyari.Visible = false;
-                    lblUyari2.Visible = false;
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Veri getirilirken hata oluştu: " + ex.Message, "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            finally
-            {
-                if (connection.State == ConnectionState.Open)
-                    connection.Close();
+                lstTamamlayici.Visible = false;
             }
         }
+
+
+
+        private void lstTamamlayici_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (lstTamamlayici.SelectedItem != null)
+            {
+                var secilen = (dynamic)lstTamamlayici.SelectedItem;
+                txtBarkodArama.TextChanged -= txtBarkodArama_TextChanged;
+                txtBarkodArama.Text = secilen.bilgi;
+                txtBarkodArama.TextChanged += txtBarkodArama_TextChanged;
+
+                currentUrunId = Convert.ToInt32(secilen.urun_id);
+                lstTamamlayici.Visible = false;
+
+                UrunBilgileriniYukle(currentUrunId);
+                UrunKonumlariniYukle(currentUrunId);
+            }
+        }
+
 
 
 
@@ -372,7 +381,8 @@ namespace StokTakipOtomasyonu.Forms
                 if (connection.State == ConnectionState.Open)
                     connection.Close();
             }
-        }
+        }       
+
 
 
 

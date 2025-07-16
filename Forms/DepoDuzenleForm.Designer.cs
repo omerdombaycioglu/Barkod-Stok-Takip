@@ -60,7 +60,7 @@
             this.lblBarkodArama.Name = "lblBarkodArama";
             this.lblBarkodArama.Size = new System.Drawing.Size(84, 23);
             this.lblBarkodArama.TabIndex = 1;
-            this.lblBarkodArama.Text = "Barkod Ara:";
+            this.lblBarkodArama.Text = "Ürün Ara:";
             // 
             // txtBarkodArama
             // 
