@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Anamakine: 127.0.0.1
--- Üretim Zamanı: 13 Tem 2025, 20:48:56
+-- Üretim Zamanı: 16 Tem 2025, 12:45:30
 -- Sunucu sürümü: 10.4.32-MariaDB
 -- PHP Sürümü: 8.2.12
 
@@ -29,9 +29,18 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `depo_konum` (
   `id` int(11) NOT NULL,
-  `kat` varchar(50) NOT NULL,
-  `konum` varchar(100) NOT NULL
+  `harf` varchar(50) NOT NULL,
+  `numara` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Tablo döküm verisi `depo_konum`
+--
+
+INSERT INTO `depo_konum` (`id`, `harf`, `numara`) VALUES
+(7, 'A', '1'),
+(8, 'A', '2'),
+(9, 'A', '3');
 
 -- --------------------------------------------------------
 
@@ -66,16 +75,18 @@ CREATE TABLE `kullanicilar` (
   `kullanici_yetki` tinyint(4) NOT NULL CHECK (`kullanici_yetki` in (1,2)),
   `ad_soyad` varchar(100) DEFAULT NULL,
   `aktif` tinyint(1) DEFAULT 1,
-  `kayit_tarihi` datetime DEFAULT current_timestamp()
+  `kayit_tarihi` datetime DEFAULT current_timestamp(),
+  `silindi` tinyint(1) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Tablo döküm verisi `kullanicilar`
 --
 
-INSERT INTO `kullanicilar` (`kullanici_id`, `kullanici_adi`, `sifre`, `kullanici_yetki`, `ad_soyad`, `aktif`, `kayit_tarihi`) VALUES
-(1, 'admin', 'admin', 1, 'Sistem Yöneticisi', 1, '2025-07-04 13:59:18'),
-(2, 'kullanici', '123', 2, 'Standart Kullanıcı', 1, '2025-07-04 13:59:18');
+INSERT INTO `kullanicilar` (`kullanici_id`, `kullanici_adi`, `sifre`, `kullanici_yetki`, `ad_soyad`, `aktif`, `kayit_tarihi`, `silindi`) VALUES
+(1, 'admin', 'admin', 1, 'Sistem Yöneticisi', 1, '2025-07-04 13:59:18', 0),
+(2, 'kullanici', '1234', 2, 'Standart Kullanıcı', 0, '2025-07-04 13:59:18', 1),
+(10, 'omer', '123', 2, 'omer dombaycioglu', 0, '2025-07-16 10:44:34', 0);
 
 -- --------------------------------------------------------
 
@@ -144,16 +155,36 @@ CREATE TABLE `proje_hareketleri` (
   `urun_id` int(11) NOT NULL,
   `miktar` int(11) NOT NULL,
   `kullanici_id` int(11) NOT NULL,
-  `islem_tarihi` datetime DEFAULT current_timestamp()
+  `islem_tarihi` datetime DEFAULT current_timestamp(),
+  `aktif` tinyint(1) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Tablo döküm verisi `proje_hareketleri`
 --
 
-INSERT INTO `proje_hareketleri` (`id`, `proje_id`, `urun_id`, `miktar`, `kullanici_id`, `islem_tarihi`) VALUES
-(20, 39, 260, 1, 1, '2025-07-13 01:44:56'),
-(21, 39, 286, 1, 1, '2025-07-13 15:50:54');
+INSERT INTO `proje_hareketleri` (`id`, `proje_id`, `urun_id`, `miktar`, `kullanici_id`, `islem_tarihi`, `aktif`) VALUES
+(20, 39, 260, 1, 1, '2025-07-13 01:44:56', 0),
+(21, 39, 286, 1, 1, '2025-07-13 15:50:54', 0),
+(34, 42, 286, 1, 1, '2025-07-14 17:12:11', 0),
+(35, 42, 286, 1, 1, '2025-07-14 17:12:14', 0),
+(36, 42, 286, 1, 1, '2025-07-14 17:13:22', 0),
+(37, 42, 286, 1, 1, '2025-07-14 17:13:25', 0),
+(38, 42, 286, 1, 1, '2025-07-14 17:13:29', 0),
+(39, 42, 286, 1, 1, '2025-07-14 17:16:06', 0),
+(40, 42, 286, 1, 1, '2025-07-14 17:16:13', 0),
+(41, 42, 286, 1, 1, '2025-07-14 17:16:43', 0),
+(42, 42, 259, 1, 1, '2025-07-14 17:25:52', 0),
+(43, 42, 259, 1, 1, '2025-07-14 17:29:27', 0),
+(44, 42, 259, 1, 1, '2025-07-14 17:37:20', 0),
+(45, 42, 338, 1, 1, '2025-07-16 08:41:58', 0),
+(46, 42, 338, 1, 1, '2025-07-16 08:43:59', 0),
+(47, 42, 338, 1, 1, '2025-07-16 09:01:19', 0),
+(48, 42, 338, 1, 1, '2025-07-16 09:02:55', 0),
+(49, 42, 338, 1, 1, '2025-07-16 09:05:54', 0),
+(50, 42, 338, 1, 1, '2025-07-16 09:07:25', 0),
+(51, 42, 338, 1, 1, '2025-07-16 09:07:50', 0),
+(52, 42, 338, 1, 1, '2025-07-16 12:06:30', 0);
 
 -- --------------------------------------------------------
 
@@ -192,14 +223,6 @@ INSERT INTO `proje_urunleri` (`id`, `proje_id`, `urun_id`, `miktar`, `log_date`,
 (1219, 39, 273, 5, '2025-07-13 01:44:19', 1),
 (1220, 39, 274, 39, '2025-07-13 01:44:19', 1),
 (1221, 39, 275, 146, '2025-07-13 01:44:19', 1),
-(1222, 39, 276, 1, '2025-07-13 01:44:19', 1),
-(1223, 39, 277, 1, '2025-07-13 01:44:19', 1),
-(1224, 39, 278, 1, '2025-07-13 01:44:19', 1),
-(1225, 39, 279, 23, '2025-07-13 01:44:19', 1),
-(1226, 39, 280, 22, '2025-07-13 01:44:19', 1),
-(1227, 39, 281, 4, '2025-07-13 01:44:19', 1),
-(1228, 39, 282, 1, '2025-07-13 01:44:19', 1),
-(1229, 39, 283, 1, '2025-07-13 01:44:19', 1),
 (1230, 39, 284, 6, '2025-07-13 01:44:19', 1),
 (1231, 39, 285, 9, '2025-07-13 01:44:19', 1),
 (1232, 39, 286, 28, '2025-07-13 01:44:19', 1),
@@ -320,7 +343,8 @@ INSERT INTO `proje_urunleri` (`id`, `proje_id`, `urun_id`, `miktar`, `log_date`,
 (1347, 42, 328, 1, '2025-07-13 21:47:50', 1),
 (1348, 42, 329, 6, '2025-07-13 21:47:50', 1),
 (1349, 42, 330, 5, '2025-07-13 21:47:50', 1),
-(1350, 42, 331, 1, '2025-07-13 21:47:50', 1);
+(1350, 42, 331, 1, '2025-07-13 21:47:50', 1),
+(1351, 42, 338, 5, '2025-07-16 08:41:39', 1);
 
 -- --------------------------------------------------------
 
@@ -346,20 +370,20 @@ CREATE TABLE `urunler` (
 --
 
 INSERT INTO `urunler` (`urun_id`, `urun_adi`, `urun_kodu`, `aciklama`, `urun_barkod`, `urun_marka`, `urun_no`, `miktar`, `kritik_seviye`, `kayit_tarihi`) VALUES
-(256, 'Klemens', '', NULL, '232', 'LEU', NULL, 69, NULL, '2025-07-11 14:26:57'),
-(259, '4 Gerilim girişi/Akım girişi', 'AS04AD-A', NULL, '777', 'DEL', NULL, 3, NULL, '2025-07-11 16:38:58'),
-(260, 'AS200 PLC - 16DI / 12DO PNP, Dahili Ethernet / CAN', 'AS228P-A', NULL, '222', 'DEL', NULL, 0, NULL, '2025-07-11 16:38:58'),
-(261, 'AS16AP11P-A ,8D/8P Plc Ek Dijital Modül', 'AS16AP11P-A', NULL, '888', 'DEL', NULL, 1, NULL, '2025-07-11 16:38:58'),
+(256, 'Klemens1', '50130833', NULL, '232', 'LEU', NULL, 69, NULL, '2025-07-11 14:26:57'),
+(259, '4 Gerilim girişi/Akım girişi', 'AS04AD-A', NULL, '776', 'DEP', NULL, 3, NULL, '2025-07-11 16:38:58'),
+(260, 'AS200 PLC - 16DI / 12DO PNP, Dahili Ethernet / CAN', 'AS228P-A', NULL, '222', 'DEL', NULL, 6, NULL, '2025-07-11 16:38:58'),
+(261, 'AS16AP11P-A ,8D/8P Plc Ek Dijital Modül', 'AS16AP11P-A', NULL, '887', 'DEL', NULL, 1, NULL, '2025-07-11 16:38:58'),
 (262, 'Endüstriyel Ethernet DIACloud Bulut Yönlendiriciler', 'DX-2300LN-WW', NULL, NULL, 'DEL', NULL, 0, NULL, '2025-07-11 16:38:58'),
 (263, 'A2 Servo Sürücü - 1000W', 'ASD-A2-1021-M', NULL, '0', 'DEL', NULL, 1, NULL, '2025-07-11 16:38:58'),
 (264, 'A2 Servo Sürücü - 400 Watt', 'ASD-A2-0421-M', NULL, NULL, 'DEL', NULL, 0, NULL, '2025-07-11 16:38:58'),
 (265, 'Pano Soğutma Termostat\'ı 0-70°C Ray Tipi - Emas 10A 230V AC', 'PTM111', NULL, NULL, 'EMAS', NULL, 0, NULL, '2025-07-11 16:38:58'),
-(266, 'Pimli Plastik Kapı Switch - NC contact type', 'BS1010', NULL, NULL, 'EMAS', NULL, 0, NULL, '2025-07-11 16:38:58'),
-(267, 'Vibrasyon Kontrol Cihazı', 'EPAC3-W-F', NULL, NULL, 'ENDA', NULL, 0, NULL, '2025-07-11 16:38:58'),
+(266, 'Pimli Plastik Kapı Switch - NC contact type', 'BS1010', NULL, '799', 'EMAS', NULL, 0, NULL, '2025-07-11 16:38:58'),
+(267, 'Vibrasyon Kontrol Cihazı', 'EPAC3-W-F', NULL, '965', 'ENDA', NULL, 1, NULL, '2025-07-11 16:38:58'),
 (268, 'Faz yokluğu, Faz sırası hatası, 1 N/O kontak DIN1 Ray Montaj', 'MKS-03', NULL, NULL, 'ENTES', NULL, 0, NULL, '2025-07-11 16:38:58'),
 (269, 'HMI 10” TFT, 1024x600, Dirençli dokunmatik, 4 GB Flash bellek, 1x Ethernet, JMobile çalışma zamanı', 'ESMA10U301', NULL, '346', 'EXOR', NULL, 1, NULL, '2025-07-11 16:38:58'),
 (270, 'Transistör Çıkış Kartı 8\'li', 'GT8-V11', NULL, NULL, 'GEM', NULL, 0, NULL, '2025-07-11 16:38:58'),
-(271, 'Bağlantı kablosu', '50130832', NULL, NULL, 'LEU', NULL, 0, NULL, '2025-07-11 16:38:58'),
+(271, 'Bağlantı kablosu', '50130832', NULL, '878', 'LEU', NULL, 72, NULL, '2025-07-11 16:38:58'),
 (272, 'Bağlantı kablosu', '50130690', NULL, NULL, 'LEU', NULL, 0, NULL, '2025-07-11 16:38:58'),
 (273, 'EXACT12, 8XM12, 5-KUTUPLU, KAPAK, FIŞ. VİDA TERM.', '8000-88550-0000000', NULL, NULL, 'MURR', NULL, 0, NULL, '2025-07-11 16:38:58'),
 (274, 'Sensör aktüatör adaptörü', '7000-41201-0000000', NULL, NULL, 'MURR', NULL, 0, NULL, '2025-07-11 16:38:58'),
@@ -374,7 +398,7 @@ INSERT INTO `urunler` (`urun_id`, `urun_adi`, `urun_kodu`, `aciklama`, `urun_bar
 (283, 'Terminal bloğu için uç ve bölme plakası', '3030420', NULL, NULL, 'PXC', NULL, 0, NULL, '2025-07-11 16:38:58'),
 (284, 'Topraklama modüler terminal bloğu', '3209536', NULL, NULL, 'PXC', NULL, 0, NULL, '2025-07-11 16:38:58'),
 (285, 'Terminal bloğu için uç ve bölme plakası', '3030417', NULL, NULL, 'PXC', NULL, 0, NULL, '2025-07-11 16:38:58'),
-(286, 'Geçişli terminal bloğu', '3209523', NULL, '987', 'PXC', NULL, 0, NULL, '2025-07-11 16:38:58'),
+(286, 'Geçişli terminal bloğu', '3209523', NULL, '987', 'PXC', NULL, 3, NULL, '2025-07-11 16:38:58'),
 (287, 'Geçmeli köprü', '3030174', NULL, NULL, 'PXC', NULL, 0, NULL, '2025-07-11 16:38:58'),
 (288, 'Geçişli terminal bloğu', '3209512', NULL, NULL, 'PXC', NULL, 0, NULL, '2025-07-11 16:38:58'),
 (289, 'Geçmeli köprü', '3030161', NULL, NULL, 'PXC', NULL, 0, NULL, '2025-07-11 16:38:58'),
@@ -423,8 +447,12 @@ INSERT INTO `urunler` (`urun_id`, `urun_adi`, `urun_kodu`, `aciklama`, `urun_bar
 (332, '', '105698', NULL, NULL, '', NULL, 0, NULL, '2025-07-11 17:36:07'),
 (333, '', '987654321', NULL, NULL, '', NULL, 0, NULL, '2025-07-11 17:36:07'),
 (334, 'uBRİTO14', 'ES', NULL, '1', NULL, NULL, 1, NULL, '2025-07-12 11:23:05'),
-(335, 'vaio', NULL, NULL, '258852', NULL, NULL, 0, NULL, '2025-07-13 15:48:39'),
-(336, '5 servo sürüc', '23', NULL, '5', NULL, NULL, 2, NULL, '2025-07-13 19:00:03');
+(335, 'vaio', NULL, NULL, '258852', NULL, NULL, 1, NULL, '2025-07-13 15:48:39'),
+(336, '5 servo sürüc', '23', NULL, '5', NULL, NULL, 3, NULL, '2025-07-13 19:00:03'),
+(337, 'dell', 'AST9999', NULL, '874', NULL, NULL, 7, NULL, '2025-07-14 10:11:06'),
+(338, 'hp', 'vby45', NULL, '64', NULL, NULL, 1, NULL, '2025-07-14 12:38:44'),
+(339, 'olk', 'öçl', NULL, '1290666', NULL, NULL, 1, NULL, '2025-07-14 12:39:34'),
+(340, 'messi', '126', NULL, '15', NULL, NULL, 1, NULL, '2025-07-14 13:26:02');
 
 -- --------------------------------------------------------
 
@@ -437,6 +465,40 @@ CREATE TABLE `urun_depo_konum` (
   `depo_konum_id` int(11) NOT NULL,
   `miktar` int(11) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Tablo döküm verisi `urun_depo_konum`
+--
+
+INSERT INTO `urun_depo_konum` (`urun_id`, `depo_konum_id`, `miktar`) VALUES
+(256, 7, 50),
+(259, 7, 50),
+(259, 9, 3),
+(271, 7, 50),
+(338, 8, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Tablo için tablo yapısı `urun_guncelleme_log`
+--
+
+CREATE TABLE `urun_guncelleme_log` (
+  `log_id` int(11) NOT NULL,
+  `urun_id` int(11) NOT NULL,
+  `kolon_adi` enum('urun_adi','urun_kodu','urun_barkod','urun_marka','urun_no','kritik_seviye') NOT NULL,
+  `eski_deger` text DEFAULT NULL,
+  `yeni_deger` text DEFAULT NULL,
+  `degistiren_id` int(11) NOT NULL,
+  `degisiklik_tarihi` datetime DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Tablo döküm verisi `urun_guncelleme_log`
+--
+
+INSERT INTO `urun_guncelleme_log` (`log_id`, `urun_id`, `kolon_adi`, `eski_deger`, `yeni_deger`, `degistiren_id`, `degisiklik_tarihi`) VALUES
+(1, 259, 'urun_barkod', '777', '776', 1, '2025-07-16 13:42:42');
 
 -- --------------------------------------------------------
 
@@ -486,7 +548,55 @@ INSERT INTO `urun_hareketleri` (`id`, `urun_id`, `hareket_turu`, `miktar`, `log_
 (119, 335, 'Cikis', 1, '2025-07-13 18:32:51', 1, NULL, 2, NULL),
 (120, 336, 'Giris', 1, '2025-07-13 19:00:03', 1, NULL, 0, NULL),
 (121, 336, 'Giris', 1, '2025-07-13 19:00:07', 1, NULL, 0, NULL),
-(122, 334, 'Giris', 1, '2025-07-13 20:53:08', 1, NULL, 0, NULL);
+(122, 334, 'Giris', 1, '2025-07-13 20:53:08', 1, NULL, 0, NULL),
+(123, 271, 'Cikis', 69, '2025-07-14 08:23:32', 1, NULL, 1, 42),
+(124, 271, 'Cikis', 1, '2025-07-14 08:23:48', 1, NULL, 1, 42),
+(125, 271, 'Cikis', 1, '2025-07-14 08:23:55', 1, NULL, 1, 42),
+(126, 271, 'Cikis', 1, '2025-07-14 08:24:00', 1, NULL, 1, 42),
+(127, 260, 'Cikis', 1, '2025-07-14 08:32:13', 1, NULL, 1, 42),
+(128, 267, 'Cikis', 1, '2025-07-14 08:58:07', 1, NULL, 1, 42),
+(129, 267, 'Cikis', 1, '2025-07-14 09:37:14', 1, NULL, 1, 42),
+(130, 267, 'Cikis', 1, '2025-07-14 09:37:24', 1, NULL, 1, 42),
+(131, 267, 'Cikis', 1, '2025-07-14 09:47:01', 1, NULL, 1, 42),
+(132, 337, 'Giris', 1, '2025-07-14 10:11:06', 1, NULL, 0, NULL),
+(133, 334, 'Giris', 1, '2025-07-14 11:50:39', 1, NULL, 0, NULL),
+(134, 334, 'Cikis', 1, '2025-07-14 11:50:50', 1, NULL, 0, NULL),
+(135, 338, 'Giris', 1, '2025-07-14 12:38:44', 1, NULL, 0, NULL),
+(136, 339, 'Giris', 1, '2025-07-14 12:39:34', 1, NULL, 0, NULL),
+(137, 337, 'Giris', 1, '2025-07-14 12:40:57', 1, NULL, 0, NULL),
+(138, 337, 'Giris', 1, '2025-07-14 12:41:02', 1, NULL, 0, NULL),
+(139, 337, 'Giris', 1, '2025-07-14 12:41:17', 1, NULL, 0, NULL),
+(140, 337, 'Giris', 1, '2025-07-14 12:41:53', 1, NULL, 0, NULL),
+(141, 337, 'Giris', 1, '2025-07-14 12:41:56', 1, NULL, 0, NULL),
+(142, 260, 'Giris', 1, '2025-07-14 12:42:07', 1, NULL, 0, NULL),
+(143, 337, 'Giris', 1, '2025-07-14 12:43:04', 1, NULL, 0, NULL),
+(144, 340, 'Giris', 1, '2025-07-14 13:26:02', 1, NULL, 0, NULL),
+(145, 286, 'Cikis', 1, '2025-07-14 17:04:41', 1, NULL, 1, 42),
+(146, 286, 'Cikis', 1, '2025-07-14 17:04:48', 1, NULL, 1, 42),
+(147, 286, 'Cikis', 1, '2025-07-14 17:04:51', 1, NULL, 1, 42),
+(148, 286, 'Cikis', 1, '2025-07-14 17:12:11', 1, NULL, 1, 42),
+(149, 286, 'Cikis', 1, '2025-07-14 17:12:14', 1, NULL, 1, 42),
+(150, 286, 'Cikis', 1, '2025-07-14 17:13:22', 1, NULL, 1, 42),
+(151, 286, 'Cikis', 1, '2025-07-14 17:13:25', 1, NULL, 1, 42),
+(152, 286, 'Cikis', 1, '2025-07-14 17:13:29', 1, NULL, 1, 42),
+(153, 286, 'Cikis', 1, '2025-07-14 17:16:06', 1, NULL, 1, 42),
+(154, 286, 'Cikis', 1, '2025-07-14 17:16:13', 1, NULL, 1, 42),
+(155, 286, 'Cikis', 1, '2025-07-14 17:16:43', 1, NULL, 1, 42),
+(156, 259, 'Cikis', 1, '2025-07-14 17:25:52', 1, NULL, 1, 42),
+(157, 259, 'Cikis', 1, '2025-07-14 17:29:27', 1, NULL, 1, 42),
+(158, 259, 'Cikis', 1, '2025-07-14 17:37:20', 1, NULL, 1, 42),
+(159, 335, 'Giris', 1, '2025-07-16 08:22:01', 1, NULL, 0, NULL),
+(160, 338, 'Cikis', 1, '2025-07-16 08:41:58', 1, NULL, 1, 42),
+(161, 338, 'Cikis', 1, '2025-07-16 08:43:59', 1, NULL, 1, 42),
+(162, 338, 'Cikis', 1, '2025-07-16 09:01:19', 1, NULL, 1, 42),
+(163, 338, 'Cikis', 1, '2025-07-16 09:02:55', 1, NULL, 1, 42),
+(164, 338, 'Cikis', 1, '2025-07-16 09:05:54', 1, NULL, 1, 42),
+(165, 338, 'Cikis', 1, '2025-07-16 09:07:25', 1, NULL, 1, 42),
+(166, 338, 'Cikis', 1, '2025-07-16 09:07:50', 1, NULL, 1, 42),
+(167, 338, 'Cikis', 1, '2025-07-16 10:16:46', 1, NULL, 2, NULL),
+(168, 338, 'Giris', 1, '2025-07-16 10:51:04', 2, NULL, 0, NULL),
+(169, 336, 'Giris', 1, '2025-07-16 11:30:41', 1, NULL, 0, NULL),
+(170, 338, 'Cikis', 1, '2025-07-16 12:06:30', 1, NULL, 1, 42);
 
 --
 -- Dökümü yapılmış tablolar için indeksler
@@ -497,7 +607,7 @@ INSERT INTO `urun_hareketleri` (`id`, `urun_id`, `hareket_turu`, `miktar`, `log_
 --
 ALTER TABLE `depo_konum`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `kat` (`kat`,`konum`);
+  ADD UNIQUE KEY `kat` (`harf`,`numara`);
 
 --
 -- Tablo için indeksler `islem_turu`
@@ -553,6 +663,14 @@ ALTER TABLE `urun_depo_konum`
   ADD KEY `fk_udk_depo` (`depo_konum_id`);
 
 --
+-- Tablo için indeksler `urun_guncelleme_log`
+--
+ALTER TABLE `urun_guncelleme_log`
+  ADD PRIMARY KEY (`log_id`),
+  ADD KEY `urun_id` (`urun_id`),
+  ADD KEY `degistiren_id` (`degistiren_id`);
+
+--
 -- Tablo için indeksler `urun_hareketleri`
 --
 ALTER TABLE `urun_hareketleri`
@@ -570,13 +688,13 @@ ALTER TABLE `urun_hareketleri`
 -- Tablo için AUTO_INCREMENT değeri `depo_konum`
 --
 ALTER TABLE `depo_konum`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- Tablo için AUTO_INCREMENT değeri `kullanicilar`
 --
 ALTER TABLE `kullanicilar`
-  MODIFY `kullanici_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `kullanici_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- Tablo için AUTO_INCREMENT değeri `projeler`
@@ -588,25 +706,31 @@ ALTER TABLE `projeler`
 -- Tablo için AUTO_INCREMENT değeri `proje_hareketleri`
 --
 ALTER TABLE `proje_hareketleri`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53;
 
 --
 -- Tablo için AUTO_INCREMENT değeri `proje_urunleri`
 --
 ALTER TABLE `proje_urunleri`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1351;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1352;
 
 --
 -- Tablo için AUTO_INCREMENT değeri `urunler`
 --
 ALTER TABLE `urunler`
-  MODIFY `urun_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=337;
+  MODIFY `urun_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=341;
+
+--
+-- Tablo için AUTO_INCREMENT değeri `urun_guncelleme_log`
+--
+ALTER TABLE `urun_guncelleme_log`
+  MODIFY `log_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- Tablo için AUTO_INCREMENT değeri `urun_hareketleri`
 --
 ALTER TABLE `urun_hareketleri`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=123;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=171;
 
 --
 -- Dökümü yapılmış tablolar için kısıtlamalar
@@ -640,6 +764,13 @@ ALTER TABLE `proje_urunleri`
 ALTER TABLE `urun_depo_konum`
   ADD CONSTRAINT `fk_udk_depo` FOREIGN KEY (`depo_konum_id`) REFERENCES `depo_konum` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `fk_udk_urun` FOREIGN KEY (`urun_id`) REFERENCES `urunler` (`urun_id`) ON DELETE CASCADE;
+
+--
+-- Tablo kısıtlamaları `urun_guncelleme_log`
+--
+ALTER TABLE `urun_guncelleme_log`
+  ADD CONSTRAINT `urun_guncelleme_log_ibfk_1` FOREIGN KEY (`urun_id`) REFERENCES `urunler` (`urun_id`),
+  ADD CONSTRAINT `urun_guncelleme_log_ibfk_2` FOREIGN KEY (`degistiren_id`) REFERENCES `kullanicilar` (`kullanici_id`);
 
 --
 -- Tablo kısıtlamaları `urun_hareketleri`

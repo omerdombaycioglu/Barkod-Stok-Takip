@@ -11,7 +11,6 @@ namespace StokTakipOtomasyonu.Forms
     public partial class UrunBilgiForm : Form
     {
         private DataTable originalData;
-
         private int aktifKullaniciId;
 
         public UrunBilgiForm(int kullaniciId)
@@ -23,7 +22,6 @@ namespace StokTakipOtomasyonu.Forms
             LoadUrunler();
         }
 
-
         private void ConfigureDataGridView()
         {
             dataGridViewUrunler.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
@@ -34,9 +32,7 @@ namespace StokTakipOtomasyonu.Forms
             dataGridViewUrunler.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
             dataGridViewUrunler.RowHeadersVisible = false;
             dataGridViewUrunler.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            
         }
-
 
         private void LoadUrunler()
         {
@@ -44,13 +40,14 @@ namespace StokTakipOtomasyonu.Forms
             {
                 string query = "SELECT urun_id, urun_adi, urun_kodu, urun_barkod, urun_marka, urun_no, miktar, kritik_seviye FROM urunler";
                 originalData = DatabaseHelper.ExecuteQuery(query);
+                originalData.AcceptChanges(); // 🔒 Karşılaştırma için önemli
+
                 dataGridViewUrunler.DataSource = originalData;
 
-                // 🛡️ 'miktar' sütununu sadece okunur yap
                 if (dataGridViewUrunler.Columns.Contains("miktar"))
                 {
                     dataGridViewUrunler.Columns["miktar"].ReadOnly = true;
-                    dataGridViewUrunler.Columns["miktar"].DefaultCellStyle.BackColor = Color.LightGray; // isteğe bağlı görsel ipucu
+                    dataGridViewUrunler.Columns["miktar"].DefaultCellStyle.BackColor = Color.LightGray;
                 }
             }
             catch (Exception ex)
@@ -59,9 +56,11 @@ namespace StokTakipOtomasyonu.Forms
             }
         }
 
-
         private void btnKaydet_Click(object sender, EventArgs e)
         {
+            dataGridViewUrunler.EndEdit();
+            dataGridViewUrunler.CurrentCell = null;
+
             try
             {
                 using (var conn = DatabaseHelper.GetConnection())
@@ -75,31 +74,32 @@ namespace StokTakipOtomasyonu.Forms
                             {
                                 if (row.IsNewRow) continue;
 
-                                int urunId = Convert.ToInt32(row.Cells["urun_id"].Value);
-                                DataRow originalRow = originalData.Select($"urun_id = {urunId}").FirstOrDefault();
-                                if (originalRow == null) continue;
+                                if (!(row.DataBoundItem is DataRowView drv)) continue;
+
+                                drv.EndEdit(); // ✅ En kritik satır — bağlanan DataRow'u günceller
+
+                                DataRow originalRow = drv.Row;
+                                int urunId = Convert.ToInt32(originalRow["urun_id"]);
 
                                 string[] kolonlar = { "urun_adi", "urun_kodu", "urun_barkod", "urun_marka", "urun_no", "kritik_seviye" };
-
                                 bool degisiklikVar = false;
 
                                 foreach (string kolon in kolonlar)
                                 {
-                                    object eskiDeger = originalRow[kolon];
-                                    object yeniDeger = row.Cells[kolon].Value ?? DBNull.Value;
+                                    string eskiDeger = originalRow[kolon, DataRowVersion.Original]?.ToString()?.Trim() ?? "";
+                                    string yeniDeger = originalRow[kolon]?.ToString()?.Trim() ?? "";
 
-                                    if (!object.Equals(eskiDeger, yeniDeger))
+                                    if (eskiDeger != yeniDeger)
                                     {
-                                        // LOG kaydı
                                         string logQuery = @"INSERT INTO urun_guncelleme_log 
-                                                    (urun_id, kolon_adi, eski_deger, yeni_deger, degistiren_id) 
-                                                    VALUES (@urun_id, @kolon, @eski, @yeni, @kullanici_id)";
+                                    (urun_id, kolon_adi, eski_deger, yeni_deger, degistiren_id) 
+                                    VALUES (@urun_id, @kolon, @eski, @yeni, @kullanici_id)";
 
                                         DatabaseHelper.ExecuteNonQuery(logQuery, transaction,
                                             new MySqlParameter("@urun_id", urunId),
                                             new MySqlParameter("@kolon", kolon),
-                                            new MySqlParameter("@eski", eskiDeger?.ToString() ?? ""),
-                                            new MySqlParameter("@yeni", yeniDeger?.ToString() ?? ""),
+                                            new MySqlParameter("@eski", eskiDeger),
+                                            new MySqlParameter("@yeni", yeniDeger),
                                             new MySqlParameter("@kullanici_id", aktifKullaniciId));
 
                                         degisiklikVar = true;
@@ -108,23 +108,22 @@ namespace StokTakipOtomasyonu.Forms
 
                                 if (degisiklikVar)
                                 {
-                                    // Sadece değişiklik varsa güncelle
                                     string updateQuery = @"UPDATE urunler SET 
-                                                urun_adi = @urun_adi, 
-                                                urun_kodu = @urun_kodu, 
-                                                urun_barkod = @urun_barkod, 
-                                                urun_marka = @urun_marka, 
-                                                urun_no = @urun_no, 
-                                                kritik_seviye = @kritik_seviye 
-                                                WHERE urun_id = @urun_id";
+                                urun_adi = @urun_adi, 
+                                urun_kodu = @urun_kodu, 
+                                urun_barkod = @urun_barkod, 
+                                urun_marka = @urun_marka, 
+                                urun_no = @urun_no, 
+                                kritik_seviye = @kritik_seviye 
+                                WHERE urun_id = @urun_id";
 
                                     DatabaseHelper.ExecuteNonQuery(updateQuery, transaction,
-                                        new MySqlParameter("@urun_adi", row.Cells["urun_adi"].Value ?? DBNull.Value),
-                                        new MySqlParameter("@urun_kodu", row.Cells["urun_kodu"].Value ?? DBNull.Value),
-                                        new MySqlParameter("@urun_barkod", row.Cells["urun_barkod"].Value ?? DBNull.Value),
-                                        new MySqlParameter("@urun_marka", row.Cells["urun_marka"].Value ?? DBNull.Value),
-                                        new MySqlParameter("@urun_no", row.Cells["urun_no"].Value ?? DBNull.Value),
-                                        new MySqlParameter("@kritik_seviye", row.Cells["kritik_seviye"].Value ?? DBNull.Value),
+                                        new MySqlParameter("@urun_adi", originalRow["urun_adi"] ?? DBNull.Value),
+                                        new MySqlParameter("@urun_kodu", originalRow["urun_kodu"] ?? DBNull.Value),
+                                        new MySqlParameter("@urun_barkod", originalRow["urun_barkod"] ?? DBNull.Value),
+                                        new MySqlParameter("@urun_marka", originalRow["urun_marka"] ?? DBNull.Value),
+                                        new MySqlParameter("@urun_no", originalRow["urun_no"] ?? DBNull.Value),
+                                        new MySqlParameter("@kritik_seviye", originalRow["kritik_seviye"] ?? DBNull.Value),
                                         new MySqlParameter("@urun_id", urunId));
                                 }
                             }
@@ -136,18 +135,16 @@ namespace StokTakipOtomasyonu.Forms
                         catch (Exception ex)
                         {
                             transaction.Rollback();
-                            MessageBox.Show("Transaction hatası:\n" + ex.ToString(), "HATA", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            MessageBox.Show("Transaction hatası:\n" + ex.Message, "HATA", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
                     }
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Bağlantı hatası:\n" + ex.ToString(), "HATA", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Bağlantı hatası:\n" + ex.Message, "HATA", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
-
 
 
 
@@ -163,9 +160,8 @@ namespace StokTakipOtomasyonu.Forms
                 string searchText = txtArama.Text.ToLower();
                 DataView dv = originalData.DefaultView;
                 dv.RowFilter = $"urun_adi LIKE '%{searchText}%' OR urun_kodu LIKE '%{searchText}%' OR urun_barkod LIKE '%{searchText}%'";
-                dataGridViewUrunler.DataSource = dv; // ✅ DEĞİŞTİRİLDİ
+                dataGridViewUrunler.DataSource = dv;
             }
         }
-
     }
 }
