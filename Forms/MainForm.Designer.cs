@@ -73,7 +73,7 @@
             this.btnUrunListele.Name = "btnUrunListele";
             this.btnUrunListele.Size = new System.Drawing.Size(200, 40);
             this.btnUrunListele.TabIndex = 0;
-            this.btnUrunListele.Text = "Ürün Listele/Ara/Filtrele";
+            this.btnUrunListele.Text = "📋 Ürün Listele/Ara/Filtrele";
             this.btnUrunListele.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnUrunListele.UseVisualStyleBackColor = false;
             this.btnUrunListele.Click += new System.EventHandler(this.btnUrunListele_Click);
@@ -93,7 +93,7 @@
             this.btnManuelUrunCikisi.Name = "btnManuelUrunCikisi";
             this.btnManuelUrunCikisi.Size = new System.Drawing.Size(200, 40);
             this.btnManuelUrunCikisi.TabIndex = 0;
-            this.btnManuelUrunCikisi.Text = "Ürün Çıkışı";
+            this.btnManuelUrunCikisi.Text = "➖ Ürün Çıkışı";
             this.btnManuelUrunCikisi.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnManuelUrunCikisi.UseVisualStyleBackColor = false;
             this.btnManuelUrunCikisi.Click += new System.EventHandler(this.btnManuelUrunCikisi_Click);
@@ -113,7 +113,7 @@
             this.btnManuelUrunGirisi.Name = "btnManuelUrunGirisi";
             this.btnManuelUrunGirisi.Size = new System.Drawing.Size(200, 40);
             this.btnManuelUrunGirisi.TabIndex = 0;
-            this.btnManuelUrunGirisi.Text = "Ürün Girişi";
+            this.btnManuelUrunGirisi.Text = "➕ Ürün Girişi";
             this.btnManuelUrunGirisi.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnManuelUrunGirisi.UseVisualStyleBackColor = false;
             this.btnManuelUrunGirisi.Click += new System.EventHandler(this.btnManuelUrunGirisi_Click);
@@ -148,7 +148,7 @@
             this.btnProjeEkle.Name = "btnProjeEkle";
             this.btnProjeEkle.Size = new System.Drawing.Size(200, 40);
             this.btnProjeEkle.TabIndex = 0;
-            this.btnProjeEkle.Text = "   Proje Ekle";
+            this.btnProjeEkle.Text = "📁 Proje Ekle";
             this.btnProjeEkle.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnProjeEkle.UseVisualStyleBackColor = false;
             this.btnProjeEkle.Click += new System.EventHandler(this.btnProjeEkle_Click);
@@ -168,7 +168,7 @@
             this.btnProjeMontaj.Name = "btnProjeMontaj";
             this.btnProjeMontaj.Size = new System.Drawing.Size(200, 40);
             this.btnProjeMontaj.TabIndex = 1;
-            this.btnProjeMontaj.Text = "Proje Ürün Kontrol";
+            this.btnProjeMontaj.Text = "🔍 Proje Ürün Kontrol";
             this.btnProjeMontaj.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnProjeMontaj.UseVisualStyleBackColor = false;
             this.btnProjeMontaj.Click += new System.EventHandler(this.btnProjeMontaj_Click);
@@ -202,7 +202,7 @@
             this.btnDepoDuzenle.Name = "btnDepoDuzenle";
             this.btnDepoDuzenle.Size = new System.Drawing.Size(200, 40);
             this.btnDepoDuzenle.TabIndex = 0;
-            this.btnDepoDuzenle.Text = "   Depo Düzenle";
+            this.btnDepoDuzenle.Text = "🧱 Depo Düzenle";
             this.btnDepoDuzenle.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnDepoDuzenle.UseVisualStyleBackColor = false;
             this.btnDepoDuzenle.Click += new System.EventHandler(this.btnDepoDuzenle_Click);
@@ -237,7 +237,7 @@
             this.btnUrunBilgiGuncelle.Name = "btnUrunBilgiGuncelle";
             this.btnUrunBilgiGuncelle.Size = new System.Drawing.Size(200, 40);
             this.btnUrunBilgiGuncelle.TabIndex = 0;
-            this.btnUrunBilgiGuncelle.Text = "   Ürün Bilgi Güncelle";
+            this.btnUrunBilgiGuncelle.Text = " ✏️ Ürün Bilgi Güncelle";
             this.btnUrunBilgiGuncelle.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnUrunBilgiGuncelle.UseVisualStyleBackColor = false;
             this.btnUrunBilgiGuncelle.Click += new System.EventHandler(this.btnUrunBilgiGuncelle_Click);
@@ -257,7 +257,7 @@
             this.btnKullaniciIslemleri.Name = "btnKullaniciIslemleri";
             this.btnKullaniciIslemleri.Size = new System.Drawing.Size(200, 40);
             this.btnKullaniciIslemleri.TabIndex = 1;
-            this.btnKullaniciIslemleri.Text = "   Kullanıcı İşlemleri";
+            this.btnKullaniciIslemleri.Text = "👤 Kullanıcı İşlemleri";
             this.btnKullaniciIslemleri.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnKullaniciIslemleri.UseVisualStyleBackColor = false;
             this.btnKullaniciIslemleri.Click += new System.EventHandler(this.btnKullaniciIslemleri_Click);
@@ -277,7 +277,7 @@
             this.btnSonIslemler.Name = "btnSonIslemler";
             this.btnSonIslemler.Size = new System.Drawing.Size(150, 40);
             this.btnSonIslemler.TabIndex = 6;
-            this.btnSonIslemler.Text = "   Son İşlemler";
+            this.btnSonIslemler.Text = "📑 Son İşlemler";
             this.btnSonIslemler.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnSonIslemler.UseVisualStyleBackColor = false;
             this.btnSonIslemler.Click += new System.EventHandler(this.btnSonIslemler_Click);
@@ -297,7 +297,7 @@
             this.btnCikis.Name = "btnCikis";
             this.btnCikis.Size = new System.Drawing.Size(150, 40);
             this.btnCikis.TabIndex = 7;
-            this.btnCikis.Text = "   Çıkış";
+            this.btnCikis.Text = "🔚 Çıkış";
             this.btnCikis.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnCikis.UseVisualStyleBackColor = false;
             this.btnCikis.Click += new System.EventHandler(this.btnCikis_Click);
