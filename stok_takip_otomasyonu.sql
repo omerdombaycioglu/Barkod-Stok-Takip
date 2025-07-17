@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Anamakine: 127.0.0.1
--- Üretim Zamanı: 17 Tem 2025, 08:44:54
+-- Üretim Zamanı: 17 Tem 2025, 16:34:05
 -- Sunucu sürümü: 10.4.32-MariaDB
 -- PHP Sürümü: 8.2.12
 
@@ -85,8 +85,7 @@ CREATE TABLE `kullanicilar` (
 
 INSERT INTO `kullanicilar` (`kullanici_id`, `kullanici_adi`, `sifre`, `kullanici_yetki`, `ad_soyad`, `aktif`, `kayit_tarihi`, `silindi`) VALUES
 (1, 'admin', 'admin', 1, 'Sistem Yöneticisi', 1, '2025-07-04 13:59:18', 0),
-(2, 'kullanici', '1234', 2, 'Standart Kullanıcı', 0, '2025-07-04 13:59:18', 1),
-(10, 'omer', '123', 2, 'omer dombaycioglu', 0, '2025-07-16 10:44:34', 0);
+(2, 'kullanici', 'fccf00907c168fffd34a79979bddfeec1e97892c', 2, 'Standart Kullanıcı', 0, '2025-07-04 13:59:18', 1);
 
 -- --------------------------------------------------------
 
@@ -109,7 +108,8 @@ CREATE TABLE `projeler` (
 
 INSERT INTO `projeler` (`proje_id`, `proje_kodu`, `proje_tanimi`, `aktif`, `kayit_tarihi`, `olusturan_id`) VALUES
 (39, 'E666', 'E666 VANA OTOMASYONU', 0, '2025-07-13 01:44:19', 1),
-(42, 'E666', 'E666 VANA OTOMASYONU', 1, '2025-07-13 21:47:49', 1);
+(42, 'E666', 'E666 VANA OTOMASYONU', 0, '2025-07-13 21:47:49', 1),
+(43, 'buzdagi', 'buzdagi', 1, '2025-07-17 12:47:29', 1);
 
 --
 -- Tetikleyiciler `projeler`
@@ -165,7 +165,20 @@ CREATE TABLE `proje_hareketleri` (
 --
 
 INSERT INTO `proje_hareketleri` (`id`, `proje_id`, `urun_id`, `miktar`, `kullanici_id`, `islem_tarihi`, `aktif`, `geri_alinan_islem`) VALUES
-(20, 39, 260, 1, 1, '2025-07-13 01:44:56', 0, NULL);
+(20, 39, 260, 1, 1, '2025-07-13 01:44:56', 0, NULL),
+(55, 43, 341, 1, 1, '2025-07-17 12:48:01', 0, '2025-07-17 13:08:05'),
+(56, 43, 341, 1, 1, '2025-07-17 12:48:08', 0, '2025-07-17 13:07:59'),
+(57, 43, 341, 2, 1, '2025-07-17 12:48:15', 0, '2025-07-17 12:54:27'),
+(58, 43, 341, 1, 1, '2025-07-17 13:47:41', 0, '2025-07-17 13:47:50'),
+(59, 43, 341, 1, 1, '2025-07-17 13:48:34', 0, '2025-07-17 13:54:23'),
+(60, 43, 341, 2, 1, '2025-07-17 13:48:41', 0, '2025-07-17 13:49:59'),
+(61, 43, 341, 1, 1, '2025-07-17 13:50:06', 0, '2025-07-17 14:20:36'),
+(62, 43, 341, 3, 1, '2025-07-17 13:54:17', 0, '2025-07-17 13:54:26'),
+(63, 43, 341, 1, 1, '2025-07-17 14:20:22', 0, '2025-07-17 14:20:36'),
+(64, 43, 327, 1, 1, '2025-07-17 14:33:11', 0, '2025-07-17 14:33:27'),
+(65, 43, 341, 1, 1, '2025-07-17 14:46:09', 0, '2025-07-17 15:46:57'),
+(66, 43, 336, 1, 1, '2025-07-17 14:48:17', 0, '2025-07-17 15:52:18'),
+(67, 43, 336, 4, 1, '2025-07-17 14:51:13', 0, '2025-07-17 15:52:20');
 
 -- --------------------------------------------------------
 
@@ -187,71 +200,6 @@ CREATE TABLE `proje_urunleri` (
 --
 
 INSERT INTO `proje_urunleri` (`id`, `proje_id`, `urun_id`, `miktar`, `log_date`, `user_id`) VALUES
-(1205, 39, 259, 1, '2025-07-13 01:44:19', 1),
-(1206, 39, 260, 1, '2025-07-13 01:44:19', 1),
-(1207, 39, 261, 14, '2025-07-13 01:44:19', 1),
-(1208, 39, 262, 1, '2025-07-13 01:44:19', 1),
-(1209, 39, 263, 2, '2025-07-13 01:44:19', 1),
-(1210, 39, 264, 3, '2025-07-13 01:44:19', 1),
-(1211, 39, 265, 1, '2025-07-13 01:44:19', 1),
-(1212, 39, 266, 1, '2025-07-13 01:44:19', 1),
-(1213, 39, 267, 2, '2025-07-13 01:44:19', 1),
-(1214, 39, 268, 1, '2025-07-13 01:44:19', 1),
-(1215, 39, 269, 1, '2025-07-13 01:44:19', 1),
-(1216, 39, 270, 12, '2025-07-13 01:44:19', 1),
-(1217, 39, 271, 73, '2025-07-13 01:44:19', 1),
-(1218, 39, 272, 10, '2025-07-13 01:44:19', 1),
-(1219, 39, 273, 5, '2025-07-13 01:44:19', 1),
-(1220, 39, 274, 39, '2025-07-13 01:44:19', 1),
-(1221, 39, 275, 146, '2025-07-13 01:44:19', 1),
-(1230, 39, 284, 6, '2025-07-13 01:44:19', 1),
-(1231, 39, 285, 9, '2025-07-13 01:44:19', 1),
-(1232, 39, 286, 28, '2025-07-13 01:44:19', 1),
-(1233, 39, 287, 2, '2025-07-13 01:44:19', 1),
-(1234, 39, 288, 22, '2025-07-13 01:44:19', 1),
-(1235, 39, 289, 2, '2025-07-13 01:44:19', 1),
-(1236, 39, 290, 12, '2025-07-13 01:44:19', 1),
-(1237, 39, 291, 45, '2025-07-13 01:44:19', 1),
-(1238, 39, 292, 1, '2025-07-13 01:44:19', 1),
-(1239, 39, 293, 95, '2025-07-13 01:44:19', 1),
-(1240, 39, 294, 1, '2025-07-13 01:44:19', 1),
-(1241, 39, 295, 1, '2025-07-13 01:44:19', 1),
-(1242, 39, 296, 1, '2025-07-13 01:44:19', 1),
-(1243, 39, 297, 1, '2025-07-13 01:44:19', 1),
-(1244, 39, 298, 1, '2025-07-13 01:44:19', 1),
-(1245, 39, 299, 5, '2025-07-13 01:44:19', 1),
-(1246, 39, 300, 3, '2025-07-13 01:44:19', 1),
-(1247, 39, 301, 7, '2025-07-13 01:44:19', 1),
-(1248, 39, 302, 1, '2025-07-13 01:44:19', 1),
-(1249, 39, 303, 2, '2025-07-13 01:44:19', 1),
-(1250, 39, 304, 2, '2025-07-13 01:44:19', 1),
-(1251, 39, 305, 2, '2025-07-13 01:44:19', 1),
-(1252, 39, 306, 1, '2025-07-13 01:44:19', 1),
-(1253, 39, 307, 1, '2025-07-13 01:44:19', 1),
-(1254, 39, 308, 1, '2025-07-13 01:44:19', 1),
-(1255, 39, 309, 2, '2025-07-13 01:44:19', 1),
-(1256, 39, 310, 1, '2025-07-13 01:44:19', 1),
-(1257, 39, 311, 1, '2025-07-13 01:44:19', 1),
-(1258, 39, 312, 1, '2025-07-13 01:44:19', 1),
-(1259, 39, 313, 1, '2025-07-13 01:44:19', 1),
-(1260, 39, 314, 35, '2025-07-13 01:44:19', 1),
-(1261, 39, 315, 4, '2025-07-13 01:44:19', 1),
-(1262, 39, 316, 1, '2025-07-13 01:44:19', 1),
-(1263, 39, 317, 1, '2025-07-13 01:44:19', 1),
-(1264, 39, 318, 1, '2025-07-13 01:44:19', 1),
-(1265, 39, 319, 4, '2025-07-13 01:44:19', 1),
-(1266, 39, 320, 1, '2025-07-13 01:44:19', 1),
-(1267, 39, 321, 3, '2025-07-13 01:44:19', 1),
-(1268, 39, 322, 1, '2025-07-13 01:44:19', 1),
-(1269, 39, 323, 1, '2025-07-13 01:44:19', 1),
-(1270, 39, 324, 5, '2025-07-13 01:44:19', 1),
-(1271, 39, 325, 5, '2025-07-13 01:44:19', 1),
-(1272, 39, 326, 2, '2025-07-13 01:44:19', 1),
-(1273, 39, 327, 1, '2025-07-13 01:44:19', 1),
-(1274, 39, 328, 1, '2025-07-13 01:44:19', 1),
-(1275, 39, 329, 6, '2025-07-13 01:44:19', 1),
-(1276, 39, 330, 5, '2025-07-13 01:44:19', 1),
-(1277, 39, 331, 1, '2025-07-13 01:44:19', 1),
 (1278, 42, 259, 1, '2025-07-13 21:47:49', 1),
 (1279, 42, 260, 1, '2025-07-13 21:47:49', 1),
 (1280, 42, 261, 14, '2025-07-13 21:47:49', 1),
@@ -320,12 +268,8 @@ INSERT INTO `proje_urunleri` (`id`, `proje_id`, `urun_id`, `miktar`, `log_date`,
 (1343, 42, 324, 5, '2025-07-13 21:47:50', 1),
 (1344, 42, 325, 5, '2025-07-13 21:47:50', 1),
 (1345, 42, 326, 2, '2025-07-13 21:47:50', 1),
-(1346, 42, 327, 1, '2025-07-13 21:47:50', 1),
-(1347, 42, 328, 1, '2025-07-13 21:47:50', 1),
-(1348, 42, 329, 6, '2025-07-13 21:47:50', 1),
-(1349, 42, 330, 5, '2025-07-13 21:47:50', 1),
-(1350, 42, 331, 1, '2025-07-13 21:47:50', 1),
-(1351, 42, 338, 5, '2025-07-16 08:41:39', 1);
+(1359, 43, 261, 6, '2025-07-17 16:01:45', 1),
+(1360, 43, 336, 10, '2025-07-17 16:24:56', 1);
 
 -- --------------------------------------------------------
 
@@ -342,6 +286,7 @@ CREATE TABLE `urunler` (
   `urun_marka` varchar(50) DEFAULT NULL,
   `urun_no` varchar(50) DEFAULT NULL,
   `miktar` int(11) NOT NULL DEFAULT 0,
+  `birim` enum('adet','metre','cm') NOT NULL DEFAULT 'adet',
   `kritik_seviye` int(11) DEFAULT NULL,
   `kayit_tarihi` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -350,90 +295,94 @@ CREATE TABLE `urunler` (
 -- Tablo döküm verisi `urunler`
 --
 
-INSERT INTO `urunler` (`urun_id`, `urun_adi`, `urun_kodu`, `aciklama`, `urun_barkod`, `urun_marka`, `urun_no`, `miktar`, `kritik_seviye`, `kayit_tarihi`) VALUES
-(256, 'Klemens1', '50130833', NULL, '232', 'LEU', NULL, 69, NULL, '2025-07-11 14:26:57'),
-(259, '4 Gerilim girişi/Akım girişi', 'AS04AD-A', NULL, '776', 'DEP', NULL, 3, NULL, '2025-07-11 16:38:58'),
-(260, 'AS200 PLC - 16DI / 12DO PNP, Dahili Ethernet / CAN', 'AS228P-A', NULL, '222', 'DEL', NULL, 6, NULL, '2025-07-11 16:38:58'),
-(261, 'AS16AP11P-A ,8D/8P Plc Ek Dijital Modül', 'AS16AP11P-A', NULL, '887', 'DEL', NULL, 1, NULL, '2025-07-11 16:38:58'),
-(262, 'Endüstriyel Ethernet DIACloud Bulut Yönlendiriciler', 'DX-2300LN-WW', NULL, NULL, 'DEL', NULL, 0, NULL, '2025-07-11 16:38:58'),
-(263, 'A2 Servo Sürücü - 1000W', 'ASD-A2-1021-M', NULL, '0', 'DEL', NULL, 1, NULL, '2025-07-11 16:38:58'),
-(264, 'A2 Servo Sürücü - 400 Watt', 'ASD-A2-0421-M', NULL, NULL, 'DEL', NULL, 0, NULL, '2025-07-11 16:38:58'),
-(265, 'Pano Soğutma Termostat\'ı 0-70°C Ray Tipi - Emas 10A 230V AC', 'PTM111', NULL, NULL, 'EMAS', NULL, 0, NULL, '2025-07-11 16:38:58'),
-(266, 'Pimli Plastik Kapı Switch - NC contact type', 'BS1010', NULL, '799', 'EMAS', NULL, 0, NULL, '2025-07-11 16:38:58'),
-(267, 'Vibrasyon Kontrol Cihazı', 'EPAC3-W-F', NULL, '965', 'ENDA', NULL, 1, NULL, '2025-07-11 16:38:58'),
-(268, 'Faz yokluğu, Faz sırası hatası, 1 N/O kontak DIN1 Ray Montaj', 'MKS-03', NULL, NULL, 'ENTES', NULL, 0, NULL, '2025-07-11 16:38:58'),
-(269, 'HMI 10” TFT, 1024x600, Dirençli dokunmatik, 4 GB Flash bellek, 1x Ethernet, JMobile çalışma zamanı', 'ESMA10U301', NULL, '346', 'EXOR', NULL, 1, NULL, '2025-07-11 16:38:58'),
-(270, 'Transistör Çıkış Kartı 8\'li', 'GT8-V11', NULL, NULL, 'GEM', NULL, 0, NULL, '2025-07-11 16:38:58'),
-(271, 'Bağlantı kablosu', '50130832', NULL, '878', 'LEU', NULL, 72, NULL, '2025-07-11 16:38:58'),
-(272, 'Bağlantı kablosu', '50130690', NULL, NULL, 'LEU', NULL, 0, NULL, '2025-07-11 16:38:58'),
-(273, 'EXACT12, 8XM12, 5-KUTUPLU, KAPAK, FIŞ. VİDA TERM.', '8000-88550-0000000', NULL, NULL, 'MURR', NULL, 0, NULL, '2025-07-11 16:38:58'),
-(274, 'Sensör aktüatör adaptörü', '7000-41201-0000000', NULL, NULL, 'MURR', NULL, 0, NULL, '2025-07-11 16:38:58'),
-(275, 'Dairesel konektör (saha montajı için)', '7000-08601-0000000', NULL, NULL, 'MURR', NULL, 0, NULL, '2025-07-11 16:38:58'),
-(276, 'Güç kaynağı 24V 10A 240W 24~28 V', 'NDR-240-24', NULL, NULL, 'MW', NULL, 0, NULL, '2025-07-11 16:38:58'),
-(277, 'Tek katlı tepe lambası + Buzzer', 'SNT-7024-SB1', NULL, NULL, 'Mucco', NULL, 0, NULL, '2025-07-11 16:38:58'),
-(278, 'İki elli şalt cihazı', '774350', NULL, NULL, 'PILZ', NULL, 0, NULL, '2025-07-11 16:38:58'),
-(279, 'Terminal bloğu için uç braketi', '3022276', NULL, NULL, 'PXC', NULL, 0, NULL, '2025-07-11 16:38:58'),
-(280, 'Klemens dizisi etiket taşıyıcı', '0811969', NULL, NULL, 'PXC', NULL, 0, NULL, '2025-07-11 16:38:58'),
-(281, 'Geçişli terminal bloğu', '3211757', NULL, NULL, 'PXC', NULL, 0, NULL, '2025-07-11 16:38:58'),
-(282, 'Topraklama modüler terminal bloğu', '3211766', NULL, NULL, 'PXC', NULL, 0, NULL, '2025-07-11 16:38:58'),
-(283, 'Terminal bloğu için uç ve bölme plakası', '3030420', NULL, NULL, 'PXC', NULL, 0, NULL, '2025-07-11 16:38:58'),
-(284, 'Topraklama modüler terminal bloğu', '3209536', NULL, NULL, 'PXC', NULL, 0, NULL, '2025-07-11 16:38:58'),
-(285, 'Terminal bloğu için uç ve bölme plakası', '3030417', NULL, NULL, 'PXC', NULL, 0, NULL, '2025-07-11 16:38:58'),
-(286, 'Geçişli terminal bloğu', '3209523', NULL, '987', 'PXC', NULL, 3, NULL, '2025-07-11 16:38:58'),
-(287, 'Geçmeli köprü', '3030174', NULL, NULL, 'PXC', NULL, 0, NULL, '2025-07-11 16:38:58'),
-(288, 'Geçişli terminal bloğu', '3209512', NULL, NULL, 'PXC', NULL, 0, NULL, '2025-07-11 16:38:58'),
-(289, 'Geçmeli köprü', '3030161', NULL, NULL, 'PXC', NULL, 0, NULL, '2025-07-11 16:38:58'),
-(290, 'Sigortalı modüler klemens', '3036547', NULL, NULL, 'PXC', NULL, 0, NULL, '2025-07-11 16:38:58'),
-(291, 'Geçişli terminal bloğu', '3209510', NULL, NULL, 'PXC', NULL, 0, NULL, '2025-07-11 16:38:58'),
-(292, 'Röle Modülü', '2900299', NULL, NULL, 'PXC', NULL, 0, NULL, '2025-07-11 16:38:58'),
-(293, 'Çift seviyeli terminal bloğu', '3210567', NULL, NULL, 'PXC', NULL, 0, NULL, '2025-07-11 16:38:58'),
-(294, 'FANLI FILTRE 108 m3/h 162X162X65mm', 'FULL1500', NULL, NULL, 'QUICK', NULL, 0, NULL, '2025-07-11 16:38:58'),
-(295, 'Panel Filtre (162x162x24mm) KESİM=125x125', 'FIL1500', NULL, NULL, 'QUICK', NULL, 0, NULL, '2025-07-11 16:38:58'),
-(296, 'Minyatür devre kesici iC60N, 3P, 16A, C', 'A9F74316', NULL, NULL, 'SE', NULL, 0, NULL, '2025-07-11 16:38:58'),
-(297, 'TeSys Vario - kapı üzerinde acil durdurma şalteri ayırıcısı', 'VCF01', NULL, NULL, 'SE', NULL, 0, NULL, '2025-07-11 16:38:58'),
-(298, 'Minyatür devre kesici iC60N, 3P, 2A, C', 'A9F74302', NULL, NULL, 'SE', NULL, 0, NULL, '2025-07-11 16:38:58'),
-(299, 'Minyatür devre kesici iC60N, 1P, 4A, C', 'A9F74104', NULL, NULL, 'SE', NULL, 0, NULL, '2025-07-11 16:38:58'),
-(300, 'Beyaz komple pilot lambası Ø22 entegre LED\'li düz lens 230...240V', 'XB4BVM1', NULL, NULL, 'SE', NULL, 0, NULL, '2025-07-11 16:38:58'),
-(301, 'Minyatür devre kesici iC60N, 1P, 10A, C', 'A9F74110', NULL, NULL, 'SE', NULL, 0, NULL, '2025-07-11 16:38:58'),
-(302, 'TeSys K kontaktör - 3P(3 NA) - AC-3 - <= 440 V 6 A - 24 V DC bobin', 'LP1K0610BD', NULL, NULL, 'SE', NULL, 0, NULL, '2025-07-11 16:38:58'),
-(303, 'Kırmızı Ø40 Acil durdurma, kapatma Ø22 mandallı dönüş serbest bırakma 1NK 600VAC', 'XB4BS8442', NULL, NULL, 'SE', NULL, 0, NULL, '2025-07-11 16:38:58'),
-(304, 'Siyah Ø40 mantar Buton Ø22 yaylı dönüş 1NA', 'XB4BC21', NULL, NULL, 'SE', NULL, 0, NULL, '2025-07-11 16:38:58'),
-(305, 'Harmony XB5 1NK kontağı', 'ZBE102', NULL, NULL, 'SE', NULL, 0, NULL, '2025-07-11 16:38:58'),
-(306, 'Kontaktör TeSys LC1-D - 3P - AC-3 440V 9 A, Bobin 24 V DC', 'LC1D09BD', NULL, NULL, 'SE', NULL, 0, NULL, '2025-07-11 16:38:58'),
-(307, 'Termik Manyetik Motorlu Devre Kesici TeSys GV2ME - 3P - 1...1.6 A', 'GV2ME06', NULL, NULL, 'SE', NULL, 0, NULL, '2025-07-11 16:38:58'),
-(308, 'TeSys GVAE11 - yardımcı kontak - 1 NA + 1 NK', 'GVAE11', NULL, NULL, 'SE', NULL, 0, NULL, '2025-07-11 16:38:58'),
-(309, 'Minyatür devre kesici iC60N, 1P, 16A, C', 'A9F74116', NULL, NULL, 'SE', NULL, 0, NULL, '2025-07-11 16:38:58'),
-(310, 'Siyah seçim anahtarı Ø22 2 konumlu sabit 1NA 600V', 'XB4BD21', NULL, NULL, 'SE', NULL, 0, NULL, '2025-07-11 16:38:58'),
-(311, 'Yeşil sıva altı komple ışıklı buton Ø22 yaylı dönüş 1NA+1NK 24V', 'XB4BW33B5', NULL, NULL, 'SE', NULL, 0, NULL, '2025-07-11 16:38:58'),
-(312, 'Kırmızı gömme komple buton Ø22 yay geri dönüşlü 1NC \"işaretsiz\"', 'XB4BA42', NULL, NULL, 'SE', NULL, 0, NULL, '2025-07-11 16:38:58'),
-(313, 'Manifold', 'SS5Y3-10L13-09B', NULL, NULL, 'SMC', NULL, 0, NULL, '2025-07-11 16:38:58'),
-(314, 'SY3000, 5 Portlu Solenoid Valf, Tüm Tipler - Yeni Stil', 'SY3200-5U1', NULL, NULL, 'SMC', NULL, 0, NULL, '2025-07-11 16:38:58'),
-(315, 'KÖRLEME PLAKASI TAKIMI', 'SY30M-26-1A', NULL, NULL, 'SMC', NULL, 0, NULL, '2025-07-11 16:38:58'),
-(316, 'Manifold', 'SS5Y3-10L13-08B', NULL, NULL, 'SMC', NULL, 0, NULL, '2025-07-11 16:38:58'),
-(317, 'Manifold', 'SS5Y3-10L13-10B', NULL, NULL, 'SMC', NULL, 0, NULL, '2025-07-11 16:38:58'),
-(318, 'Manifold', 'SS5Y3-10L13-12B', NULL, NULL, 'SMC', NULL, 0, NULL, '2025-07-11 16:38:58'),
-(319, '', 'SY30M-14-4A-1-3', NULL, NULL, 'SMC', NULL, 0, NULL, '2025-07-11 16:38:59'),
-(320, 'Güç ve kontrol kabloları 0,6/1,0 kV', '5G4 YSLY-JB', NULL, NULL, 'TSE', NULL, 0, NULL, '2025-07-11 16:38:59'),
-(321, 'Güç ve kontrol kabloları', '7G0,75 YSLY-JZ', NULL, NULL, 'TSE', NULL, 0, NULL, '2025-07-11 16:38:59'),
-(322, 'Güç ve kontrol kabloları', '18G0,75 YSLY-JZ', NULL, '44', 'TSE', NULL, 1, NULL, '2025-07-11 16:38:59'),
-(323, 'Güç ve kontrol kabloları 0,6/1,0 kV', '4G2,5 YSLY-JB', NULL, NULL, 'TSE', NULL, 0, NULL, '2025-07-11 16:38:59'),
-(324, 'Güç ve kontrol kabloları', '3G0,75 YSLY-JZ', NULL, NULL, 'TSE', NULL, 0, NULL, '2025-07-11 16:38:59'),
-(325, 'Güç ve kontrol kabloları', '25G0,5 YSLY-JZ', NULL, NULL, 'TSE', NULL, 0, NULL, '2025-07-11 16:38:59'),
-(326, 'Güç ve kontrol kabloları 0,6/1,0 kV', '3G1,5 YSLY-JB', NULL, NULL, 'TSE', NULL, 0, NULL, '2025-07-11 16:38:59'),
-(327, '220VAC Led armatür. Soketi ve 1 metre kablosu dahil.', 'TLPA-10W', NULL, NULL, 'Trio', NULL, 0, NULL, '2025-07-11 16:38:59'),
-(328, 'RAY TİPİ PRİZ 16A 250V', 'VSR-G16', NULL, NULL, 'VIKO', NULL, 0, NULL, '2025-07-11 16:38:59'),
-(329, 'Cisimden Yansımalı Sensör Arka Fon Bastırmalı', 'P1KH006', NULL, NULL, 'WGL', NULL, 0, NULL, '2025-07-11 16:38:59'),
-(330, 'İndüktif sensör arttırılmış anahtarlama mesafeli', 'I12H006', NULL, NULL, 'WGL', NULL, 0, NULL, '2025-07-11 16:38:59'),
-(331, 'Cisimden Yansımalı Sensör', 'U1KT001', NULL, NULL, 'WGL', NULL, 0, NULL, '2025-07-11 16:38:59'),
-(332, '', '105698', NULL, NULL, '', NULL, 0, NULL, '2025-07-11 17:36:07'),
-(333, '', '987654321', NULL, NULL, '', NULL, 0, NULL, '2025-07-11 17:36:07'),
-(334, 'uBRİTO14', 'ES', NULL, '1', NULL, NULL, 1, NULL, '2025-07-12 11:23:05'),
-(335, 'vaio', NULL, NULL, '258852', NULL, NULL, 0, NULL, '2025-07-13 15:48:39'),
-(336, '5 servo sürüc', '23', NULL, '5', NULL, NULL, 3, NULL, '2025-07-13 19:00:03'),
-(337, 'dell', 'AST9999', NULL, '874', NULL, NULL, 7, NULL, '2025-07-14 10:11:06'),
-(338, 'hp', 'vby45', NULL, '64', NULL, NULL, 1, NULL, '2025-07-14 12:38:44'),
-(339, 'olk', 'öçl', NULL, '1290666', NULL, NULL, 1, NULL, '2025-07-14 12:39:34'),
-(340, 'messi', '126', NULL, '15', NULL, NULL, 1, NULL, '2025-07-14 13:26:02');
+INSERT INTO `urunler` (`urun_id`, `urun_adi`, `urun_kodu`, `aciklama`, `urun_barkod`, `urun_marka`, `urun_no`, `miktar`, `birim`, `kritik_seviye`, `kayit_tarihi`) VALUES
+(256, 'Klemens', '50130833', NULL, NULL, 'LEU', NULL, 69, 'adet', 10, '2025-07-11 14:26:57'),
+(259, '4 Gerilim girişi/Akım girişi', 'AS04AD-A', NULL, NULL, 'DEP', NULL, 3, 'adet', NULL, '2025-07-11 16:38:58'),
+(260, 'AS200 PLC - 16DI / 12DO PNP, Dahili Ethernet / CAN', 'AS228P-A', NULL, NULL, 'DEL', NULL, 6, 'adet', NULL, '2025-07-11 16:38:58'),
+(261, 'AS16AP11P-A ,8D/8P Plc Ek Dijital Modül', 'AS16AP11P-A', NULL, NULL, 'DEL', NULL, 1, 'adet', NULL, '2025-07-11 16:38:58'),
+(262, 'Endüstriyel Ethernet DIACloud Bulut Yönlendiriciler', 'DX-2300LN-WW', NULL, NULL, 'DEL', NULL, 0, 'adet', NULL, '2025-07-11 16:38:58'),
+(263, 'A2 Servo Sürücü - 1000W', 'ASD-A2-1021-M', NULL, '0', 'DEL', NULL, 1, 'adet', NULL, '2025-07-11 16:38:58'),
+(264, 'A2 Servo Sürücü - 400 Watt', 'ASD-A2-0421-M', NULL, NULL, 'DEL', NULL, 0, 'adet', NULL, '2025-07-11 16:38:58'),
+(265, 'Pano Soğutma Termostat\'ı 0-70°C Ray Tipi - Emas 10A 230V AC', 'PTM111', NULL, NULL, 'EMAS', NULL, 0, 'adet', NULL, '2025-07-11 16:38:58'),
+(266, 'Pimli Plastik Kapı Switch - NC contact type', 'BS1010', NULL, '799', 'EMAS', NULL, 0, 'adet', NULL, '2025-07-11 16:38:58'),
+(267, 'Vibrasyon Kontrol Cihazı', 'EPAC3-W-F', NULL, '965', 'ENDA', NULL, 1, 'adet', NULL, '2025-07-11 16:38:58'),
+(268, 'Faz yokluğu, Faz sırası hatası, 1 N/O kontak DIN1 Ray Montaj', 'MKS-03', NULL, NULL, 'ENTES', NULL, 0, 'adet', NULL, '2025-07-11 16:38:58'),
+(269, 'HMI 10” TFT, 1024x600, Dirençli dokunmatik, 4 GB Flash bellek, 1x Ethernet, JMobile çalışma zamanı', 'ESMA10U301', NULL, '346', 'EXOR', NULL, 1, 'adet', NULL, '2025-07-11 16:38:58'),
+(270, 'Transistör Çıkış Kartı 8\'li', 'GT8-V11', NULL, NULL, 'GEM', NULL, 0, 'adet', NULL, '2025-07-11 16:38:58'),
+(271, 'Bağlantı kablosu', '50130832', NULL, NULL, 'LEU', NULL, 72, 'adet', NULL, '2025-07-11 16:38:58'),
+(272, 'Bağlantı kablosu', '50130690', NULL, NULL, 'LEU', NULL, 0, 'adet', NULL, '2025-07-11 16:38:58'),
+(273, 'EXACT12, 8XM12, 5-KUTUPLU, KAPAK, FIŞ. VİDA TERM.', '8000-88550-0000000', NULL, NULL, 'MURR', NULL, 0, 'adet', NULL, '2025-07-11 16:38:58'),
+(274, 'Sensör aktüatör adaptörü', '7000-41201-0000000', NULL, NULL, 'MURR', NULL, 0, 'adet', NULL, '2025-07-11 16:38:58'),
+(275, 'Dairesel konektör (saha montajı için)', '7000-08601-0000000', NULL, NULL, 'MURR', NULL, 0, 'adet', NULL, '2025-07-11 16:38:58'),
+(276, 'Güç kaynağı 24V 10A 240W 24~28 V', 'NDR-240-24', NULL, NULL, 'MW', NULL, 0, 'adet', NULL, '2025-07-11 16:38:58'),
+(277, 'Tek katlı tepe lambası + Buzzer', 'SNT-7024-SB1', NULL, NULL, 'Mucco', NULL, 0, 'adet', NULL, '2025-07-11 16:38:58'),
+(278, 'İki elli şalt cihazı', '774350', NULL, NULL, 'PILZ', NULL, 0, 'adet', NULL, '2025-07-11 16:38:58'),
+(279, 'Terminal bloğu için uç braketi', '3022276', NULL, NULL, 'PXC', NULL, 0, 'adet', NULL, '2025-07-11 16:38:58'),
+(280, 'Klemens dizisi etiket taşıyıcı', '0811969', NULL, NULL, 'PXC', NULL, 0, 'adet', NULL, '2025-07-11 16:38:58'),
+(281, 'Geçişli terminal bloğu', '3211757', NULL, NULL, 'PXC', NULL, 0, 'adet', NULL, '2025-07-11 16:38:58'),
+(282, 'Topraklama modüler terminal bloğu', '3211766', NULL, NULL, 'PXC', NULL, 0, 'adet', NULL, '2025-07-11 16:38:58'),
+(283, 'Terminal bloğu için uç ve bölme plakası', '3030420', NULL, NULL, 'PXC', NULL, 0, 'adet', NULL, '2025-07-11 16:38:58'),
+(284, 'Topraklama modüler terminal bloğu', '3209536', NULL, NULL, 'PXC', NULL, 0, 'adet', NULL, '2025-07-11 16:38:58'),
+(285, 'Terminal bloğu için uç ve bölme plakası', '3030417', NULL, NULL, 'PXC', NULL, 0, 'adet', NULL, '2025-07-11 16:38:58'),
+(286, 'Geçişli terminal bloğu', '3209523', NULL, NULL, 'PXC', NULL, 3, 'adet', NULL, '2025-07-11 16:38:58'),
+(287, 'Geçmeli köprü', '3030174', NULL, NULL, 'PXC', NULL, 0, 'adet', NULL, '2025-07-11 16:38:58'),
+(288, 'Geçişli terminal bloğu', '3209512', NULL, NULL, 'PXC', NULL, 0, 'adet', NULL, '2025-07-11 16:38:58'),
+(289, 'Geçmeli köprü', '3030161', NULL, NULL, 'PXC', NULL, 0, 'adet', NULL, '2025-07-11 16:38:58'),
+(290, 'Sigortalı modüler klemens', '3036547', NULL, NULL, 'PXC', NULL, 0, 'adet', NULL, '2025-07-11 16:38:58'),
+(291, 'Geçişli terminal bloğu', '3209510', NULL, NULL, 'PXC', NULL, 0, 'adet', NULL, '2025-07-11 16:38:58'),
+(292, 'Röle Modülü', '2900299', NULL, NULL, 'PXC', NULL, 0, 'adet', NULL, '2025-07-11 16:38:58'),
+(293, 'Çift seviyeli terminal bloğu', '3210567', NULL, NULL, 'PXC', NULL, 0, 'adet', NULL, '2025-07-11 16:38:58'),
+(294, 'FANLI FILTRE 108 m3/h 162X162X65mm', 'FULL1500', NULL, NULL, 'QUICK', NULL, 0, 'adet', NULL, '2025-07-11 16:38:58'),
+(295, 'Panel Filtre (162x162x24mm) KESİM=125x125', 'FIL1500', NULL, NULL, 'QUICK', NULL, 0, 'adet', NULL, '2025-07-11 16:38:58'),
+(296, 'Minyatür devre kesici iC60N, 3P, 16A, C', 'A9F74316', NULL, NULL, 'SE', NULL, 0, 'adet', NULL, '2025-07-11 16:38:58'),
+(297, 'TeSys Vario - kapı üzerinde acil durdurma şalteri ayırıcısı', 'VCF01', NULL, NULL, 'SE', NULL, 0, 'adet', NULL, '2025-07-11 16:38:58'),
+(298, 'Minyatür devre kesici iC60N, 3P, 2A, C', 'A9F74302', NULL, NULL, 'SE', NULL, 0, 'adet', NULL, '2025-07-11 16:38:58'),
+(299, 'Minyatür devre kesici iC60N, 1P, 4A, C', 'A9F74104', NULL, NULL, 'SE', NULL, 0, 'adet', NULL, '2025-07-11 16:38:58'),
+(300, 'Beyaz komple pilot lambası Ø22 entegre LED\'li düz lens 230...240V', 'XB4BVM1', NULL, NULL, 'SE', NULL, 0, 'adet', NULL, '2025-07-11 16:38:58'),
+(301, 'Minyatür devre kesici iC60N, 1P, 10A, C', 'A9F74110', NULL, NULL, 'SE', NULL, 0, 'adet', NULL, '2025-07-11 16:38:58'),
+(302, 'TeSys K kontaktör - 3P(3 NA) - AC-3 - <= 440 V 6 A - 24 V DC bobin', 'LP1K0610BD', NULL, NULL, 'SE', NULL, 0, 'adet', NULL, '2025-07-11 16:38:58'),
+(303, 'Kırmızı Ø40 Acil durdurma, kapatma Ø22 mandallı dönüş serbest bırakma 1NK 600VAC', 'XB4BS8442', NULL, NULL, 'SE', NULL, 0, 'adet', NULL, '2025-07-11 16:38:58'),
+(304, 'Siyah Ø40 mantar Buton Ø22 yaylı dönüş 1NA', 'XB4BC21', NULL, NULL, 'SE', NULL, 0, 'adet', NULL, '2025-07-11 16:38:58'),
+(305, 'Harmony XB5 1NK kontağı', 'ZBE102', NULL, NULL, 'SE', NULL, 0, 'adet', NULL, '2025-07-11 16:38:58'),
+(306, 'Kontaktör TeSys LC1-D - 3P - AC-3 440V 9 A, Bobin 24 V DC', 'LC1D09BD', NULL, NULL, 'SE', NULL, 0, 'adet', NULL, '2025-07-11 16:38:58'),
+(307, 'Termik Manyetik Motorlu Devre Kesici TeSys GV2ME - 3P - 1...1.6 A', 'GV2ME06', NULL, NULL, 'SE', NULL, 0, 'adet', NULL, '2025-07-11 16:38:58'),
+(308, 'TeSys GVAE11 - yardımcı kontak - 1 NA + 1 NK', 'GVAE11', NULL, NULL, 'SE', NULL, 0, 'adet', NULL, '2025-07-11 16:38:58'),
+(309, 'Minyatür devre kesici iC60N, 1P, 16A, C', 'A9F74116', NULL, NULL, 'SE', NULL, 0, 'adet', NULL, '2025-07-11 16:38:58'),
+(310, 'Siyah seçim anahtarı Ø22 2 konumlu sabit 1NA 600V', 'XB4BD21', NULL, NULL, 'SE', NULL, 0, 'adet', NULL, '2025-07-11 16:38:58'),
+(311, 'Yeşil sıva altı komple ışıklı buton Ø22 yaylı dönüş 1NA+1NK 24V', 'XB4BW33B5', NULL, NULL, 'SE', NULL, 0, 'adet', NULL, '2025-07-11 16:38:58'),
+(312, 'Kırmızı gömme komple buton Ø22 yay geri dönüşlü 1NC \"işaretsiz\"', 'XB4BA42', NULL, NULL, 'SE', NULL, 0, 'adet', NULL, '2025-07-11 16:38:58'),
+(313, 'Manifold', 'SS5Y3-10L13-09B', NULL, NULL, 'SMC', NULL, 0, 'adet', NULL, '2025-07-11 16:38:58'),
+(314, 'SY3000, 5 Portlu Solenoid Valf, Tüm Tipler - Yeni Stil', 'SY3200-5U1', NULL, NULL, 'SMC', NULL, 0, 'adet', NULL, '2025-07-11 16:38:58'),
+(315, 'KÖRLEME PLAKASI TAKIMI', 'SY30M-26-1A', NULL, NULL, 'SMC', NULL, 0, 'adet', NULL, '2025-07-11 16:38:58'),
+(316, 'Manifold', 'SS5Y3-10L13-08B', NULL, NULL, 'SMC', NULL, 0, 'adet', NULL, '2025-07-11 16:38:58'),
+(317, 'Manifold', 'SS5Y3-10L13-10B', NULL, NULL, 'SMC', NULL, 0, 'adet', NULL, '2025-07-11 16:38:58'),
+(318, 'Manifold', 'SS5Y3-10L13-12B', NULL, NULL, 'SMC', NULL, 0, 'adet', NULL, '2025-07-11 16:38:58'),
+(319, '', 'SY30M-14-4A-1-3', NULL, NULL, 'SMC', NULL, 0, 'adet', NULL, '2025-07-11 16:38:59'),
+(320, 'Güç ve kontrol kabloları 0,6/1,0 kV', '5G4 YSLY-JB', NULL, NULL, 'TSE', NULL, 0, 'adet', NULL, '2025-07-11 16:38:59'),
+(321, 'Güç ve kontrol kabloları', '7G0,75 YSLY-JZ', NULL, NULL, 'TSE', NULL, 0, 'adet', NULL, '2025-07-11 16:38:59'),
+(322, 'Güç ve kontrol kabloları', '18G0,75 YSLY-JZ', NULL, '44', 'TSE', NULL, 1, 'adet', NULL, '2025-07-11 16:38:59'),
+(323, 'Güç ve kontrol kabloları 0,6/1,0 kV', '4G2,5 YSLY-JB', NULL, NULL, 'TSE', NULL, 0, 'adet', NULL, '2025-07-11 16:38:59'),
+(324, 'Güç ve kontrol kabloları', '3G0,75 YSLY-JZ', NULL, NULL, 'TSE', NULL, 0, 'adet', NULL, '2025-07-11 16:38:59'),
+(325, 'Güç ve kontrol kabloları', '25G0,5 YSLY-JZ', NULL, NULL, 'TSE', NULL, 0, 'adet', NULL, '2025-07-11 16:38:59'),
+(326, 'Güç ve kontrol kabloları 0,6/1,0 kV', '3G1,5 YSLY-JB', NULL, NULL, 'TSE', NULL, 0, 'adet', NULL, '2025-07-11 16:38:59'),
+(327, '220VAC Led armatür. Soketi ve 1 metre kablosu dahil.', 'TLPA-10W', NULL, NULL, 'Trio', NULL, 0, 'adet', NULL, '2025-07-11 16:38:59'),
+(328, 'RAY TİPİ PRİZ 16A 250V', 'VSR-G16', NULL, NULL, 'VIKO', NULL, 0, 'adet', NULL, '2025-07-11 16:38:59'),
+(329, 'Cisimden Yansımalı Sensör Arka Fon Bastırmalı', 'P1KH006', NULL, NULL, 'WGL', NULL, 0, 'adet', NULL, '2025-07-11 16:38:59'),
+(330, 'İndüktif sensör arttırılmış anahtarlama mesafeli', 'I12H006', NULL, NULL, 'WGL', NULL, 0, 'adet', NULL, '2025-07-11 16:38:59'),
+(331, 'Cisimden Yansımalı Sensör', 'U1KT001', NULL, NULL, 'WGL', NULL, 0, 'adet', NULL, '2025-07-11 16:38:59'),
+(332, '', '105698', NULL, NULL, '', NULL, 0, 'adet', NULL, '2025-07-11 17:36:07'),
+(333, '', '987654321', NULL, NULL, '', NULL, 0, 'adet', NULL, '2025-07-11 17:36:07'),
+(334, 'uBRİTO14', 'ES', NULL, '1', NULL, NULL, 1, 'adet', NULL, '2025-07-12 11:23:05'),
+(335, 'vaio', NULL, NULL, '258852', NULL, NULL, 0, 'adet', NULL, '2025-07-13 15:48:39'),
+(336, '5 servo sürüc', '23', NULL, '100', NULL, NULL, 109, 'adet', NULL, '2025-07-13 19:00:03'),
+(337, 'Servo sürücü 4asd', 'AST9999', NULL, NULL, 'ETX', NULL, 7, 'adet', NULL, '2025-07-14 10:11:06'),
+(338, 'hp', 'vby45', NULL, '64', NULL, NULL, 1, 'adet', NULL, '2025-07-14 12:38:44'),
+(339, 'olk', 'öçl', NULL, '1290666', NULL, NULL, 1, 'adet', NULL, '2025-07-14 12:39:34'),
+(340, 'servo', '126', NULL, '15', NULL, NULL, 2, 'adet', NULL, '2025-07-14 13:26:02'),
+(341, 'buzdagi', 'bzdg123', NULL, '8699878420755', NULL, NULL, 11, 'adet', NULL, '2025-07-17 12:35:09'),
+(342, 'KABLO556', 'BHJ654', NULL, '556', NULL, NULL, 10, 'adet', NULL, '2025-07-17 16:50:29'),
+(343, 'kablo332', '332', NULL, '332', NULL, NULL, 2, 'adet', NULL, '2025-07-17 17:15:04'),
+(344, 'kablo333', '333', NULL, '333', NULL, NULL, 0, 'metre', NULL, '2025-07-17 17:16:20');
 
 -- --------------------------------------------------------
 
@@ -580,7 +529,40 @@ INSERT INTO `urun_hareketleri` (`id`, `urun_id`, `hareket_turu`, `miktar`, `log_
 (170, 338, 'Cikis', 1, '2025-07-16 12:06:30', 1, NULL, 1, 42),
 (171, 335, 'Cikis', 1, '2025-07-16 16:39:17', 1, NULL, 0, NULL),
 (172, 338, 'Cikis', 1, '2025-07-17 09:06:54', 1, NULL, 1, 42),
-(173, 338, 'Cikis', 1, '2025-07-17 09:27:10', 1, NULL, 1, 42);
+(173, 338, 'Cikis', 1, '2025-07-17 09:27:10', 1, NULL, 1, 42),
+(174, 341, 'Giris', 1, '2025-07-17 12:35:09', 1, NULL, 0, NULL),
+(175, 341, 'Giris', 1, '2025-07-17 12:43:00', 1, NULL, 0, NULL),
+(176, 341, 'Giris', 9, '2025-07-17 12:43:35', 1, NULL, 0, NULL),
+(177, 341, 'Cikis', 1, '2025-07-17 12:48:01', 1, NULL, 1, 43),
+(178, 341, 'Cikis', 1, '2025-07-17 12:48:08', 1, NULL, 1, 43),
+(179, 341, 'Cikis', 2, '2025-07-17 12:48:15', 1, NULL, 1, 43),
+(180, 341, 'Cikis', 1, '2025-07-17 13:47:41', 1, NULL, 1, 43),
+(181, 341, 'Giris', 1, '2025-07-17 13:47:50', 1, 'İşlem geri alındı', 1, 43),
+(182, 341, 'Cikis', 1, '2025-07-17 13:48:34', 1, NULL, 1, 43),
+(183, 341, 'Cikis', 2, '2025-07-17 13:48:41', 1, NULL, 1, 43),
+(184, 341, 'Cikis', 1, '2025-07-17 13:50:06', 1, NULL, 1, 43),
+(185, 341, 'Cikis', 3, '2025-07-17 13:54:17', 1, NULL, 1, 43),
+(186, 341, 'Giris', 1, '2025-07-17 13:54:23', 1, 'İşlem geri alındı', 1, 43),
+(187, 341, 'Giris', 3, '2025-07-17 13:54:26', 1, 'İşlem geri alındı', 1, 43),
+(188, 341, 'Cikis', 1, '2025-07-17 14:20:22', 1, NULL, 1, 43),
+(189, 327, 'Cikis', 1, '2025-07-17 14:33:11', 1, NULL, 1, 43),
+(190, 341, 'Cikis', 1, '2025-07-17 14:46:09', 1, NULL, 1, 43),
+(191, 336, 'Cikis', 1, '2025-07-17 14:48:17', 1, NULL, 1, 43),
+(192, 336, 'Cikis', 4, '2025-07-17 14:51:13', 1, NULL, 1, 43),
+(193, 341, 'Giris', 1, '2025-07-17 15:46:57', 1, 'İşlem geri alındı', 1, 43),
+(194, 336, 'Giris', 1, '2025-07-17 15:52:18', 1, 'İşlem geri alındı', 1, 43),
+(195, 336, 'Giris', 4, '2025-07-17 15:52:20', 1, 'İşlem geri alındı', 1, 43),
+(196, 336, 'Giris', 1, '2025-07-17 16:48:24', 1, NULL, 0, NULL),
+(197, 336, 'Giris', 1, '2025-07-17 16:49:06', 1, NULL, 0, NULL),
+(198, 340, 'Giris', 1, '2025-07-17 16:49:34', 1, NULL, 0, NULL),
+(199, 336, 'Giris', 1, '2025-07-17 16:49:41', 1, NULL, 0, NULL),
+(200, 336, 'Giris', 100, '2025-07-17 16:49:51', 1, NULL, 0, NULL),
+(201, 342, 'Giris', 10, '2025-07-17 16:50:29', 1, NULL, 0, NULL),
+(202, 343, 'Giris', 1, '2025-07-17 17:15:04', 1, NULL, 0, NULL),
+(203, 343, 'Giris', 1, '2025-07-17 17:15:16', 1, NULL, 0, NULL),
+(204, 344, 'Giris', 1, '2025-07-17 17:16:20', 1, NULL, 0, NULL),
+(205, 344, 'Cikis', 1, '2025-07-17 17:18:43', 1, NULL, 0, NULL),
+(206, 344, 'Cikis', 1, '2025-07-17 17:23:36', 1, NULL, 0, NULL);
 
 --
 -- Dökümü yapılmış tablolar için indeksler
@@ -684,25 +666,25 @@ ALTER TABLE `kullanicilar`
 -- Tablo için AUTO_INCREMENT değeri `projeler`
 --
 ALTER TABLE `projeler`
-  MODIFY `proje_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
+  MODIFY `proje_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
 
 --
 -- Tablo için AUTO_INCREMENT değeri `proje_hareketleri`
 --
 ALTER TABLE `proje_hareketleri`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=55;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=68;
 
 --
 -- Tablo için AUTO_INCREMENT değeri `proje_urunleri`
 --
 ALTER TABLE `proje_urunleri`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1352;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1361;
 
 --
 -- Tablo için AUTO_INCREMENT değeri `urunler`
 --
 ALTER TABLE `urunler`
-  MODIFY `urun_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=341;
+  MODIFY `urun_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=345;
 
 --
 -- Tablo için AUTO_INCREMENT değeri `urun_guncelleme_log`
@@ -714,7 +696,7 @@ ALTER TABLE `urun_guncelleme_log`
 -- Tablo için AUTO_INCREMENT değeri `urun_hareketleri`
 --
 ALTER TABLE `urun_hareketleri`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=174;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=207;
 
 --
 -- Dökümü yapılmış tablolar için kısıtlamalar
