@@ -1,4 +1,5 @@
 ﻿using MySql.Data.MySqlClient;
+using NPOI.SS.Formula.Functions;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -12,11 +13,16 @@ namespace StokTakipOtomasyonu.Forms
         private readonly string _connectionString = "server=localhost;user=root;database=stok_takip_otomasyonu;password=;";
         private Timer mesajTimer;
 
+
         public ManuelUrunGirisiForm(int kullaniciId)
         {
             this.Icon = new Icon("isp_logo2.ico");
             InitializeComponent();
             _kullaniciId = kullaniciId;
+
+            cmbBirim.Items.Clear();
+            cmbBirim.Items.AddRange(new object[] { "adet", "metre", "cm" });
+            cmbBirim.SelectedIndex = 0;
 
             txtIslemTuru.Text = "Stok";
             txtIslemTuru.ReadOnly = true;
@@ -28,7 +34,7 @@ namespace StokTakipOtomasyonu.Forms
             mesajTimer.Tick += mesajTimer_Tick;
 
             txtBarkod.KeyDown += txtBarkod_KeyDown;
-            txtUrunKodu.KeyDown += txtUrunKodu_KeyDown; // EKLENDİ
+            txtUrunKodu.KeyDown += txtUrunKodu_KeyDown;
 
             txtUrunKodu.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
             txtUrunKodu.AutoCompleteSource = AutoCompleteSource.CustomSource;
@@ -50,7 +56,11 @@ namespace StokTakipOtomasyonu.Forms
                 }
             }
             txtUrunKodu.AutoCompleteCustomSource = autoSource;
+
+            // **Load eventini burada bağla**
+            this.Load += ManuelUrunGirisiForm_Load;
         }
+
 
         private void txtBarkod_KeyDown(object sender, KeyEventArgs e)
         {
@@ -70,6 +80,12 @@ namespace StokTakipOtomasyonu.Forms
             }
         }
 
+        private void ManuelUrunGirisiForm_Load(object sender, EventArgs e)
+        {
+            txtBarkod.Focus();
+        }
+
+
         private void mesajTimer_Tick(object sender, EventArgs e)
         {
             lblBasariMesaji.Visible = false;
@@ -78,6 +94,7 @@ namespace StokTakipOtomasyonu.Forms
 
         private void btnKaydet_Click(object sender, EventArgs e)
         {
+            string birim = cmbBirim.SelectedItem.ToString();
             string barkod = txtBarkod.Text.Trim();
             int miktar = (int)nudMiktar.Value;
 
@@ -122,22 +139,26 @@ namespace StokTakipOtomasyonu.Forms
                             return;
                         }
 
-                        string insert = "INSERT INTO urunler (urun_adi, urun_kodu, urun_barkod, miktar) VALUES (@adi, @kodu, @barkod, 0); SELECT LAST_INSERT_ID();";
+                        string insert = "INSERT INTO urunler (urun_adi, urun_kodu, urun_barkod, miktar, birim) VALUES (@adi, @kodu, @barkod, 0, @birim); SELECT LAST_INSERT_ID();";
                         var insertCmd = new MySqlCommand(insert, conn);
                         insertCmd.Parameters.AddWithValue("@adi", yeniUrunAdi);
                         insertCmd.Parameters.AddWithValue("@kodu", urunKodu);
                         insertCmd.Parameters.AddWithValue("@barkod", barkod);
-                        urunId = Convert.ToInt32(insertCmd.ExecuteScalar());
+                        insertCmd.Parameters.AddWithValue("@birim", birim);
+                        urunId = Convert.ToInt32(insertCmd.ExecuteScalar());                       
                     }
                     else
                     {
-                        urunId = Convert.ToInt32(kodResult);
-                        string guncelle = "UPDATE urunler SET urun_barkod = @barkod WHERE urun_id = @urun_id";
-                        var guncelleCmd = new MySqlCommand(guncelle, conn);
-                        guncelleCmd.Parameters.AddWithValue("@barkod", barkod);
+                        urunId = Convert.ToInt32(result);
+
+                        // EKLE!
+                        string guncelleBirim = "UPDATE urunler SET birim = @birim WHERE urun_id = @urun_id";
+                        var guncelleCmd = new MySqlCommand(guncelleBirim, conn);
+                        guncelleCmd.Parameters.AddWithValue("@birim", birim);
                         guncelleCmd.Parameters.AddWithValue("@urun_id", urunId);
                         guncelleCmd.ExecuteNonQuery();
                     }
+
                 }
                 else
                 {
@@ -164,7 +185,7 @@ namespace StokTakipOtomasyonu.Forms
                 adCmd.Parameters.AddWithValue("@id", urunId);
                 string urunAdi = adCmd.ExecuteScalar()?.ToString() ?? "(ad yok)";
 
-                lblBasariMesaji.Text = $"✔ {urunAdi} ürününden {miktar} adet stok girişi yapıldı.";
+                lblBasariMesaji.Text = $"✔ {urunAdi} ürününden {miktar} {birim} stok girişi yapıldı.";
                 lblBasariMesaji.Visible = true;
                 mesajTimer.Start();
 

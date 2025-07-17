@@ -129,11 +129,11 @@
             // 
             // btnSec
             // 
-            this.btnSec.Location = new System.Drawing.Point(672, 70);
+            this.btnSec.Location = new System.Drawing.Point(644, 70);
             this.btnSec.Name = "btnSec";
-            this.btnSec.Size = new System.Drawing.Size(75, 34);
+            this.btnSec.Size = new System.Drawing.Size(144, 34);
             this.btnSec.TabIndex = 8;
-            this.btnSec.Text = "button1";
+            this.btnSec.Text = "Projeye ürünü ekle";
             this.btnSec.UseVisualStyleBackColor = true;
             this.btnSec.Click += new System.EventHandler(this.btnSec_Click);
             // 

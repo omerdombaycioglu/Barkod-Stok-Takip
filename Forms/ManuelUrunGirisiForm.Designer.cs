@@ -17,6 +17,8 @@
         private System.Windows.Forms.Label lblYeniUrunAdi;
         private System.Windows.Forms.Panel panelTop;
         private System.Windows.Forms.Label lblBaslik;
+        private System.Windows.Forms.ComboBox cmbBirim;
+
 
         protected override void Dispose(bool disposing)
         {
@@ -50,7 +52,7 @@
             this.txtBarkod.Location = new System.Drawing.Point(160, 80);
             this.txtBarkod.Name = "txtBarkod";
             this.txtBarkod.Size = new System.Drawing.Size(220, 22);
-            this.txtBarkod.TabIndex = 1;
+            this.txtBarkod.TabIndex = 0;
             // 
             // txtIslemTuru
             // 
@@ -58,7 +60,7 @@
             this.txtIslemTuru.Name = "txtIslemTuru";
             this.txtIslemTuru.ReadOnly = true;
             this.txtIslemTuru.Size = new System.Drawing.Size(220, 22);
-            this.txtIslemTuru.TabIndex = 2;
+            this.txtIslemTuru.TabIndex = 1;
             // 
             // nudMiktar
             // 
@@ -74,8 +76,8 @@
             0,
             0});
             this.nudMiktar.Name = "nudMiktar";
-            this.nudMiktar.Size = new System.Drawing.Size(220, 22);
-            this.nudMiktar.TabIndex = 3;
+            this.nudMiktar.Size = new System.Drawing.Size(55, 22);
+            this.nudMiktar.TabIndex = 2;
             this.nudMiktar.Value = new decimal(new int[] {
             1,
             0,
@@ -87,7 +89,7 @@
             this.txtUrunKodu.Location = new System.Drawing.Point(160, 185);
             this.txtUrunKodu.Name = "txtUrunKodu";
             this.txtUrunKodu.Size = new System.Drawing.Size(220, 22);
-            this.txtUrunKodu.TabIndex = 4;
+            this.txtUrunKodu.TabIndex = 3;
             // 
             // lblBarkod
             // 
@@ -97,6 +99,13 @@
             this.lblBarkod.Size = new System.Drawing.Size(120, 20);
             this.lblBarkod.TabIndex = 8;
             this.lblBarkod.Text = "Barkod:";
+            // InitializeComponent içinde şunu ekle:
+            this.cmbBirim = new System.Windows.Forms.ComboBox();
+            this.cmbBirim.Location = new System.Drawing.Point(nudMiktar.Right + 10, nudMiktar.Top);
+            this.cmbBirim.Name = "cmbBirim";
+            this.cmbBirim.Size = new System.Drawing.Size(80, 22); // 80 veya 121, nasıl istersen
+            this.cmbBirim.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.Controls.Add(this.cmbBirim);
             // 
             // lblIslemTuru
             // 
@@ -177,7 +186,7 @@
             this.panelTop.Dock = System.Windows.Forms.DockStyle.Top;
             this.panelTop.Location = new System.Drawing.Point(0, 0);
             this.panelTop.Name = "panelTop";
-            this.panelTop.Size = new System.Drawing.Size(440, 60);
+            this.panelTop.Size = new System.Drawing.Size(417, 60);
             this.panelTop.TabIndex = 0;
             // 
             // lblBaslik
@@ -191,16 +200,22 @@
             this.lblBaslik.TabIndex = 0;
             this.lblBaslik.Text = "Ürün Girişi";
             // 
+            // cmbBirim
+            // 
+            
+            // 
             // ManuelUrunGirisiForm
             // 
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
-            this.ClientSize = new System.Drawing.Size(440, 369);
+            this.ClientSize = new System.Drawing.Size(417, 369);
             this.Controls.Add(this.panelTop);
             this.Controls.Add(this.txtBarkod);
             this.Controls.Add(this.txtIslemTuru);
             this.Controls.Add(this.nudMiktar);
+            
             this.Controls.Add(this.txtUrunKodu);
             this.Controls.Add(this.txtYeniUrunAdi);
+            this.Controls.Add(this.cmbBirim);
             this.Controls.Add(this.btnKaydet);
             this.Controls.Add(this.lblBasariMesaji);
             this.Controls.Add(this.lblBarkod);

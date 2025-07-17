@@ -15,6 +15,7 @@ namespace StokTakipOtomasyonu
         private string connectionString = "server=localhost;database=stok_takip_otomasyonu;uid=root;pwd=;";
         private DataTable dataSourceTable;
         private Label lblUrunSayisi;
+        private string _callerForm;
 
         public UrunListeleForm()
         {
@@ -31,13 +32,18 @@ namespace StokTakipOtomasyonu
             dataGridView1.CellFormatting += DataGridView1_CellFormatting;
             ProjeleriYukle();
             UrunleriYukle();
-            this.Shown += (s, e) => txtArama.Focus();
+            this.Shown += (s, e) =>
+            {
+                txtArama.Focus();
+                btnSec.Visible = _secimModu && _callerForm == "ProjeMontajDetayForm";
+            };
 
         }
 
-        public UrunListeleForm(bool secimModu) : this()
+        public UrunListeleForm(bool secimModu, string callerForm = "") : this()
         {
             _secimModu = secimModu;
+            _callerForm = callerForm;
         }
 
         private void DataGridView1_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)

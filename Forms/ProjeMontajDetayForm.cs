@@ -215,7 +215,7 @@ namespace StokTakipOtomasyonu.Forms
 
         private void BtnProjeyeYeniUrunEkle_Click(object sender, EventArgs e)
         {
-            using (var urunSecForm = new UrunListeleForm(true))
+            using (var urunSecForm = new UrunListeleForm(true, "ProjeMontajDetayForm"))
             {
                 if (urunSecForm.ShowDialog() == DialogResult.OK)
                 {

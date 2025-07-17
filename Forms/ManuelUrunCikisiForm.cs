@@ -1,9 +1,10 @@
-﻿using System;
+﻿using MySql.Data.MySqlClient;
+using NPOI.SS.Formula.Functions;
+using System;
 using System.Data;
 using System.Drawing;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using MySql.Data.MySqlClient;
 
 namespace StokTakipOtomasyonu.Forms
 {
@@ -53,7 +54,8 @@ namespace StokTakipOtomasyonu.Forms
                 {
                     await conn.OpenAsync();
 
-                    MySqlCommand cmd = new MySqlCommand("SELECT urun_id, urun_adi, miktar FROM urunler WHERE urun_barkod = @barkod", conn);
+                    MySqlCommand cmd = new MySqlCommand("SELECT urun_id, urun_adi, miktar, birim FROM urunler WHERE urun_barkod = @barkod", conn);
+                    string birim = "";
                     cmd.Parameters.AddWithValue("@barkod", barkod);
 
                     int urunId = 0;
@@ -67,6 +69,7 @@ namespace StokTakipOtomasyonu.Forms
                             urunId = Convert.ToInt32(reader["urun_id"]);
                             urunAdi = reader["urun_adi"].ToString();
                             stokMiktari = Convert.ToInt32(reader["miktar"]);
+                            birim = reader["birim"].ToString();
                         }
                         else
                         {
@@ -78,7 +81,7 @@ namespace StokTakipOtomasyonu.Forms
                     // 🛑 Stok kontrolü
                     if (stokMiktari < miktar)
                     {
-                        await ShowMessageAsync($"Yetersiz stok: Stokta sadece {stokMiktari} adet var.", false);
+                        await ShowMessageAsync($"Yetersiz stok: Stokta sadece {stokMiktari} {birim} var.", false);
                         return;
                     }
 
@@ -99,7 +102,8 @@ namespace StokTakipOtomasyonu.Forms
                     nudMiktar.Value = 1;
                     txtBarkod.Focus();
 
-                    await ShowMessageAsync($"{urunAdi} ürününden {miktar} adet çıkış yapıldı.", true);
+                    await ShowMessageAsync($"{urunAdi} ürününden {miktar} {birim} çıkış yapıldı.", true);
+
                 }
             }
             catch (Exception ex)
