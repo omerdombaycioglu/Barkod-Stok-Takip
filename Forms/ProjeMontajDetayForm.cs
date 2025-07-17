@@ -25,15 +25,75 @@ namespace StokTakipOtomasyonu.Forms
             _kullaniciId = kullaniciId;
             _projeKodu = projeKodu;
             lblProjeKodu.Text = $"Proje: {_projeKodu}";
-            nudMiktar.Value = 1;
+            nudMiktar.Value = 1;                                                      
+
+            // Soldaki gridin boyutunu ayarla (butona yer açılsın)
+            splitContainer.Height -= 50;
         }
+
 
         private void ProjeMontajDetayForm_Load(object sender, EventArgs e)
         {
             LoadProjeUrunleri();
             LoadKullanilanUrunler();
             txtBarkod.Focus();
+            dgvKullanilanlar.CellClick += DgvKullanilanlar_CellClick;
+            dgvProjeUrunler.CellClick += DgvProjeUrunler_CellClick;
+
+            // Ekle butonu
+            DataGridViewButtonColumn btnUrunEkle = new DataGridViewButtonColumn
+            {
+                Name = "btnUrunEkle",
+                HeaderText = "Projeye Ekle",
+                Text = "+",
+                UseColumnTextForButtonValue = true,
+                FlatStyle = FlatStyle.Flat
+            };
+
+            // Çıkar butonu
+            DataGridViewButtonColumn btnUrunCikar = new DataGridViewButtonColumn
+            {
+                Name = "btnUrunCikar",
+                HeaderText = "Projeden Çıkar",
+                Text = "-",
+                UseColumnTextForButtonValue = true,
+                FlatStyle = FlatStyle.Flat
+            };
+
+            // Çöp kutusu butonu (ürünü projeden tamamen kaldırır)
+            DataGridViewButtonColumn btnUrunSil = new DataGridViewButtonColumn
+            {
+                Name = "btnUrunSil",
+                HeaderText = "Ürünü Kaldır",
+                Text = "🗑️",
+                UseColumnTextForButtonValue = true,
+                FlatStyle = FlatStyle.Flat
+            };
+
+            // Kolonları ekle
+            dgvProjeUrunler.Columns.Insert(0, btnUrunSil);
+            dgvProjeUrunler.Columns.Add(btnUrunEkle);
+            dgvProjeUrunler.Columns.Add(btnUrunCikar);
+
+            Button btnProjeyeYeniUrunEkle = new Button
+            {
+                Name = "btnProjeyeYeniUrunEkle",
+                Text = "📦 Projeye Yeni Ürün Ekle",
+                BackColor = Color.SeaGreen,
+                ForeColor = Color.White,
+                FlatStyle = FlatStyle.Flat,
+                Font = new Font("Segoe UI", 9F, FontStyle.Bold),
+                Size = new Size(220, 35),
+                Location = new Point(25, this.ClientSize.Height - 50),
+                Anchor = AnchorStyles.Bottom | AnchorStyles.Left
+            };
+
+            btnProjeyeYeniUrunEkle.Click += BtnProjeyeYeniUrunEkle_Click;
+            this.Controls.Add(btnProjeyeYeniUrunEkle);
+            splitContainer.Height -= 50;
         }
+
+
 
         private void LoadProjeUrunleri()
         {
@@ -68,6 +128,118 @@ namespace StokTakipOtomasyonu.Forms
                     row.DefaultCellStyle.BackColor = Color.LightGreen;
             }
         }
+        private void DgvProjeUrunler_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0) return;
+
+            var row = dgvProjeUrunler.Rows[e.RowIndex];
+            int urunId = Convert.ToInt32(row.Cells["urun_id"].Value);
+            string urunAdi = row.Cells["urun_adi"].Value.ToString();
+
+            if (dgvProjeUrunler.Columns[e.ColumnIndex].Name == "btnUrunEkle")
+            {
+                DatabaseHelper.ExecuteNonQuery(@"
+            UPDATE proje_urunleri SET miktar = miktar + 1
+            WHERE proje_id = @pid AND urun_id = @uid",
+                    new MySqlParameter("@pid", _projeId),
+                    new MySqlParameter("@uid", urunId));
+
+                lblSonIslem.Text = $"{urunAdi} ürününün proje için gerekli miktarı 1 artırıldı.";
+                lblSonIslem.ForeColor = Color.DarkGreen;
+                LoadProjeUrunleri();
+            }
+            else if (dgvProjeUrunler.Columns[e.ColumnIndex].Name == "btnUrunCikar")
+            {
+                int gerekliMiktar = Convert.ToInt32(row.Cells["gerekli_miktar"].Value);
+
+                if (gerekliMiktar <= 1)
+                {
+                    MessageBox.Show("Ürünün miktarı 1'den küçük olamaz.", "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                DatabaseHelper.ExecuteNonQuery(@"
+            UPDATE proje_urunleri SET miktar = miktar - 1
+            WHERE proje_id = @pid AND urun_id = @uid",
+                    new MySqlParameter("@pid", _projeId),
+                    new MySqlParameter("@uid", urunId));
+
+                lblSonIslem.Text = $"{urunAdi} ürününün proje için gerekli miktarı 1 azaltıldı.";
+                lblSonIslem.ForeColor = Color.IndianRed;
+                LoadProjeUrunleri();
+            }
+            else if (dgvProjeUrunler.Columns[e.ColumnIndex].Name == "btnUrunSil")
+            {
+                var dialogResult = MessageBox.Show($"{urunAdi} ürünü projeden tamamen kaldırılacak. Emin misiniz?",
+                                                   "Ürünü Projeden Kaldır",
+                                                   MessageBoxButtons.YesNo,
+                                                   MessageBoxIcon.Warning);
+
+                if (dialogResult != DialogResult.Yes) return;
+
+                DatabaseHelper.ExecuteNonQuery(@"
+            DELETE FROM proje_urunleri 
+            WHERE proje_id = @pid AND urun_id = @uid",
+                    new MySqlParameter("@pid", _projeId),
+                    new MySqlParameter("@uid", urunId));
+
+                lblSonIslem.Text = $"{urunAdi} ürünü projeden kaldırıldı.";
+                lblSonIslem.ForeColor = Color.Red;
+                LoadProjeUrunleri();
+            }
+        }
+
+
+
+        private void BtnProjeyeYeniUrunEkle_Click(object sender, EventArgs e)
+        {
+            using (var urunSecForm = new UrunListeleForm(true))
+            {
+                if (urunSecForm.ShowDialog() == DialogResult.OK)
+                {
+                    int secilenUrunId = urunSecForm.SecilenUrunId;
+                    int secilenUrunMiktar = urunSecForm.SecilenMiktar;
+
+                    // Önce ürünün projeye daha önce eklenip eklenmediğini kontrol et
+                    object varMi = DatabaseHelper.ExecuteScalar(@"
+                SELECT COUNT(*) FROM proje_urunleri
+                WHERE proje_id = @pid AND urun_id = @uid",
+                        new MySqlParameter("@pid", _projeId),
+                        new MySqlParameter("@uid", secilenUrunId));
+
+                    if (Convert.ToInt32(varMi) > 0)
+                    {
+                        // Ürün varsa miktarı güncelle
+                        DatabaseHelper.ExecuteNonQuery(@"
+                    UPDATE proje_urunleri SET miktar = miktar + @miktar
+                    WHERE proje_id = @pid AND urun_id = @uid",
+                            new MySqlParameter("@pid", _projeId),
+                            new MySqlParameter("@uid", secilenUrunId),
+                            new MySqlParameter("@miktar", secilenUrunMiktar));
+                    }
+                    else
+                    {
+                        // Ürün yoksa yeni ekle
+                        DatabaseHelper.ExecuteNonQuery(@"
+                    INSERT INTO proje_urunleri (proje_id, urun_id, miktar, user_id)
+                    VALUES (@pid, @uid, @miktar, @kid)",
+                            new MySqlParameter("@pid", _projeId),
+                            new MySqlParameter("@uid", secilenUrunId),
+                            new MySqlParameter("@miktar", secilenUrunMiktar),
+                            new MySqlParameter("@kid", _kullaniciId));
+                    }
+
+                    lblSonIslem.Text = $"Yeni ürün projeye eklendi veya miktarı güncellendi.";
+                    lblSonIslem.ForeColor = Color.DarkGreen;
+
+                    LoadProjeUrunleri();
+                }
+            }
+        }
+
+
+
+
 
 
         private void LoadKullanilanUrunler()
@@ -75,6 +247,7 @@ namespace StokTakipOtomasyonu.Forms
             string query = @"
         SELECT 
             ph.id AS hareket_id, 
+            u.urun_id,
             u.urun_kodu, 
             u.urun_adi, 
             ph.miktar, 
@@ -86,7 +259,78 @@ namespace StokTakipOtomasyonu.Forms
 
             _kullanilanlar = DatabaseHelper.ExecuteQuery(query, new MySqlParameter("@pid", _projeId));
             dgvKullanilanlar.DataSource = _kullanilanlar;
+
+            // Buton kolonunu ekle (eğer daha önce eklenmediyse)
+            if (!dgvKullanilanlar.Columns.Contains("btnGeriAl"))
+            {
+                DataGridViewButtonColumn btnGeriAl = new DataGridViewButtonColumn
+                {
+                    Name = "btnGeriAl",
+                    HeaderText = "İşlem",
+                    Text = "Geri Al",
+                    UseColumnTextForButtonValue = true,
+                    FlatStyle = FlatStyle.Flat
+                };
+
+                dgvKullanilanlar.Columns.Add(btnGeriAl);
+            }
+
+            // Gereksiz kolonları gizle
+            dgvKullanilanlar.Columns["hareket_id"].Visible = false;
+            dgvKullanilanlar.Columns["urun_id"].Visible = false;
         }
+
+        private void DgvKullanilanlar_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0 || dgvKullanilanlar.Columns[e.ColumnIndex].Name != "btnGeriAl")
+                return;
+
+            var row = dgvKullanilanlar.Rows[e.RowIndex];
+            int hareketId = Convert.ToInt32(row.Cells["hareket_id"].Value);
+            int urunId = Convert.ToInt32(row.Cells["urun_id"].Value);
+            int miktar = Convert.ToInt32(row.Cells["miktar"].Value);
+            string urunAdi = row.Cells["urun_adi"].Value.ToString();
+
+            var dialogResult = MessageBox.Show($"{urunAdi} ürününden {miktar} adet işlemi geri almak istediğinizden emin misiniz?",
+                                               "İşlem Geri Al",
+                                               MessageBoxButtons.YesNo,
+                                               MessageBoxIcon.Question);
+
+            if (dialogResult != DialogResult.Yes) return;
+
+            // İşlemi pasif hale getir ve geri alındığı tarihi kaydet
+            DatabaseHelper.ExecuteNonQuery(@"
+        UPDATE proje_hareketleri 
+        SET aktif = 0, geri_alinan_islem = NOW() 
+        WHERE id = @hid",
+                new MySqlParameter("@hid", hareketId));
+
+            // Ürün miktarını stokta güncelle
+            DatabaseHelper.ExecuteNonQuery(@"
+        UPDATE urunler 
+        SET miktar = miktar + @miktar 
+        WHERE urun_id = @uid",
+                new MySqlParameter("@miktar", miktar),
+                new MySqlParameter("@uid", urunId));
+
+            // Urun hareketlerini de loglayalım (Giriş olarak, proje geri alma işlemi)
+            DatabaseHelper.ExecuteNonQuery(@"
+        INSERT INTO urun_hareketleri (urun_id, hareket_turu, miktar, kullanici_id, islem_turu_id, proje_id, aciklama)
+        VALUES (@uid, 'Giris', @miktar, @kid, 1, @pid, 'İşlem geri alındı')",
+                new MySqlParameter("@uid", urunId),
+                new MySqlParameter("@miktar", miktar),
+                new MySqlParameter("@kid", _kullaniciId),
+                new MySqlParameter("@pid", _projeId));
+
+            lblSonIslem.Text = $"{miktar} adet {urunAdi} stoklara geri eklendi.";
+            lblSonIslem.ForeColor = Color.Blue;
+
+            // Listeyi güncelle
+            LoadProjeUrunleri();
+            LoadKullanilanUrunler();
+        }
+
+
 
 
         private async void txtBarkod_KeyDown(object sender, KeyEventArgs e)

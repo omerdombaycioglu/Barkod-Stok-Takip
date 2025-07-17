@@ -125,7 +125,7 @@ namespace StokTakipOtomasyonu.Forms
             this.splitContainer.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.splitContainer.Location = new System.Drawing.Point(20, 90);
+            this.splitContainer.Location = new System.Drawing.Point(25, 93);
             this.splitContainer.Name = "splitContainer";
             // 
             // splitContainer.Panel1
@@ -135,8 +135,8 @@ namespace StokTakipOtomasyonu.Forms
             // splitContainer.Panel2
             // 
             this.splitContainer.Panel2.Controls.Add(this.dgvKullanilanlar);
-            this.splitContainer.Size = new System.Drawing.Size(960, 470);
-            this.splitContainer.SplitterDistance = 470;
+            this.splitContainer.Size = new System.Drawing.Size(960, 505);
+            this.splitContainer.SplitterDistance = 465;
             this.splitContainer.TabIndex = 7;
             // 
             // dgvProjeUrunler
@@ -151,7 +151,7 @@ namespace StokTakipOtomasyonu.Forms
             this.dgvProjeUrunler.ReadOnly = true;
             this.dgvProjeUrunler.RowHeadersWidth = 51;
             this.dgvProjeUrunler.RowTemplate.Height = 24;
-            this.dgvProjeUrunler.Size = new System.Drawing.Size(470, 470);
+            this.dgvProjeUrunler.Size = new System.Drawing.Size(465, 505);
             this.dgvProjeUrunler.TabIndex = 0;
             this.dgvProjeUrunler.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvProjeUrunler_CellContentClick);
             // 
@@ -159,7 +159,7 @@ namespace StokTakipOtomasyonu.Forms
             // 
             this.dgvKullanilanlar.AllowUserToAddRows = false;
             this.dgvKullanilanlar.AllowUserToDeleteRows = false;
-            this.dgvKullanilanlar.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.dgvKullanilanlar.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.ColumnHeader;
             this.dgvKullanilanlar.ColumnHeadersHeight = 28;
             this.dgvKullanilanlar.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dgvKullanilanlar.Location = new System.Drawing.Point(0, 0);
@@ -167,7 +167,7 @@ namespace StokTakipOtomasyonu.Forms
             this.dgvKullanilanlar.ReadOnly = true;
             this.dgvKullanilanlar.RowHeadersWidth = 51;
             this.dgvKullanilanlar.RowTemplate.Height = 24;
-            this.dgvKullanilanlar.Size = new System.Drawing.Size(486, 470);
+            this.dgvKullanilanlar.Size = new System.Drawing.Size(491, 505);
             this.dgvKullanilanlar.TabIndex = 0;
             // 
             // label1
@@ -186,7 +186,7 @@ namespace StokTakipOtomasyonu.Forms
             this.label2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this.label2.Location = new System.Drawing.Point(20, 70);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(146, 20);
+            this.label2.Size = new System.Drawing.Size(128, 20);
             this.label2.TabIndex = 6;
             this.label2.Text = "Özet Ürün Listesi";
             // 
@@ -222,6 +222,7 @@ namespace StokTakipOtomasyonu.Forms
             this.Name = "ProjeMontajDetayForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Proje Montaj Detayı";
+            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.Load += new System.EventHandler(this.ProjeMontajDetayForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.nudMiktar)).EndInit();
             this.splitContainer.Panel1.ResumeLayout(false);
@@ -232,6 +233,8 @@ namespace StokTakipOtomasyonu.Forms
             ((System.ComponentModel.ISupportInitialize)(this.dgvKullanilanlar)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
+            
+
 
         }
     }

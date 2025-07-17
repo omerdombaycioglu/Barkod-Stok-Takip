@@ -8,6 +8,9 @@ namespace StokTakipOtomasyonu
 {
     public partial class UrunListeleForm : Form
     {
+        public int SecilenUrunId { get; private set; }
+        public int SecilenMiktar { get; private set; } = 1;
+        private bool _secimModu = false;
         private MySqlConnection connection;
         private string connectionString = "server=localhost;database=stok_takip_otomasyonu;uid=root;pwd=;";
         private DataTable dataSourceTable;
@@ -30,6 +33,11 @@ namespace StokTakipOtomasyonu
             UrunleriYukle();
             this.Shown += (s, e) => txtArama.Focus();
 
+        }
+
+        public UrunListeleForm(bool secimModu) : this()
+        {
+            _secimModu = secimModu;
         }
 
         private void DataGridView1_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
@@ -156,6 +164,38 @@ namespace StokTakipOtomasyonu
             }
         }
 
+        private void btnSecTamam_Click(object sender, EventArgs e)
+        {
+            if (dataGridView1.SelectedRows.Count == 0)
+            {
+                MessageBox.Show("Lütfen bir ürün seçin.");
+                return;
+            }
+
+            SecilenUrunId = Convert.ToInt32(dataGridView1.SelectedRows[0].Cells["urun_id"].Value);
+
+            using (var miktarForm = new Form())
+            {
+                var lbl = new Label() { Text = "Miktar:", Dock = DockStyle.Top };
+                var numericUpDown = new NumericUpDown() { Minimum = 1, Maximum = 1000, Value = 1, Dock = DockStyle.Top };
+                var btnOk = new Button() { Text = "Tamam", Dock = DockStyle.Bottom, DialogResult = DialogResult.OK };
+
+                miktarForm.Controls.Add(btnOk);
+                miktarForm.Controls.Add(numericUpDown);
+                miktarForm.Controls.Add(lbl);
+                miktarForm.AcceptButton = btnOk;
+                miktarForm.StartPosition = FormStartPosition.CenterParent;
+                miktarForm.Size = new Size(200, 120);
+
+                if (miktarForm.ShowDialog() == DialogResult.OK)
+                {
+                    SecilenMiktar = (int)numericUpDown.Value;
+                    DialogResult = DialogResult.OK;
+                }
+            }
+        }
+
+
         private void ProjeUrunleriniYukle(int projeId)
         {
             try
@@ -274,6 +314,51 @@ namespace StokTakipOtomasyonu
                 EnsureConnectionClosed();
                 connection.Dispose();
             }
+        }
+
+        private void btnSec_Click(object sender, EventArgs e)
+        {
+            if (dataGridView1.SelectedRows.Count == 0)
+            {
+                MessageBox.Show("Lütfen projeye eklenecek ürünü seçin.", "Ürün Seçimi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            SecilenUrunId = Convert.ToInt32(dataGridView1.SelectedRows[0].Cells["ID"].Value);
+
+            using (var miktarForm = new Form())
+            {
+                miktarForm.Text = "Ürün Miktarı";
+                miktarForm.Size = new Size(250, 120);
+                miktarForm.FormBorderStyle = FormBorderStyle.FixedDialog;
+                miktarForm.StartPosition = FormStartPosition.CenterParent;
+
+                var nudMiktar = new NumericUpDown
+                {
+                    Minimum = 1,
+                    Maximum = 1000,
+                    Value = 1,
+                    Dock = DockStyle.Top
+                };
+                var btnTamam = new Button
+                {
+                    Text = "Tamam",
+                    DialogResult = DialogResult.OK,
+                    Dock = DockStyle.Bottom
+                };
+
+                miktarForm.Controls.Add(nudMiktar);
+                miktarForm.Controls.Add(btnTamam);
+
+                miktarForm.AcceptButton = btnTamam;
+
+                if (miktarForm.ShowDialog() == DialogResult.OK)
+                {
+                    SecilenMiktar = (int)nudMiktar.Value;
+                    DialogResult = DialogResult.OK; // Seçim başarılı
+                }
+            }
+
         }
     }
 }
