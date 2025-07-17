@@ -13,8 +13,7 @@ namespace StokTakipOtomasyonu.Forms
             this.Text = $"İşlem Geçmişi - {projeKodu}";
 
             // Yeni "durum" sütunu ekle
-            islemGecmisi.Columns.Add("durum", typeof(string));
-            islemGecmisi.Columns.Add("geri_alinma_tarihi_str", typeof(string));
+            islemGecmisi.Columns.Add("durum", typeof(string));            
 
             foreach (DataRow row in islemGecmisi.Rows)
             {
@@ -26,10 +25,7 @@ namespace StokTakipOtomasyonu.Forms
                 }
                 else
                 {
-                    row["durum"] = "✘ Geri Alınan İşlem";
-                    row["geri_alinma_tarihi_str"] = row["geri_alinan_islem"] != DBNull.Value
-                        ? Convert.ToDateTime(row["geri_alinan_islem"]).ToString("g")
-                        : "???";
+                    row["durum"] = "✘ Geri Alınan İşlem";                  
                 }
             }
 
@@ -79,7 +75,8 @@ namespace StokTakipOtomasyonu.Forms
             // Gereksiz sütunu gizle
             dgvIslemler.Columns["aktif"].Visible = false;
             dgvIslemler.Columns["durum"].HeaderText = "Durum";
-            dgvIslemler.Columns["geri_alinma_tarihi_str"].HeaderText = "Geri Alınma Tarihi";
+            dgvIslemler.Columns["geri_alinan_islem"].HeaderText = "Geri Alınma Tarihi";
+
 
         }
     }
