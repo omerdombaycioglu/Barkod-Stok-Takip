@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Anamakine: 127.0.0.1
--- Üretim Zamanı: 16 Tem 2025, 12:45:30
+-- Üretim Zamanı: 17 Tem 2025, 08:44:54
 -- Sunucu sürümü: 10.4.32-MariaDB
 -- PHP Sürümü: 8.2.12
 
@@ -156,35 +156,16 @@ CREATE TABLE `proje_hareketleri` (
   `miktar` int(11) NOT NULL,
   `kullanici_id` int(11) NOT NULL,
   `islem_tarihi` datetime DEFAULT current_timestamp(),
-  `aktif` tinyint(1) NOT NULL DEFAULT 1
+  `aktif` tinyint(1) NOT NULL DEFAULT 1,
+  `geri_alinan_islem` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Tablo döküm verisi `proje_hareketleri`
 --
 
-INSERT INTO `proje_hareketleri` (`id`, `proje_id`, `urun_id`, `miktar`, `kullanici_id`, `islem_tarihi`, `aktif`) VALUES
-(20, 39, 260, 1, 1, '2025-07-13 01:44:56', 0),
-(21, 39, 286, 1, 1, '2025-07-13 15:50:54', 0),
-(34, 42, 286, 1, 1, '2025-07-14 17:12:11', 0),
-(35, 42, 286, 1, 1, '2025-07-14 17:12:14', 0),
-(36, 42, 286, 1, 1, '2025-07-14 17:13:22', 0),
-(37, 42, 286, 1, 1, '2025-07-14 17:13:25', 0),
-(38, 42, 286, 1, 1, '2025-07-14 17:13:29', 0),
-(39, 42, 286, 1, 1, '2025-07-14 17:16:06', 0),
-(40, 42, 286, 1, 1, '2025-07-14 17:16:13', 0),
-(41, 42, 286, 1, 1, '2025-07-14 17:16:43', 0),
-(42, 42, 259, 1, 1, '2025-07-14 17:25:52', 0),
-(43, 42, 259, 1, 1, '2025-07-14 17:29:27', 0),
-(44, 42, 259, 1, 1, '2025-07-14 17:37:20', 0),
-(45, 42, 338, 1, 1, '2025-07-16 08:41:58', 0),
-(46, 42, 338, 1, 1, '2025-07-16 08:43:59', 0),
-(47, 42, 338, 1, 1, '2025-07-16 09:01:19', 0),
-(48, 42, 338, 1, 1, '2025-07-16 09:02:55', 0),
-(49, 42, 338, 1, 1, '2025-07-16 09:05:54', 0),
-(50, 42, 338, 1, 1, '2025-07-16 09:07:25', 0),
-(51, 42, 338, 1, 1, '2025-07-16 09:07:50', 0),
-(52, 42, 338, 1, 1, '2025-07-16 12:06:30', 0);
+INSERT INTO `proje_hareketleri` (`id`, `proje_id`, `urun_id`, `miktar`, `kullanici_id`, `islem_tarihi`, `aktif`, `geri_alinan_islem`) VALUES
+(20, 39, 260, 1, 1, '2025-07-13 01:44:56', 0, NULL);
 
 -- --------------------------------------------------------
 
@@ -447,7 +428,7 @@ INSERT INTO `urunler` (`urun_id`, `urun_adi`, `urun_kodu`, `aciklama`, `urun_bar
 (332, '', '105698', NULL, NULL, '', NULL, 0, NULL, '2025-07-11 17:36:07'),
 (333, '', '987654321', NULL, NULL, '', NULL, 0, NULL, '2025-07-11 17:36:07'),
 (334, 'uBRİTO14', 'ES', NULL, '1', NULL, NULL, 1, NULL, '2025-07-12 11:23:05'),
-(335, 'vaio', NULL, NULL, '258852', NULL, NULL, 1, NULL, '2025-07-13 15:48:39'),
+(335, 'vaio', NULL, NULL, '258852', NULL, NULL, 0, NULL, '2025-07-13 15:48:39'),
 (336, '5 servo sürüc', '23', NULL, '5', NULL, NULL, 3, NULL, '2025-07-13 19:00:03'),
 (337, 'dell', 'AST9999', NULL, '874', NULL, NULL, 7, NULL, '2025-07-14 10:11:06'),
 (338, 'hp', 'vby45', NULL, '64', NULL, NULL, 1, NULL, '2025-07-14 12:38:44'),
@@ -596,7 +577,10 @@ INSERT INTO `urun_hareketleri` (`id`, `urun_id`, `hareket_turu`, `miktar`, `log_
 (167, 338, 'Cikis', 1, '2025-07-16 10:16:46', 1, NULL, 2, NULL),
 (168, 338, 'Giris', 1, '2025-07-16 10:51:04', 2, NULL, 0, NULL),
 (169, 336, 'Giris', 1, '2025-07-16 11:30:41', 1, NULL, 0, NULL),
-(170, 338, 'Cikis', 1, '2025-07-16 12:06:30', 1, NULL, 1, 42);
+(170, 338, 'Cikis', 1, '2025-07-16 12:06:30', 1, NULL, 1, 42),
+(171, 335, 'Cikis', 1, '2025-07-16 16:39:17', 1, NULL, 0, NULL),
+(172, 338, 'Cikis', 1, '2025-07-17 09:06:54', 1, NULL, 1, 42),
+(173, 338, 'Cikis', 1, '2025-07-17 09:27:10', 1, NULL, 1, 42);
 
 --
 -- Dökümü yapılmış tablolar için indeksler
@@ -706,7 +690,7 @@ ALTER TABLE `projeler`
 -- Tablo için AUTO_INCREMENT değeri `proje_hareketleri`
 --
 ALTER TABLE `proje_hareketleri`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=55;
 
 --
 -- Tablo için AUTO_INCREMENT değeri `proje_urunleri`
@@ -730,7 +714,7 @@ ALTER TABLE `urun_guncelleme_log`
 -- Tablo için AUTO_INCREMENT değeri `urun_hareketleri`
 --
 ALTER TABLE `urun_hareketleri`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=171;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=174;
 
 --
 -- Dökümü yapılmış tablolar için kısıtlamalar
