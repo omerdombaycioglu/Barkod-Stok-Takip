@@ -70,8 +70,10 @@ namespace StokTakipOtomasyonu.Forms
                 FlatStyle = FlatStyle.Flat
             };
 
+            dgvProjeUrunler.Columns.Insert(0, btnUrunSil); // Kolonu başa koyar
+
             // Kolonları ekle
-            dgvProjeUrunler.Columns.Insert(0, btnUrunSil);
+            
             dgvProjeUrunler.Columns.Add(btnUrunEkle);
             dgvProjeUrunler.Columns.Add(btnUrunCikar);
 
@@ -170,23 +172,43 @@ namespace StokTakipOtomasyonu.Forms
             }
             else if (dgvProjeUrunler.Columns[e.ColumnIndex].Name == "btnUrunSil")
             {
-                var dialogResult = MessageBox.Show($"{urunAdi} ürünü projeden tamamen kaldırılacak. Emin misiniz?",
+                var dialogResult = MessageBox.Show($"{urunAdi} ürününü projeden kaldırmak istediğinizden emin misiniz?",
                                                    "Ürünü Projeden Kaldır",
                                                    MessageBoxButtons.YesNo,
                                                    MessageBoxIcon.Warning);
 
                 if (dialogResult != DialogResult.Yes) return;
 
+                // Ürüne ait aktif hareket var mı kontrol et
+                object hareketSayisi = DatabaseHelper.ExecuteScalar(@"
+        SELECT COUNT(*) FROM proje_hareketleri 
+        WHERE proje_id = @pid AND urun_id = @uid AND aktif = 1",
+                    new MySqlParameter("@pid", _projeId),
+                    new MySqlParameter("@uid", urunId));
+
+                if (Convert.ToInt32(hareketSayisi) > 0)
+                {
+                    MessageBox.Show($"Bu ürüne ait aktif hareketler mevcut ({hareketSayisi} adet). Lütfen önce bu hareketleri geri alın.",
+                                    "Aktif Hareketler Mevcut",
+                                    MessageBoxButtons.OK,
+                                    MessageBoxIcon.Warning);
+                    return;
+                }
+
+                // Ürünü projeden kaldır (aktif hareket yoksa güvenli)
                 DatabaseHelper.ExecuteNonQuery(@"
-            DELETE FROM proje_urunleri 
-            WHERE proje_id = @pid AND urun_id = @uid",
+        DELETE FROM proje_urunleri 
+        WHERE proje_id = @pid AND urun_id = @uid",
                     new MySqlParameter("@pid", _projeId),
                     new MySqlParameter("@uid", urunId));
 
                 lblSonIslem.Text = $"{urunAdi} ürünü projeden kaldırıldı.";
                 lblSonIslem.ForeColor = Color.Red;
+
                 LoadProjeUrunleri();
+                LoadKullanilanUrunler();
             }
+
         }
 
 
