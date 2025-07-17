@@ -46,9 +46,6 @@ namespace StokTakipOtomasyonu.Forms
             lstTamamlayici.KeyDown += lstTamamlayici_KeyDown;
             this.Controls.Add(lstTamamlayici);
 
-
-
-
         }
 
 

@@ -202,7 +202,10 @@ namespace StokTakipOtomasyonu.Forms
             int urunId = Convert.ToInt32(dt.Rows[0]["urun_id"]);
             int miktar = Convert.ToInt32(dt.Rows[0]["miktar"]);
 
-            DatabaseHelper.ExecuteNonQuery("UPDATE proje_hareketleri SET aktif = 0 WHERE id = @hid", new MySqlParameter("@hid", hareketId));
+            DatabaseHelper.ExecuteNonQuery(
+    "UPDATE proje_hareketleri SET aktif = 0, geri_alinan_islem = NOW() WHERE id = @hid",
+    new MySqlParameter("@hid", hareketId));
+
             DatabaseHelper.ExecuteNonQuery("UPDATE urunler SET miktar = miktar + @miktar WHERE urun_id = @uid",
                 new MySqlParameter("@miktar", miktar),
                 new MySqlParameter("@uid", urunId));
