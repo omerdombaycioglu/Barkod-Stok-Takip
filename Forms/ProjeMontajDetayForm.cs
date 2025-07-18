@@ -16,20 +16,21 @@ namespace StokTakipOtomasyonu.Forms
         private readonly string _projeKodu;
         private DataTable _tumUrunler;
         private DataTable _kullanilanlar;
+        private readonly int _kullaniciYetkisi; // EKLE
 
-        public ProjeMontajDetayForm(int projeId, int kullaniciId, string projeKodu)
+        public ProjeMontajDetayForm(int projeId, int kullaniciId, string projeKodu, int kullaniciYetkisi)
         {
             this.Icon = new Icon("isp_logo2.ico");
             InitializeComponent();
             _projeId = projeId;
             _kullaniciId = kullaniciId;
             _projeKodu = projeKodu;
+            _kullaniciYetkisi = kullaniciYetkisi; // EKLE
             lblProjeKodu.Text = $"Proje: {_projeKodu}";
-            nudMiktar.Value = 1;                                                      
-
-            // Soldaki gridin boyutunu ayarla (butona yer açılsın)
+            nudMiktar.Value = 1;
             splitContainer.Height -= 50;
         }
+
 
 
         private void ProjeMontajDetayForm_Load(object sender, EventArgs e)
@@ -40,60 +41,63 @@ namespace StokTakipOtomasyonu.Forms
             dgvKullanilanlar.CellClick += DgvKullanilanlar_CellClick;
             dgvProjeUrunler.CellClick += DgvProjeUrunler_CellClick;
 
-            // Ekle butonu
-            DataGridViewButtonColumn btnUrunEkle = new DataGridViewButtonColumn
+            // SADECE YETKİLİ KULLANICIYA BUTONLARI EKLE
+            if (_kullaniciYetkisi == 1)
             {
-                Name = "btnUrunEkle",
-                HeaderText = "Projeye Ekle",
-                Text = "+",
-                UseColumnTextForButtonValue = true,
-                FlatStyle = FlatStyle.Flat
-            };
+                // Ekle butonu
+                DataGridViewButtonColumn btnUrunEkle = new DataGridViewButtonColumn
+                {
+                    Name = "btnUrunEkle",
+                    HeaderText = "Projeye Ekle",
+                    Text = "+",
+                    UseColumnTextForButtonValue = true,
+                    FlatStyle = FlatStyle.Flat
+                };
 
-            // Çıkar butonu
-            DataGridViewButtonColumn btnUrunCikar = new DataGridViewButtonColumn
-            {
-                Name = "btnUrunCikar",
-                HeaderText = "Projeden Çıkar",
-                Text = "-",
-                UseColumnTextForButtonValue = true,
-                FlatStyle = FlatStyle.Flat
-            };
+                // Çıkar butonu
+                DataGridViewButtonColumn btnUrunCikar = new DataGridViewButtonColumn
+                {
+                    Name = "btnUrunCikar",
+                    HeaderText = "Projeden Çıkar",
+                    Text = "-",
+                    UseColumnTextForButtonValue = true,
+                    FlatStyle = FlatStyle.Flat
+                };
 
-            // Çöp kutusu butonu (ürünü projeden tamamen kaldırır)
-            DataGridViewButtonColumn btnUrunSil = new DataGridViewButtonColumn
-            {
-                Name = "btnUrunSil",
-                HeaderText = "Ürünü Kaldır",
-                Text = "🗑️",
-                UseColumnTextForButtonValue = true,
-                FlatStyle = FlatStyle.Flat
-            };
+                // Çöp kutusu butonu
+                DataGridViewButtonColumn btnUrunSil = new DataGridViewButtonColumn
+                {
+                    Name = "btnUrunSil",
+                    HeaderText = "Ürünü Kaldır",
+                    Text = "🗑️",
+                    UseColumnTextForButtonValue = true,
+                    FlatStyle = FlatStyle.Flat
+                };
 
-            dgvProjeUrunler.Columns.Insert(0, btnUrunSil); // Kolonu başa koyar
+                dgvProjeUrunler.Columns.Insert(0, btnUrunSil);
+                dgvProjeUrunler.Columns.Add(btnUrunEkle);
+                dgvProjeUrunler.Columns.Add(btnUrunCikar);
 
-            // Kolonları ekle
-            
-            dgvProjeUrunler.Columns.Add(btnUrunEkle);
-            dgvProjeUrunler.Columns.Add(btnUrunCikar);
+                // Sadece yetkiliye butonu göster
+                Button btnProjeyeYeniUrunEkle = new Button
+                {
+                    Name = "btnProjeyeYeniUrunEkle",
+                    Text = "📦 Projeye Yeni Ürün Ekle",
+                    BackColor = Color.SeaGreen,
+                    ForeColor = Color.White,
+                    FlatStyle = FlatStyle.Flat,
+                    Font = new Font("Segoe UI", 9F, FontStyle.Bold),
+                    Size = new Size(220, 35),
+                    Location = new Point(25, this.ClientSize.Height - 50),
+                    Anchor = AnchorStyles.Bottom | AnchorStyles.Left
+                };
 
-            Button btnProjeyeYeniUrunEkle = new Button
-            {
-                Name = "btnProjeyeYeniUrunEkle",
-                Text = "📦 Projeye Yeni Ürün Ekle",
-                BackColor = Color.SeaGreen,
-                ForeColor = Color.White,
-                FlatStyle = FlatStyle.Flat,
-                Font = new Font("Segoe UI", 9F, FontStyle.Bold),
-                Size = new Size(220, 35),
-                Location = new Point(25, this.ClientSize.Height - 50),
-                Anchor = AnchorStyles.Bottom | AnchorStyles.Left
-            };
-
-            btnProjeyeYeniUrunEkle.Click += BtnProjeyeYeniUrunEkle_Click;
-            this.Controls.Add(btnProjeyeYeniUrunEkle);
-            splitContainer.Height -= 50;
+                btnProjeyeYeniUrunEkle.Click += BtnProjeyeYeniUrunEkle_Click;
+                this.Controls.Add(btnProjeyeYeniUrunEkle);
+                splitContainer.Height -= 50;
+            }
         }
+
 
 
 

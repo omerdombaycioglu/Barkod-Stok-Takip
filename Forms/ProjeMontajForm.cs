@@ -129,7 +129,9 @@ namespace StokTakipOtomasyonu.Forms
 
             if (column.Name == "btnUrunListesi")
             {
-                var detayForm = new ProjeMontajDetayForm(projeId, _userId, projeKodu);
+                var detayForm = new ProjeMontajDetayForm(projeId, _userId, projeKodu, _kullaniciYetki);
+                detayForm.ShowDialog();
+
                 detayForm.ShowDialog();
             }
             else if (column.Name == "btnIslemGecmisi")
