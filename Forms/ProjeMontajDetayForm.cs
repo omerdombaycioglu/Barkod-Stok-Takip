@@ -132,13 +132,23 @@ namespace StokTakipOtomasyonu.Forms
         }
         private void DgvProjeUrunler_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (e.RowIndex < 0) return;
+            // Hücre gerçekten bir veri hücresi mi? (satır başlığı veya kolon başlığı tıklanmışsa işlemi iptal et)
+            if (e.RowIndex < 0 || e.ColumnIndex < 0)
+                return;
 
             var row = dgvProjeUrunler.Rows[e.RowIndex];
+
+            // Satırda urun_id veya urun_adi yoksa (örneğin boş satır, yeni satır, vs) işlemi iptal et
+            if (row.Cells["urun_id"].Value == null || row.Cells["urun_adi"].Value == null)
+                return;
+
             int urunId = Convert.ToInt32(row.Cells["urun_id"].Value);
             string urunAdi = row.Cells["urun_adi"].Value.ToString();
 
-            if (dgvProjeUrunler.Columns[e.ColumnIndex].Name == "btnUrunEkle")
+            // Kolonun adını alın (tıklanan kolonun ne olduğunu kontrol ediyoruz)
+            string colName = dgvProjeUrunler.Columns[e.ColumnIndex].Name;
+
+            if (colName == "btnUrunEkle")
             {
                 DatabaseHelper.ExecuteNonQuery(@"
             UPDATE proje_urunleri SET miktar = miktar + 1
@@ -150,7 +160,7 @@ namespace StokTakipOtomasyonu.Forms
                 lblSonIslem.ForeColor = Color.DarkGreen;
                 LoadProjeUrunleri();
             }
-            else if (dgvProjeUrunler.Columns[e.ColumnIndex].Name == "btnUrunCikar")
+            else if (colName == "btnUrunCikar")
             {
                 int gerekliMiktar = Convert.ToInt32(row.Cells["gerekli_miktar"].Value);
 
@@ -170,19 +180,19 @@ namespace StokTakipOtomasyonu.Forms
                 lblSonIslem.ForeColor = Color.IndianRed;
                 LoadProjeUrunleri();
             }
-            else if (dgvProjeUrunler.Columns[e.ColumnIndex].Name == "btnUrunSil")
+            else if (colName == "btnUrunSil")
             {
                 var dialogResult = MessageBox.Show($"{urunAdi} ürününü projeden kaldırmak istediğinizden emin misiniz?",
-                                                   "Ürünü Projeden Kaldır",
-                                                   MessageBoxButtons.YesNo,
-                                                   MessageBoxIcon.Warning);
+                                                    "Ürünü Projeden Kaldır",
+                                                    MessageBoxButtons.YesNo,
+                                                    MessageBoxIcon.Warning);
 
                 if (dialogResult != DialogResult.Yes) return;
 
                 // Ürüne ait aktif hareket var mı kontrol et
                 object hareketSayisi = DatabaseHelper.ExecuteScalar(@"
-        SELECT COUNT(*) FROM proje_hareketleri 
-        WHERE proje_id = @pid AND urun_id = @uid AND aktif = 1",
+            SELECT COUNT(*) FROM proje_hareketleri 
+            WHERE proje_id = @pid AND urun_id = @uid AND aktif = 1",
                     new MySqlParameter("@pid", _projeId),
                     new MySqlParameter("@uid", urunId));
 
@@ -197,8 +207,8 @@ namespace StokTakipOtomasyonu.Forms
 
                 // Ürünü projeden kaldır (aktif hareket yoksa güvenli)
                 DatabaseHelper.ExecuteNonQuery(@"
-        DELETE FROM proje_urunleri 
-        WHERE proje_id = @pid AND urun_id = @uid",
+            DELETE FROM proje_urunleri 
+            WHERE proje_id = @pid AND urun_id = @uid",
                     new MySqlParameter("@pid", _projeId),
                     new MySqlParameter("@uid", urunId));
 
@@ -208,10 +218,9 @@ namespace StokTakipOtomasyonu.Forms
                 LoadProjeUrunleri();
                 LoadKullanilanUrunler();
             }
-
         }
 
-
+        
 
         private void BtnProjeyeYeniUrunEkle_Click(object sender, EventArgs e)
         {
@@ -304,19 +313,33 @@ namespace StokTakipOtomasyonu.Forms
 
         private void DgvKullanilanlar_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (e.RowIndex < 0 || dgvKullanilanlar.Columns[e.ColumnIndex].Name != "btnGeriAl")
+            // Yalnızca gerçek veri hücrelerine tıklandığında çalışsın
+            if (e.RowIndex < 0 || e.ColumnIndex < 0)
+                return;
+
+            // Kolon ismini kontrol et
+            if (dgvKullanilanlar.Columns[e.ColumnIndex].Name != "btnGeriAl")
                 return;
 
             var row = dgvKullanilanlar.Rows[e.RowIndex];
+
+            // Tıklanan satırda gerekli veriler var mı kontrolü
+            if (row.Cells["hareket_id"].Value == null ||
+                row.Cells["urun_id"].Value == null ||
+                row.Cells["miktar"].Value == null ||
+                row.Cells["urun_adi"].Value == null)
+                return;
+
             int hareketId = Convert.ToInt32(row.Cells["hareket_id"].Value);
             int urunId = Convert.ToInt32(row.Cells["urun_id"].Value);
             int miktar = Convert.ToInt32(row.Cells["miktar"].Value);
             string urunAdi = row.Cells["urun_adi"].Value.ToString();
 
-            var dialogResult = MessageBox.Show($"{urunAdi} ürününden {miktar} adet işlemi geri almak istediğinizden emin misiniz?",
-                                               "İşlem Geri Al",
-                                               MessageBoxButtons.YesNo,
-                                               MessageBoxIcon.Question);
+            var dialogResult = MessageBox.Show(
+                $"{urunAdi} ürününden {miktar} adet işlemi geri almak istediğinizden emin misiniz?",
+                "İşlem Geri Al",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question);
 
             if (dialogResult != DialogResult.Yes) return;
 
@@ -351,6 +374,7 @@ namespace StokTakipOtomasyonu.Forms
             LoadProjeUrunleri();
             LoadKullanilanUrunler();
         }
+
 
 
 
@@ -490,8 +514,6 @@ namespace StokTakipOtomasyonu.Forms
             LoadProjeUrunleri();
             LoadKullanilanUrunler();
         }
-
-
 
 
         private void dgvProjeUrunler_CellContentClick(object sender, DataGridViewCellEventArgs e) { }

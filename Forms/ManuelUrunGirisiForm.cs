@@ -96,11 +96,12 @@ namespace StokTakipOtomasyonu.Forms
         {
             string birim = cmbBirim.SelectedItem.ToString();
             string barkod = txtBarkod.Text.Trim();
+            string urunKodu = txtUrunKodu.Text.Trim();
             int miktar = (int)nudMiktar.Value;
 
-            if (string.IsNullOrEmpty(barkod))
+            if (string.IsNullOrEmpty(barkod) && string.IsNullOrEmpty(urunKodu))
             {
-                MessageBox.Show("Lütfen barkod girin.");
+                MessageBox.Show("Lütfen barkod veya ürün kodu girin.");
                 return;
             }
 
@@ -108,66 +109,59 @@ namespace StokTakipOtomasyonu.Forms
             {
                 conn.Open();
 
-                string urunSorgu = "SELECT urun_id FROM urunler WHERE urun_barkod = @barkod";
-                var cmd = new MySqlCommand(urunSorgu, conn);
-                cmd.Parameters.AddWithValue("@barkod", barkod);
-                object result = cmd.ExecuteScalar();
+                object result = null;
+                if (!string.IsNullOrEmpty(barkod))
+                {
+                    string urunSorgu = "SELECT urun_id FROM urunler WHERE urun_barkod = @barkod";
+                    var cmd = new MySqlCommand(urunSorgu, conn);
+                    cmd.Parameters.AddWithValue("@barkod", barkod);
+                    result = cmd.ExecuteScalar();
+                }
+
+                // Eğer barkoddan ürün bulunamazsa veya barkod girilmemişse, ürün kodundan ara
+                if (result == null && !string.IsNullOrEmpty(urunKodu))
+                {
+                    string kodSorgu = "SELECT urun_id FROM urunler WHERE urun_kodu = @urun_kodu";
+                    var kodCmd = new MySqlCommand(kodSorgu, conn);
+                    kodCmd.Parameters.AddWithValue("@urun_kodu", urunKodu);
+                    result = kodCmd.ExecuteScalar();
+                }
 
                 int urunId;
 
                 if (result == null)
                 {
-                    string urunKodu = txtUrunKodu.Text.Trim();
-                    if (string.IsNullOrEmpty(urunKodu))
+                    // Yeni ürün ekleme süreci aynı kalacak
+                    var yeniUrunAdi = Microsoft.VisualBasic.Interaction.InputBox("Yeni ürün adı girin:", "Yeni Ürün", "");
+                    if (string.IsNullOrWhiteSpace(yeniUrunAdi))
                     {
-                        MessageBox.Show("Ürün bulunamadı. Lütfen ürün kodu girin.");
-                        txtUrunKodu.Focus();
+                        MessageBox.Show("Ürün adı gerekli.");
                         return;
                     }
-
-                    string kodSorgu = "SELECT urun_id FROM urunler WHERE urun_kodu = @urun_kodu";
-                    var kodCmd = new MySqlCommand(kodSorgu, conn);
-                    kodCmd.Parameters.AddWithValue("@urun_kodu", urunKodu);
-                    object kodResult = kodCmd.ExecuteScalar();
-
-                    if (kodResult == null)
-                    {
-                        var yeniUrunAdi = Microsoft.VisualBasic.Interaction.InputBox("Yeni ürün adı girin:", "Yeni Ürün", "");
-                        if (string.IsNullOrWhiteSpace(yeniUrunAdi))
-                        {
-                            MessageBox.Show("Ürün adı gerekli.");
-                            return;
-                        }
-
-                        string insert = "INSERT INTO urunler (urun_adi, urun_kodu, urun_barkod, miktar, birim) VALUES (@adi, @kodu, @barkod, 0, @birim); SELECT LAST_INSERT_ID();";
-                        var insertCmd = new MySqlCommand(insert, conn);
-                        insertCmd.Parameters.AddWithValue("@adi", yeniUrunAdi);
-                        insertCmd.Parameters.AddWithValue("@kodu", urunKodu);
-                        insertCmd.Parameters.AddWithValue("@barkod", barkod);
-                        insertCmd.Parameters.AddWithValue("@birim", birim);
-                        urunId = Convert.ToInt32(insertCmd.ExecuteScalar());                       
-                    }
-                    else
-                    {
-                        urunId = Convert.ToInt32(result);
-
-                        // EKLE!
-                        string guncelleBirim = "UPDATE urunler SET birim = @birim WHERE urun_id = @urun_id";
-                        var guncelleCmd = new MySqlCommand(guncelleBirim, conn);
-                        guncelleCmd.Parameters.AddWithValue("@birim", birim);
-                        guncelleCmd.Parameters.AddWithValue("@urun_id", urunId);
-                        guncelleCmd.ExecuteNonQuery();
-                    }
-
+                    string insert = "INSERT INTO urunler (urun_adi, urun_kodu, urun_barkod, miktar, birim) VALUES (@adi, @kodu, @barkod, 0, @birim); SELECT LAST_INSERT_ID();";
+                    var insertCmd = new MySqlCommand(insert, conn);
+                    insertCmd.Parameters.AddWithValue("@adi", yeniUrunAdi);
+                    insertCmd.Parameters.AddWithValue("@kodu", urunKodu);
+                    insertCmd.Parameters.AddWithValue("@barkod", barkod);
+                    insertCmd.Parameters.AddWithValue("@birim", birim);
+                    urunId = Convert.ToInt32(insertCmd.ExecuteScalar());
                 }
                 else
                 {
                     urunId = Convert.ToInt32(result);
+
+                    // Birim güncellemesi
+                    string guncelleBirim = "UPDATE urunler SET birim = @birim WHERE urun_id = @urun_id";
+                    var guncelleCmd = new MySqlCommand(guncelleBirim, conn);
+                    guncelleCmd.Parameters.AddWithValue("@birim", birim);
+                    guncelleCmd.Parameters.AddWithValue("@urun_id", urunId);
+                    guncelleCmd.ExecuteNonQuery();
                 }
 
+                // Hareket kaydı ve miktar güncellemesi
                 string hareketEkle = @"INSERT INTO urun_hareketleri 
-                    (urun_id, hareket_turu, miktar, kullanici_id, islem_turu_id) 
-                    VALUES (@urun_id, 'Giris', @miktar, @kullanici_id, 0)";
+            (urun_id, hareket_turu, miktar, kullanici_id, islem_turu_id) 
+            VALUES (@urun_id, 'Giris', @miktar, @kullanici_id, 0)";
                 var hareketCmd = new MySqlCommand(hareketEkle, conn);
                 hareketCmd.Parameters.AddWithValue("@urun_id", urunId);
                 hareketCmd.Parameters.AddWithValue("@miktar", miktar);
@@ -195,5 +189,6 @@ namespace StokTakipOtomasyonu.Forms
                 txtBarkod.Focus();
             }
         }
+
     }
 }

@@ -164,7 +164,8 @@ namespace StokTakipOtomasyonu.Forms
 
         private void btnKullaniciIslemleri_Click(object sender, EventArgs e)
         {
-            new KullaniciForm().ShowDialog();
+            new KullaniciForm(_kullaniciId).ShowDialog();
         }
+
     }
 }

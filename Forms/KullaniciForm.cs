@@ -1,19 +1,65 @@
-﻿using System;
+﻿using MySql.Data.MySqlClient;
+using StokTakipOtomasyonu.Helpers;
+using System;
 using System.Data;
 using System.Drawing;
 using System.Windows.Forms;
-using MySql.Data.MySqlClient;
-using StokTakipOtomasyonu.Helpers;
+using System.Windows.Forms.VisualStyles;
 
 namespace StokTakipOtomasyonu.Forms
 {
     public partial class KullaniciForm : Form
     {
-        public KullaniciForm()
+        private int _girisYapanId = 0;
+        public KullaniciForm(int girisYapanId)
         {
             this.Icon = new Icon("isp_logo2.ico");
+            _girisYapanId = girisYapanId;
             InitializeComponent();
         }
+
+        public class DataGridViewDisableButtonCell : DataGridViewButtonCell
+        {
+            private bool enabledValue;
+            public bool Enabled
+            {
+                get { return enabledValue; }
+                set
+                {
+                    enabledValue = value;
+                    this.Style.ForeColor = value ? Color.Black : Color.Gray;
+                }
+            }
+
+            public DataGridViewDisableButtonCell()
+            {
+                this.enabledValue = true;
+            }
+
+            protected override void Paint(Graphics graphics,
+                Rectangle clipBounds, Rectangle cellBounds, int rowIndex,
+                DataGridViewElementStates elementState, object value,
+                object formattedValue, string errorText,
+                DataGridViewCellStyle cellStyle,
+                DataGridViewAdvancedBorderStyle advancedBorderStyle,
+                DataGridViewPaintParts paintParts)
+            {
+                // Düğme disable ise farklı çiz
+                if (!this.enabledValue)
+                {
+                    // Gray out
+                    ButtonRenderer.DrawButton(graphics, cellBounds, PushButtonState.Disabled);
+                    TextRenderer.DrawText(graphics, formattedValue?.ToString() ?? "",
+                        cellStyle.Font, cellBounds, Color.Gray, TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter);
+                }
+                else
+                {
+                    base.Paint(graphics, clipBounds, cellBounds, rowIndex, elementState, value,
+                        formattedValue, errorText, cellStyle, advancedBorderStyle, paintParts);
+                }
+            }
+        }
+
 
         private void KullaniciForm_Load(object sender, EventArgs e)
         {
@@ -94,12 +140,26 @@ namespace StokTakipOtomasyonu.Forms
                 string query = "SELECT * FROM kullanicilar WHERE silindi = 0";
                 DataTable dt = DatabaseHelper.ExecuteQuery(query);
                 dgvKullanicilar.DataSource = dt;
+
+                // --- Burada kendi hesabının satırındaki sil butonunu disable et ---
+                foreach (DataGridViewRow row in dgvKullanicilar.Rows)
+                {
+                    if (row.Cells["kullanici_id"].Value != null &&
+                        Convert.ToInt32(row.Cells["kullanici_id"].Value) == _girisYapanId)
+                    {
+                        DataGridViewDisableButtonCell disableCell = new DataGridViewDisableButtonCell();
+                        disableCell.Value = "Sil";
+                        disableCell.Enabled = false; // Butonu devre dışı bırak
+                        row.Cells["btnSil"] = disableCell;
+                    }
+                }
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Kullanıcılar yüklenirken hata oluştu: " + ex.Message, "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
 
 
         private void dgvKullanicilar_CellValueChanged(object sender, DataGridViewCellEventArgs e)
@@ -134,8 +194,18 @@ namespace StokTakipOtomasyonu.Forms
         {
             if (e.RowIndex >= 0 && dgvKullanicilar.Columns[e.ColumnIndex].Name == "btnSil")
             {
+                // Sil butonunu disable edip etmediğimizi kontrol et
+                var cell = dgvKullanicilar.Rows[e.RowIndex].Cells["btnSil"] as DataGridViewDisableButtonCell;
+                if (cell != null && !cell.Enabled)
+                {
+                    // Buton devre dışı ise hiçbir şey yapma
+                    return;
+                }
+
                 var row = dgvKullanicilar.Rows[e.RowIndex];
-                var id = row.Cells["kullanici_id"].Value;
+                var idObj = row.Cells["kullanici_id"].Value;
+                if (idObj == null) return;
+                int id = Convert.ToInt32(idObj);
 
                 if (MessageBox.Show("Kullanıcıyı silmek istiyor musunuz? Bu işlem kullanıcıyı gizler ama tamamen silmez.",
                                     "Silme Onayı", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
@@ -154,6 +224,8 @@ namespace StokTakipOtomasyonu.Forms
                 }
             }
         }
+
+
 
 
 

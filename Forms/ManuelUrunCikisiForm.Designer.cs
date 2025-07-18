@@ -58,7 +58,7 @@
             this.MaximizeBox = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.Text = "Manuel Ürün Çıkışı";
+            this.Text = "Ürün Çıkışı";
 
             // lblBarkod
             this.lblBarkod.Text = "Barkod:";

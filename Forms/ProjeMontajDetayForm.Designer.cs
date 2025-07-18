@@ -18,7 +18,10 @@ namespace StokTakipOtomasyonu.Forms
         private SplitContainer splitContainer;
         private DataGridView dgvProjeUrunler;
         private DataGridView dgvKullanilanlar;
-        private Button btnGeriAl; // <- EKLENDİ
+        private System.Windows.Forms.PictureBox pictureBoxLogo;
+        private System.Windows.Forms.GroupBox groupBoxBarkod;
+
+
 
         protected override void Dispose(bool disposing)
         {
@@ -40,7 +43,7 @@ namespace StokTakipOtomasyonu.Forms
             this.dgvKullanilanlar = new System.Windows.Forms.DataGridView();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.btnGeriAl = new System.Windows.Forms.Button();
+            this.pictureBoxLogo = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.nudMiktar)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer)).BeginInit();
             this.splitContainer.Panel1.SuspendLayout();
@@ -48,6 +51,7 @@ namespace StokTakipOtomasyonu.Forms
             this.splitContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvProjeUrunler)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvKullanilanlar)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxLogo)).BeginInit();
             this.SuspendLayout();
             // 
             // lblProjeKodu
@@ -135,8 +139,8 @@ namespace StokTakipOtomasyonu.Forms
             // splitContainer.Panel2
             // 
             this.splitContainer.Panel2.Controls.Add(this.dgvKullanilanlar);
-            this.splitContainer.Size = new System.Drawing.Size(960, 505);
-            this.splitContainer.SplitterDistance = 465;
+            this.splitContainer.Size = new System.Drawing.Size(1419, 632);
+            this.splitContainer.SplitterDistance = 687;
             this.splitContainer.TabIndex = 7;
             // 
             // dgvProjeUrunler
@@ -151,7 +155,7 @@ namespace StokTakipOtomasyonu.Forms
             this.dgvProjeUrunler.ReadOnly = true;
             this.dgvProjeUrunler.RowHeadersWidth = 51;
             this.dgvProjeUrunler.RowTemplate.Height = 24;
-            this.dgvProjeUrunler.Size = new System.Drawing.Size(465, 505);
+            this.dgvProjeUrunler.Size = new System.Drawing.Size(687, 632);
             this.dgvProjeUrunler.TabIndex = 0;
             this.dgvProjeUrunler.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvProjeUrunler_CellContentClick);
             // 
@@ -167,14 +171,14 @@ namespace StokTakipOtomasyonu.Forms
             this.dgvKullanilanlar.ReadOnly = true;
             this.dgvKullanilanlar.RowHeadersWidth = 51;
             this.dgvKullanilanlar.RowTemplate.Height = 24;
-            this.dgvKullanilanlar.Size = new System.Drawing.Size(491, 505);
+            this.dgvKullanilanlar.Size = new System.Drawing.Size(728, 632);
             this.dgvKullanilanlar.TabIndex = 0;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-            this.label1.Location = new System.Drawing.Point(500, 70);
+            this.label1.Location = new System.Drawing.Point(754, 70);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(135, 20);
             this.label1.TabIndex = 5;
@@ -190,30 +194,26 @@ namespace StokTakipOtomasyonu.Forms
             this.label2.TabIndex = 6;
             this.label2.Text = "Özet Ürün Listesi";
             // 
-            // btnGeriAl
+            // pictureBoxLogo
             // 
-            this.btnGeriAl.BackColor = System.Drawing.Color.IndianRed;
-            this.btnGeriAl.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnGeriAl.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-            this.btnGeriAl.ForeColor = System.Drawing.Color.White;
-            this.btnGeriAl.Location = new System.Drawing.Point(830, 50);
-            this.btnGeriAl.Name = "btnGeriAl";
-            this.btnGeriAl.Size = new System.Drawing.Size(150, 27);
-            this.btnGeriAl.TabIndex = 4;
-            this.btnGeriAl.Text = "Son İşlemi Geri Al";
-            this.btnGeriAl.UseVisualStyleBackColor = false;
-            this.btnGeriAl.Click += new System.EventHandler(this.BtnGeriAl_Click);
+            this.pictureBoxLogo.Image = global::IspBarkodStok.Properties.Resources.isp_logo1;
+            this.pictureBoxLogo.Location = new System.Drawing.Point(1272, -6);
+            this.pictureBoxLogo.Name = "pictureBoxLogo";
+            this.pictureBoxLogo.Size = new System.Drawing.Size(198, 96);
+            this.pictureBoxLogo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBoxLogo.TabIndex = 0;
+            this.pictureBoxLogo.TabStop = false;
             // 
             // ProjeMontajDetayForm
             // 
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
-            this.ClientSize = new System.Drawing.Size(1000, 610);
+            this.ClientSize = new System.Drawing.Size(1459, 737);
+            this.Controls.Add(this.pictureBoxLogo);
             this.Controls.Add(this.lblProjeKodu);
             this.Controls.Add(this.lblBarkod);
             this.Controls.Add(this.txtBarkod);
             this.Controls.Add(this.lblMiktar);
             this.Controls.Add(this.nudMiktar);
-            this.Controls.Add(this.btnGeriAl);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.splitContainer);
@@ -231,10 +231,9 @@ namespace StokTakipOtomasyonu.Forms
             this.splitContainer.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgvProjeUrunler)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvKullanilanlar)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxLogo)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
-            
-
 
         }
     }
