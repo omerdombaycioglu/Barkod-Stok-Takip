@@ -17,7 +17,7 @@
         private System.Windows.Forms.Label lblYeniUrunAdi;
         private System.Windows.Forms.Panel panelTop;
         private System.Windows.Forms.Label lblBaslik;
-        private System.Windows.Forms.ComboBox cmbBirim;
+        
 
 
         protected override void Dispose(bool disposing)
@@ -43,6 +43,8 @@
             this.lblYeniUrunAdi = new System.Windows.Forms.Label();
             this.panelTop = new System.Windows.Forms.Panel();
             this.lblBaslik = new System.Windows.Forms.Label();
+            this.lblDepoKonum = new System.Windows.Forms.Label();
+            this.cmbDepoKonum = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.nudMiktar)).BeginInit();
             this.panelTop.SuspendLayout();
             this.SuspendLayout();
@@ -52,7 +54,7 @@
             this.txtBarkod.Location = new System.Drawing.Point(160, 80);
             this.txtBarkod.Name = "txtBarkod";
             this.txtBarkod.Size = new System.Drawing.Size(220, 22);
-            this.txtBarkod.TabIndex = 0;
+            this.txtBarkod.TabIndex = 1;
             // 
             // txtIslemTuru
             // 
@@ -60,7 +62,7 @@
             this.txtIslemTuru.Name = "txtIslemTuru";
             this.txtIslemTuru.ReadOnly = true;
             this.txtIslemTuru.Size = new System.Drawing.Size(220, 22);
-            this.txtIslemTuru.TabIndex = 1;
+            this.txtIslemTuru.TabIndex = 2;
             // 
             // nudMiktar
             // 
@@ -76,8 +78,8 @@
             0,
             0});
             this.nudMiktar.Name = "nudMiktar";
-            this.nudMiktar.Size = new System.Drawing.Size(55, 22);
-            this.nudMiktar.TabIndex = 2;
+            this.nudMiktar.Size = new System.Drawing.Size(220, 22);
+            this.nudMiktar.TabIndex = 3;
             this.nudMiktar.Value = new decimal(new int[] {
             1,
             0,
@@ -89,7 +91,7 @@
             this.txtUrunKodu.Location = new System.Drawing.Point(160, 185);
             this.txtUrunKodu.Name = "txtUrunKodu";
             this.txtUrunKodu.Size = new System.Drawing.Size(220, 22);
-            this.txtUrunKodu.TabIndex = 3;
+            this.txtUrunKodu.TabIndex = 4;
             // 
             // lblBarkod
             // 
@@ -99,13 +101,6 @@
             this.lblBarkod.Size = new System.Drawing.Size(120, 20);
             this.lblBarkod.TabIndex = 8;
             this.lblBarkod.Text = "Barkod:";
-            // InitializeComponent içinde şunu ekle:
-            this.cmbBirim = new System.Windows.Forms.ComboBox();
-            this.cmbBirim.Location = new System.Drawing.Point(nudMiktar.Right + 10, nudMiktar.Top);
-            this.cmbBirim.Name = "cmbBirim";
-            this.cmbBirim.Size = new System.Drawing.Size(80, 22); // 80 veya 121, nasıl istersen
-            this.cmbBirim.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.Controls.Add(this.cmbBirim);
             // 
             // lblIslemTuru
             // 
@@ -142,7 +137,7 @@
             this.btnKaydet.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(153)))), ((int)(((byte)(133)))));
             this.btnKaydet.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnKaydet.ForeColor = System.Drawing.Color.White;
-            this.btnKaydet.Location = new System.Drawing.Point(160, 223);
+            this.btnKaydet.Location = new System.Drawing.Point(160, 281);
             this.btnKaydet.Name = "btnKaydet";
             this.btnKaydet.Size = new System.Drawing.Size(220, 40);
             this.btnKaydet.TabIndex = 6;
@@ -163,7 +158,7 @@
             // 
             // txtYeniUrunAdi
             // 
-            this.txtYeniUrunAdi.Location = new System.Drawing.Point(160, 220);
+            this.txtYeniUrunAdi.Location = new System.Drawing.Point(160, 266);
             this.txtYeniUrunAdi.Name = "txtYeniUrunAdi";
             this.txtYeniUrunAdi.Size = new System.Drawing.Size(220, 22);
             this.txtYeniUrunAdi.TabIndex = 5;
@@ -172,7 +167,7 @@
             // lblYeniUrunAdi
             // 
             this.lblYeniUrunAdi.Font = new System.Drawing.Font("Segoe UI", 9.5F);
-            this.lblYeniUrunAdi.Location = new System.Drawing.Point(30, 223);
+            this.lblYeniUrunAdi.Location = new System.Drawing.Point(34, 265);
             this.lblYeniUrunAdi.Name = "lblYeniUrunAdi";
             this.lblYeniUrunAdi.Size = new System.Drawing.Size(120, 20);
             this.lblYeniUrunAdi.TabIndex = 12;
@@ -186,7 +181,7 @@
             this.panelTop.Dock = System.Windows.Forms.DockStyle.Top;
             this.panelTop.Location = new System.Drawing.Point(0, 0);
             this.panelTop.Name = "panelTop";
-            this.panelTop.Size = new System.Drawing.Size(417, 60);
+            this.panelTop.Size = new System.Drawing.Size(424, 60);
             this.panelTop.TabIndex = 0;
             // 
             // lblBaslik
@@ -200,22 +195,33 @@
             this.lblBaslik.TabIndex = 0;
             this.lblBaslik.Text = "Ürün Girişi";
             // 
-            // cmbBirim
+            // lblDepoKonum
             // 
-            
+            this.lblDepoKonum.Font = new System.Drawing.Font("Segoe UI", 9.5F);
+            this.lblDepoKonum.Location = new System.Drawing.Point(30, 227);
+            this.lblDepoKonum.Name = "lblDepoKonum";
+            this.lblDepoKonum.Size = new System.Drawing.Size(120, 20);
+            this.lblDepoKonum.TabIndex = 13;
+            this.lblDepoKonum.Text = "Depo Konum:";
+            // 
+            // cmbDepoKonum
+            // 
+            this.cmbDepoKonum.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbDepoKonum.Location = new System.Drawing.Point(160, 223);
+            this.cmbDepoKonum.Name = "cmbDepoKonum";
+            this.cmbDepoKonum.Size = new System.Drawing.Size(220, 24);
+            this.cmbDepoKonum.TabIndex = 14;
             // 
             // ManuelUrunGirisiForm
             // 
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
-            this.ClientSize = new System.Drawing.Size(417, 369);
+            this.ClientSize = new System.Drawing.Size(424, 372);
             this.Controls.Add(this.panelTop);
             this.Controls.Add(this.txtBarkod);
             this.Controls.Add(this.txtIslemTuru);
             this.Controls.Add(this.nudMiktar);
-            
             this.Controls.Add(this.txtUrunKodu);
             this.Controls.Add(this.txtYeniUrunAdi);
-            this.Controls.Add(this.cmbBirim);
             this.Controls.Add(this.btnKaydet);
             this.Controls.Add(this.lblBasariMesaji);
             this.Controls.Add(this.lblBarkod);
@@ -223,6 +229,8 @@
             this.Controls.Add(this.lblMiktar);
             this.Controls.Add(this.lblUrunKodu);
             this.Controls.Add(this.lblYeniUrunAdi);
+            this.Controls.Add(this.lblDepoKonum);
+            this.Controls.Add(this.cmbDepoKonum);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.Name = "ManuelUrunGirisiForm";
