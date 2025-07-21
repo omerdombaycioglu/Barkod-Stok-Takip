@@ -40,7 +40,7 @@ namespace StokTakipOtomasyonu.Forms
             {
                 string query = "SELECT urun_id, urun_adi, urun_kodu, urun_barkod, urun_marka, urun_no, miktar, kritik_seviye FROM urunler";
                 originalData = DatabaseHelper.ExecuteQuery(query);
-                originalData.AcceptChanges(); // 🔒 Karşılaştırma için önemli
+                originalData.AcceptChanges(); 
 
                 dataGridViewUrunler.DataSource = originalData;
 
@@ -76,7 +76,7 @@ namespace StokTakipOtomasyonu.Forms
 
                                 if (!(row.DataBoundItem is DataRowView drv)) continue;
 
-                                drv.EndEdit(); // ✅ En kritik satır — bağlanan DataRow'u günceller
+                                drv.EndEdit(); // En kritik satır — bağlanan DataRow'u günceller
 
                                 DataRow originalRow = drv.Row;
                                 int urunId = Convert.ToInt32(originalRow["urun_id"]);
