@@ -145,6 +145,7 @@ namespace StokTakipOtomasyonu.Forms
 
                     acikDetayForm = new ProjeMontajDetayForm(projeId, _userId, projeKodu, _kullaniciYetki);
                     acikDetayForm.Tag = projeId.ToString();
+                    acikDetayForm.FormClosed += (s, args) => acikDetayForm = null;
                     acikDetayForm.ShowDialog();
                 }
             }
