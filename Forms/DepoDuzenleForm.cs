@@ -35,6 +35,7 @@ namespace StokTakipOtomasyonu.Forms
             dgvDepoKonumlari.AllowUserToAddRows = false;
             dgvDepoKonumlari.DataSource = new DataTable();
             dgvDepoKonumlari.CellClick += dgvDepoKonumlari_CellClick;
+            dgvDepoKonumlari.CellEndEdit += dgvDepoKonumlari_CellEndEdit;
             txtBarkodArama.TextChanged += txtBarkodArama_TextChanged;
             lstTamamlayici = new ListBox();
             lstTamamlayici.Visible = false;
@@ -46,6 +47,15 @@ namespace StokTakipOtomasyonu.Forms
             lstTamamlayici.KeyDown += lstTamamlayici_KeyDown;
             this.Controls.Add(lstTamamlayici);
 
+        }
+
+        private void dgvDepoKonumlari_CellEndEdit(object sender, DataGridViewCellEventArgs e)
+        {
+            // Sadece miktar sütunu için çalışsın
+            if (dgvDepoKonumlari.Columns[e.ColumnIndex].Name == "colMiktar")
+            {
+                DepoKonumuGuncelle(e.RowIndex, true);
+            }
         }
 
 
@@ -347,7 +357,7 @@ namespace StokTakipOtomasyonu.Forms
 
 
 
-        private void DepoKonumuGuncelle(int rowIndex)
+        private void DepoKonumuGuncelle(int rowIndex, bool sessiz = false)
         {
             int depoKonumId = Convert.ToInt32(dgvDepoKonumlari.Rows[rowIndex].Cells["colDepoKonumId"].Value);
             int yeniMiktar = Convert.ToInt32(dgvDepoKonumlari.Rows[rowIndex].Cells["colMiktar"].Value);
@@ -363,9 +373,9 @@ namespace StokTakipOtomasyonu.Forms
                 cmd.Parameters.AddWithValue("@id", depoKonumId);
                 cmd.ExecuteNonQuery();
 
-                MessageBox.Show("Miktar güncellendi.", "Başarılı");
+                if (!sessiz)
+                    MessageBox.Show("Miktar güncellendi.", "Başarılı");
 
-                // Refresh ekran
                 UrunBilgileriniYukle(currentUrunId);
                 UrunKonumlariniYukle(currentUrunId);
             }
@@ -378,10 +388,7 @@ namespace StokTakipOtomasyonu.Forms
                 if (connection.State == ConnectionState.Open)
                     connection.Close();
             }
-        }       
-
-
-
+        }
 
         private void DepoKonumuSil(int rowIndex)
         {

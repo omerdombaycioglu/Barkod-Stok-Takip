@@ -34,9 +34,11 @@ namespace StokTakipOtomasyonu
             UrunleriYukle();
             this.Shown += (s, e) =>
             {
+                this.WindowState = FormWindowState.Maximized; // <-- EKLENDİ!
                 txtArama.Focus();
                 btnSec.Visible = _secimModu && _callerForm == "ProjeMontajDetayForm";
             };
+
 
         }
 
@@ -116,24 +118,23 @@ namespace StokTakipOtomasyonu
                 connection.Open();
 
                 string query = @"SELECT 
-                                u.urun_id AS 'ID',
-                                u.urun_adi AS 'Ürün Adı',
-                                u.urun_kodu AS 'Ürün Kodu',
-                                u.urun_barkod AS 'Barkod',
-                                u.urun_marka AS 'Marka',
-                                u.miktar AS 'Stok Miktarı',
-                                u.kritik_seviye AS 'Kritik Seviye',
-                                IFNULL((SELECT SUM(pu.miktar)
-                                        FROM proje_urunleri pu
-                                        JOIN projeler p ON pu.proje_id = p.proje_id
-                                        WHERE pu.urun_id = u.urun_id AND p.aktif = 1), 0) AS 'Projelerdeki Miktar',
-                                CASE 
-                                    WHEN u.kritik_seviye IS NOT NULL AND u.kritik_seviye > 0 AND u.miktar <= u.kritik_seviye 
-                                    THEN 'KRİTİK SEVİYENİN ALTINDA' 
-                                    ELSE '' 
-                                END AS 'Durum'
-                                FROM urunler u
-                                ORDER BY u.urun_adi";
+                        u.urun_id AS 'ID',
+                        u.urun_adi AS 'Ürün Adı',
+                        u.urun_kodu AS 'Ürün Kodu',
+                        u.urun_barkod AS 'Barkod',
+                        u.urun_marka AS 'Marka',
+                        u.miktar AS 'Stok Miktarı',
+                        u.kritik_seviye AS 'Kritik Seviye',
+                        IFNULL((SELECT SUM(pu.miktar)
+                                FROM proje_urunleri pu
+                                JOIN projeler p ON pu.proje_id = p.proje_id
+                                WHERE pu.urun_id = u.urun_id AND p.aktif = 1), 0) AS 'Projelerdeki Miktar',
+                        IFNULL((SELECT GROUP_CONCAT(CONCAT(dk.harf, dk.numara, '(', udk.miktar, ')') SEPARATOR ' ')
+                                FROM urun_depo_konum udk
+                                JOIN depo_konum dk ON dk.id = udk.depo_konum_id
+                                WHERE udk.urun_id = u.urun_id), '') AS 'Depo Konum'
+                        FROM urunler u
+                        ORDER BY u.urun_adi";
 
                 MySqlCommand cmd = new MySqlCommand(query, connection);
                 MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
@@ -144,6 +145,10 @@ namespace StokTakipOtomasyonu
                 dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
                 dataGridView1.Columns["ID"].Visible = false;
                 dataGridView1.Columns["Kritik Seviye"].Visible = false;
+
+                // Eğer "Durum" kolonu kaldıysa (eski sütun), kaldır:
+                if (dataGridView1.Columns.Contains("Durum"))
+                    dataGridView1.Columns.Remove("Durum");
 
                 if (!dataGridView1.Columns.Contains("btnIslemGecmisi"))
                 {
@@ -169,6 +174,8 @@ namespace StokTakipOtomasyonu
                 EnsureConnectionClosed();
             }
         }
+
+
 
         private void btnSecTamam_Click(object sender, EventArgs e)
         {

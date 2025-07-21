@@ -15,7 +15,6 @@ namespace StokTakipOtomasyonu.Forms
             InitializeComponent();
             LoadLogo();
 
-            // Form tamamen gösterildikten sonra çalışır
             this.Shown += (s, e) => txtKullaniciAdi.Focus();
         }
 

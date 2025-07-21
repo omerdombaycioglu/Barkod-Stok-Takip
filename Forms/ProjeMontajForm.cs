@@ -117,6 +117,8 @@ namespace StokTakipOtomasyonu.Forms
             }
         }
 
+        private ProjeMontajDetayForm acikDetayForm = null;
+
         private void dataGridViewProjeler_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex < 0) return;
@@ -129,10 +131,22 @@ namespace StokTakipOtomasyonu.Forms
 
             if (column.Name == "btnUrunListesi")
             {
-                var detayForm = new ProjeMontajDetayForm(projeId, _userId, projeKodu, _kullaniciYetki);
-                detayForm.ShowDialog();
+                // Eğer zaten açık ve aynı proje ise sadece fokusla
+                if (acikDetayForm != null && !acikDetayForm.IsDisposed &&
+                    acikDetayForm.Tag != null && acikDetayForm.Tag.ToString() == projeId.ToString())
+                {
+                    acikDetayForm.Focus();
+                }
+                else
+                {
+                    // Eski formu kapat
+                    if (acikDetayForm != null && !acikDetayForm.IsDisposed)
+                        acikDetayForm.Close();
 
-                detayForm.ShowDialog();
+                    acikDetayForm = new ProjeMontajDetayForm(projeId, _userId, projeKodu, _kullaniciYetki);
+                    acikDetayForm.Tag = projeId.ToString();
+                    acikDetayForm.ShowDialog();
+                }
             }
             else if (column.Name == "btnIslemGecmisi")
             {
@@ -150,6 +164,7 @@ namespace StokTakipOtomasyonu.Forms
                 }
             }
         }
+
 
         private void ShowProjectTransactionHistory(int projeId, string projeKodu)
         {

@@ -15,7 +15,6 @@ namespace StokTakipOtomasyonu.Forms
         {
 
             InitializeComponent();
-            // Logo burada ayarlanıyor
             this.Icon = new Icon("isp_logo2.ico");
 
             _kullaniciId = kullaniciId;
