@@ -153,6 +153,20 @@ namespace StokTakipOtomasyonu.Forms
             using (MySqlConnection conn = new MySqlConnection(_connectionString))
             {
                 conn.Open();
+
+                // EKLENDİ: Aynı kodda aktif proje var mı kontrolü
+                string checkQuery = "SELECT COUNT(*) FROM projeler WHERE proje_kodu = @kod AND aktif = 1";
+                using (MySqlCommand checkCmd = new MySqlCommand(checkQuery, conn))
+                {
+                    checkCmd.Parameters.AddWithValue("@kod", txtProjeKodu.Text.Trim());
+                    int count = Convert.ToInt32(checkCmd.ExecuteScalar());
+                    if (count > 0)
+                    {
+                        MessageBox.Show($"{txtProjeKodu.Text.Trim()} proje koduna sahip zaten aktif bir projeniz var!", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
+                    }
+                }
+
                 string insertProje = "INSERT INTO projeler (proje_kodu, proje_tanimi, olusturan_id) VALUES (@kod, @tanimi, @olusturan); SELECT LAST_INSERT_ID();";
                 MySqlCommand cmd = new MySqlCommand(insertProje, conn);
                 cmd.Parameters.AddWithValue("@kod", txtProjeKodu.Text.Trim());
@@ -182,6 +196,7 @@ namespace StokTakipOtomasyonu.Forms
 
             MessageBox.Show("Proje ve ürünler başarıyla kaydedildi.");
         }
+
 
         private void btnTamEkran_Click(object sender, EventArgs e)
         {
