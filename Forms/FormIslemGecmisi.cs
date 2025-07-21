@@ -13,7 +13,7 @@ namespace StokTakipOtomasyonu.Forms
             this.Text = $"İşlem Geçmişi - {projeKodu}";
 
             // Yeni "durum" sütunu ekle
-            islemGecmisi.Columns.Add("durum", typeof(string));            
+            islemGecmisi.Columns.Add("durum", typeof(string));
 
             foreach (DataRow row in islemGecmisi.Rows)
             {
@@ -21,7 +21,6 @@ namespace StokTakipOtomasyonu.Forms
                 if (aktifMi)
                 {
                     row["durum"] = "✔ İşlem Geçerli";
-                    row["geri_alinma_tarihi_str"] = "-";
                 }
                 else
                 {
