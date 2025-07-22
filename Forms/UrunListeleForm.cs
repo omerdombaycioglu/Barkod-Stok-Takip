@@ -197,23 +197,23 @@ namespace StokTakipOtomasyonu
                 connection.Open();
 
                 string query = @"SELECT 
-                        u.urun_id AS 'ID',
-                        u.urun_adi AS 'Ürün Adı',
-                        u.urun_kodu AS 'Ürün Kodu',
-                        u.urun_barkod AS 'Barkod',
-                        u.urun_marka AS 'Marka',
-                        u.miktar AS 'Stok Miktarı',
-                        u.kritik_seviye AS 'Kritik Seviye',
-                        IFNULL((SELECT SUM(pu.miktar)
-                                FROM proje_urunleri pu
-                                JOIN projeler p ON pu.proje_id = p.proje_id
-                                WHERE pu.urun_id = u.urun_id AND p.aktif = 1), 0) AS 'Projelerdeki Miktar',
-                        IFNULL((SELECT GROUP_CONCAT(CONCAT(dk.harf, dk.numara, '(', udk.miktar, ')') SEPARATOR ' ')
-                                FROM urun_depo_konum udk
-                                JOIN depo_konum dk ON dk.id = udk.depo_konum_id
-                                WHERE udk.urun_id = u.urun_id), '') AS 'Depo Konum'
-                        FROM urunler u
-                        ORDER BY u.urun_adi";
+        u.urun_id AS 'ID',
+        u.urun_adi AS 'Ürün Adı',
+        u.urun_kodu AS 'Ürün Kodu',
+        u.urun_barkod AS 'Barkod',
+        u.urun_marka AS 'Marka',
+        u.miktar AS 'Stok Miktarı',
+        u.kritik_seviye AS 'Kritik Seviye',
+        IFNULL((SELECT SUM(udk.miktar)
+                FROM urun_depo_konum udk
+                WHERE udk.urun_id = u.urun_id), 0) AS 'Depodaki Toplam Miktar',
+        IFNULL((SELECT GROUP_CONCAT(CONCAT(dk.harf, dk.numara, '(', udk.miktar, ')') SEPARATOR ' ')
+                FROM urun_depo_konum udk
+                JOIN depo_konum dk ON dk.id = udk.depo_konum_id
+                WHERE udk.urun_id = u.urun_id), '') AS 'Depo Konum'
+        FROM urunler u
+        ORDER BY u.urun_adi";
+
 
                 MySqlCommand cmd = new MySqlCommand(query, connection);
                 MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
