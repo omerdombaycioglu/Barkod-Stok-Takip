@@ -18,10 +18,7 @@ namespace StokTakipOtomasyonu.Forms
         private SplitContainer splitContainer;
         private DataGridView dgvProjeUrunler;
         private DataGridView dgvKullanilanlar;
-        private System.Windows.Forms.PictureBox pictureBoxLogo;
-        private System.Windows.Forms.GroupBox groupBoxBarkod;
-
-
+        private System.Windows.Forms.PictureBox pictureBoxLogo;       
 
         protected override void Dispose(bool disposing)
         {
@@ -139,23 +136,25 @@ namespace StokTakipOtomasyonu.Forms
             // splitContainer.Panel2
             // 
             this.splitContainer.Panel2.Controls.Add(this.dgvKullanilanlar);
-            this.splitContainer.Size = new System.Drawing.Size(1419, 632);
-            this.splitContainer.SplitterDistance = 687;
+            this.splitContainer.Size = new System.Drawing.Size(1471, 671);
+            this.splitContainer.SplitterDistance = 712;
             this.splitContainer.TabIndex = 7;
             // 
             // dgvProjeUrunler
             // 
             this.dgvProjeUrunler.AllowUserToAddRows = false;
             this.dgvProjeUrunler.AllowUserToDeleteRows = false;
+            this.dgvProjeUrunler.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.dgvProjeUrunler.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dgvProjeUrunler.ColumnHeadersHeight = 28;
-            this.dgvProjeUrunler.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dgvProjeUrunler.Location = new System.Drawing.Point(0, 0);
+            this.dgvProjeUrunler.Location = new System.Drawing.Point(-1, 3);
             this.dgvProjeUrunler.Name = "dgvProjeUrunler";
             this.dgvProjeUrunler.ReadOnly = true;
             this.dgvProjeUrunler.RowHeadersWidth = 51;
             this.dgvProjeUrunler.RowTemplate.Height = 24;
-            this.dgvProjeUrunler.Size = new System.Drawing.Size(687, 632);
+            this.dgvProjeUrunler.Size = new System.Drawing.Size(710, 668);
             this.dgvProjeUrunler.TabIndex = 0;
             this.dgvProjeUrunler.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvProjeUrunler_CellContentClick);
             // 
@@ -163,22 +162,25 @@ namespace StokTakipOtomasyonu.Forms
             // 
             this.dgvKullanilanlar.AllowUserToAddRows = false;
             this.dgvKullanilanlar.AllowUserToDeleteRows = false;
+            this.dgvKullanilanlar.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.dgvKullanilanlar.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.ColumnHeader;
             this.dgvKullanilanlar.ColumnHeadersHeight = 28;
-            this.dgvKullanilanlar.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dgvKullanilanlar.Location = new System.Drawing.Point(0, 0);
+            this.dgvKullanilanlar.Location = new System.Drawing.Point(-1, 0);
             this.dgvKullanilanlar.Name = "dgvKullanilanlar";
             this.dgvKullanilanlar.ReadOnly = true;
             this.dgvKullanilanlar.RowHeadersWidth = 51;
             this.dgvKullanilanlar.RowTemplate.Height = 24;
-            this.dgvKullanilanlar.Size = new System.Drawing.Size(728, 632);
+            this.dgvKullanilanlar.Size = new System.Drawing.Size(756, 671);
             this.dgvKullanilanlar.TabIndex = 0;
+            this.dgvKullanilanlar.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvKullanilanlar_CellContentClick);
             // 
             // label1
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-            this.label1.Location = new System.Drawing.Point(754, 70);
+            this.label1.Location = new System.Drawing.Point(826, 70);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(135, 20);
             this.label1.TabIndex = 5;
@@ -207,7 +209,7 @@ namespace StokTakipOtomasyonu.Forms
             // ProjeMontajDetayForm
             // 
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
-            this.ClientSize = new System.Drawing.Size(1459, 737);
+            this.ClientSize = new System.Drawing.Size(1511, 776);
             this.Controls.Add(this.pictureBoxLogo);
             this.Controls.Add(this.lblProjeKodu);
             this.Controls.Add(this.lblBarkod);

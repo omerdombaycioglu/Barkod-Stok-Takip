@@ -133,6 +133,26 @@ namespace StokTakipOtomasyonu.Forms
                 if (row.Cells["tamamlandi"].Value?.ToString() == "✔")
                     row.DefaultCellStyle.BackColor = Color.LightGreen;
             }
+            if (dgvProjeUrunler.Columns["urun_kodu"] != null)
+                dgvProjeUrunler.Columns["urun_kodu"].HeaderText = "Ürün Kodu";
+            if (dgvProjeUrunler.Columns["urun_adi"] != null)
+                dgvProjeUrunler.Columns["urun_adi"].HeaderText = "Ürün Adı";
+            if (dgvProjeUrunler.Columns["gerekli_miktar"] != null)
+                dgvProjeUrunler.Columns["gerekli_miktar"].HeaderText = "Gerekli Miktar";
+            if (dgvProjeUrunler.Columns["kullanilan_miktar"] != null)
+                dgvProjeUrunler.Columns["kullanilan_miktar"].HeaderText = "Kullanılan Miktar";
+            if (dgvProjeUrunler.Columns["tamamlandi"] != null)
+                dgvProjeUrunler.Columns["tamamlandi"].HeaderText = "Tamam";
+
+            // Satır yüksekliği ve fontunu büyüt
+            dgvProjeUrunler.RowTemplate.Height = 30;
+            dgvProjeUrunler.DefaultCellStyle.Font = new Font("Segoe UI", 11F);
+            dgvProjeUrunler.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
+            dgvProjeUrunler.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.EnableResizing;
+            dgvProjeUrunler.ColumnHeadersHeight = 50;
+            dgvProjeUrunler.RowHeadersVisible = false;
+
+
         }
         private void DgvProjeUrunler_CellClick(object sender, DataGridViewCellEventArgs e)
         {
@@ -280,22 +300,25 @@ namespace StokTakipOtomasyonu.Forms
         private void LoadKullanilanUrunler()
         {
             string query = @"
-        SELECT 
-            ph.id AS hareket_id, 
-            u.urun_id,
-            u.urun_kodu, 
-            u.urun_adi, 
-            ph.miktar, 
-            ph.islem_tarihi
-        FROM proje_hareketleri ph
-        JOIN urunler u ON ph.urun_id = u.urun_id
-        WHERE ph.proje_id = @pid AND ph.aktif = 1
-        ORDER BY ph.islem_tarihi DESC";
+SELECT 
+    ph.id AS hareket_id, 
+    u.urun_id,
+    u.urun_kodu, 
+    u.urun_adi, 
+    ph.miktar, 
+    ph.islem_tarihi
+FROM proje_hareketleri ph
+JOIN urunler u ON ph.urun_id = u.urun_id
+WHERE ph.proje_id = @pid AND ph.aktif = 1
+ORDER BY ph.islem_tarihi DESC";
 
             _kullanilanlar = DatabaseHelper.ExecuteQuery(query, new MySqlParameter("@pid", _projeId));
             dgvKullanilanlar.DataSource = _kullanilanlar;
 
-            // Buton kolonunu ekle (eğer daha önce eklenmediyse)
+            // Gereksiz satır başı seçme butonunu kaldır
+            dgvKullanilanlar.RowHeadersVisible = false;
+
+            // Eğer buton kolonu daha önce eklenmediyse ekle
             if (!dgvKullanilanlar.Columns.Contains("btnGeriAl"))
             {
                 DataGridViewButtonColumn btnGeriAl = new DataGridViewButtonColumn
@@ -306,14 +329,55 @@ namespace StokTakipOtomasyonu.Forms
                     UseColumnTextForButtonValue = true,
                     FlatStyle = FlatStyle.Flat
                 };
-
                 dgvKullanilanlar.Columns.Add(btnGeriAl);
             }
 
             // Gereksiz kolonları gizle
             dgvKullanilanlar.Columns["hareket_id"].Visible = false;
             dgvKullanilanlar.Columns["urun_id"].Visible = false;
+
+            // Kolon başlıklarını düzenle
+            if (dgvKullanilanlar.Columns["urun_kodu"] != null)
+                dgvKullanilanlar.Columns["urun_kodu"].HeaderText = "Ürün Kodu";
+            if (dgvKullanilanlar.Columns["urun_adi"] != null)
+                dgvKullanilanlar.Columns["urun_adi"].HeaderText = "Ürün Adı";
+            if (dgvKullanilanlar.Columns["miktar"] != null)
+                dgvKullanilanlar.Columns["miktar"].HeaderText = "Miktar";
+            if (dgvKullanilanlar.Columns["islem_tarihi"] != null)
+                dgvKullanilanlar.Columns["islem_tarihi"].HeaderText = "İşlem Tarihi";
+
+            // Satır ve başlık fontunu, yüksekliğini büyüt
+            dgvKullanilanlar.RowTemplate.Height = 50;
+            dgvKullanilanlar.DefaultCellStyle.Font = new Font("Segoe UI", 11F);
+            dgvKullanilanlar.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
+            dgvKullanilanlar.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.EnableResizing;
+            dgvKullanilanlar.ColumnHeadersHeight = 46;
+
+            // Tüm grid alanını dolduracak şekilde kolon ayarla
+            dgvKullanilanlar.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+
+            // Eğer bazı kolonlar çok büyük olmasın istiyorsan FillWeight oranı ver
+            if (dgvKullanilanlar.Columns["urun_kodu"] != null)
+                dgvKullanilanlar.Columns["urun_kodu"].FillWeight = 130;
+            if (dgvKullanilanlar.Columns["urun_adi"] != null)
+                dgvKullanilanlar.Columns["urun_adi"].FillWeight = 160;
+            if (dgvKullanilanlar.Columns["miktar"] != null)
+                dgvKullanilanlar.Columns["miktar"].FillWeight = 50;
+            if (dgvKullanilanlar.Columns["islem_tarihi"] != null)
+                dgvKullanilanlar.Columns["islem_tarihi"].FillWeight = 100;
+            if (dgvKullanilanlar.Columns["btnGeriAl"] != null)
+            {
+                dgvKullanilanlar.Columns["btnGeriAl"].FillWeight = 70;
+                dgvKullanilanlar.Columns["btnGeriAl"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            }
+
+            // Alternatif satır arkaplanı isteğe bağlı (kullanmak istersen)
+            //dgvKullanilanlar.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(245, 250, 255);
+
+            // Scroll barların düzgün çıkması için:
+            dgvKullanilanlar.ScrollBars = ScrollBars.Both;
         }
+
 
         private void DgvKullanilanlar_CellClick(object sender, DataGridViewCellEventArgs e)
         {
@@ -523,5 +587,10 @@ namespace StokTakipOtomasyonu.Forms
         private void dgvProjeUrunler_CellContentClick(object sender, DataGridViewCellEventArgs e) { }
         private void label1_Click(object sender, EventArgs e) { }
         private void label2_Click(object sender, EventArgs e) { }
+
+        private void dgvKullanilanlar_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
     }
 }

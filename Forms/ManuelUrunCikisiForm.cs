@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static StokTakipOtomasyonu.Forms.ManuelUrunGirisiForm;
 
 namespace StokTakipOtomasyonu.Forms
 {
@@ -21,7 +22,23 @@ namespace StokTakipOtomasyonu.Forms
             cmbIslemTuru.SelectedIndex = 0;
             txtBarkod.Focus();
             this.StartPosition = FormStartPosition.CenterParent;
+
+            // Depo konumları doldur
+            cmbDepoKonum.Items.Clear();
+            using (var conn = new MySqlConnection(_connectionString))
+            {
+                conn.Open();
+                var cmd = new MySqlCommand("SELECT id, harf, numara FROM depo_konum ORDER BY harf, numara", conn);
+                var reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    string disp = $"{reader["harf"]}{reader["numara"]}";
+                    cmbDepoKonum.Items.Add(new ComboBoxItem { Text = disp, Value = Convert.ToInt32(reader["id"]) });
+                }
+            }
+            cmbDepoKonum.SelectedIndex = -1; // Otomatik seçmesin
         }
+
 
         private async void txtBarkod_KeyDown(object sender, KeyEventArgs e)
         {
@@ -41,6 +58,9 @@ namespace StokTakipOtomasyonu.Forms
         {
             string barkod = txtBarkod.Text.Trim();
             int miktar = (int)nudMiktar.Value;
+            int? depoKonumId = null;
+            if (cmbDepoKonum.SelectedItem != null)
+                depoKonumId = ((ComboBoxItem)cmbDepoKonum.SelectedItem).Value;
 
             if (string.IsNullOrEmpty(barkod))
             {
@@ -78,32 +98,70 @@ namespace StokTakipOtomasyonu.Forms
                         }
                     }
 
-                    // 🛑 Stok kontrolü
-                    if (stokMiktari < miktar)
+                    // Eğer depo konumu seçiliyse, o konumdan miktarı kontrol et ve çıkar
+                    if (depoKonumId != null)
                     {
-                        await ShowMessageAsync($"Yetersiz stok: Stokta sadece {stokMiktari} {birim} var.", false);
-                        return;
+                        // Depo-konum stok kontrolü
+                        MySqlCommand konumStokCmd = new MySqlCommand(
+                            "SELECT miktar FROM urun_depo_konum WHERE urun_id=@urun_id AND depo_konum_id=@konum_id", conn);
+                        konumStokCmd.Parameters.AddWithValue("@urun_id", urunId);
+                        konumStokCmd.Parameters.AddWithValue("@konum_id", depoKonumId);
+                        object mevcut = await konumStokCmd.ExecuteScalarAsync();
+
+                        int konumStok = mevcut != null ? Convert.ToInt32(mevcut) : 0;
+
+                        if (konumStok < miktar)
+                        {
+                            await ShowMessageAsync($"Yetersiz stok: Seçili konumda sadece {konumStok} {birim} var.", false);
+                            return;
+                        }
+
+                        // Hareket ve konum-stok güncelle
+                        string query = @"
+                    INSERT INTO urun_hareketleri (urun_id, hareket_turu, miktar, kullanici_id, islem_turu_id, depo_konum_id)
+                    VALUES (@uid, 'Cikis', @miktar, @kullanici_id, @islem_turu_id, @konum_id);
+                    UPDATE urunler SET miktar = miktar - @miktar WHERE urun_id = @uid;
+                    UPDATE urun_depo_konum SET miktar = miktar - @miktar WHERE urun_id = @uid AND depo_konum_id = @konum_id;";
+
+                        MySqlCommand updateCmd = new MySqlCommand(query, conn);
+                        updateCmd.Parameters.AddWithValue("@uid", urunId);
+                        updateCmd.Parameters.AddWithValue("@miktar", miktar);
+                        updateCmd.Parameters.AddWithValue("@kullanici_id", _kullaniciId);
+                        updateCmd.Parameters.AddWithValue("@islem_turu_id", cmbIslemTuru.SelectedIndex == 0 ? 0 : 2);
+                        updateCmd.Parameters.AddWithValue("@konum_id", depoKonumId);
+
+                        await updateCmd.ExecuteNonQueryAsync();
+
+                        await ShowMessageAsync($"{urunAdi} ürününden {miktar} {birim} çıkış yapıldı. (Konum: {((ComboBoxItem)cmbDepoKonum.SelectedItem).Text})", true);
                     }
+                    else
+                    {
+                        // Depo konumu seçilmediyse klasik çıkar
+                        if (stokMiktari < miktar)
+                        {
+                            await ShowMessageAsync($"Yetersiz stok: Stokta sadece {stokMiktari} {birim} var.", false);
+                            return;
+                        }
 
-                    string query = @"
-                INSERT INTO urun_hareketleri (urun_id, hareket_turu, miktar, kullanici_id, islem_turu_id)
-                VALUES (@uid, 'Cikis', @miktar, @kullanici_id, @islem_turu_id);
-                UPDATE urunler SET miktar = miktar - @miktar WHERE urun_id = @uid;";
+                        string query = @"
+                    INSERT INTO urun_hareketleri (urun_id, hareket_turu, miktar, kullanici_id, islem_turu_id)
+                    VALUES (@uid, 'Cikis', @miktar, @kullanici_id, @islem_turu_id);
+                    UPDATE urunler SET miktar = miktar - @miktar WHERE urun_id = @uid;";
 
-                    MySqlCommand updateCmd = new MySqlCommand(query, conn);
-                    updateCmd.Parameters.AddWithValue("@uid", urunId);
-                    updateCmd.Parameters.AddWithValue("@miktar", miktar);
-                    updateCmd.Parameters.AddWithValue("@kullanici_id", _kullaniciId);
-                    updateCmd.Parameters.AddWithValue("@islem_turu_id", cmbIslemTuru.SelectedIndex == 0 ? 0 : 2);
+                        MySqlCommand updateCmd = new MySqlCommand(query, conn);
+                        updateCmd.Parameters.AddWithValue("@uid", urunId);
+                        updateCmd.Parameters.AddWithValue("@miktar", miktar);
+                        updateCmd.Parameters.AddWithValue("@kullanici_id", _kullaniciId);
+                        updateCmd.Parameters.AddWithValue("@islem_turu_id", cmbIslemTuru.SelectedIndex == 0 ? 0 : 2);
 
-                    await updateCmd.ExecuteNonQueryAsync();
+                        await updateCmd.ExecuteNonQueryAsync();
+
+                        await ShowMessageAsync($"{urunAdi} ürününden {miktar} {birim} çıkış yapıldı.", true);
+                    }
 
                     txtBarkod.Clear();
                     nudMiktar.Value = 1;
                     txtBarkod.Focus();
-
-                    await ShowMessageAsync($"{urunAdi} ürününden {miktar} {birim} çıkış yapıldı.", true);
-
                 }
             }
             catch (Exception ex)
@@ -111,6 +169,7 @@ namespace StokTakipOtomasyonu.Forms
                 await ShowMessageAsync("Hata: " + ex.Message, false);
             }
         }
+
 
 
         private async Task ShowMessageAsync(string message, bool success)
@@ -121,5 +180,12 @@ namespace StokTakipOtomasyonu.Forms
             await Task.Delay(2000);
             lblBasariMesaji.Visible = false;
         }
+        public class ComboBoxItem
+        {
+            public string Text { get; set; }
+            public int Value { get; set; }
+            public override string ToString() { return Text; }
+        }
+
     }
 }
