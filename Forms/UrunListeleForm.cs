@@ -21,6 +21,35 @@ namespace StokTakipOtomasyonu
         {
             this.Icon = new Icon("isp_logo2.ico");
             InitializeComponent();
+            // ComboBox'ın hemen sağına bilgi label'ları
+            int xOffset = 10; // ComboBox ile label arasında 10px boşluk
+
+            Label lblSariBilgi = new Label();
+            lblSariBilgi.Text = "Stok miktarı depodaki miktardan fazla: Sarı";
+            lblSariBilgi.AutoSize = true;
+            lblSariBilgi.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            lblSariBilgi.ForeColor = Color.Black;
+            lblSariBilgi.BackColor = Color.FromArgb(255, 255, 230);
+            lblSariBilgi.Location = new Point(
+                cmbProjeler.Location.X + cmbProjeler.Width + xOffset,
+                cmbProjeler.Location.Y
+            );
+
+            this.Controls.Add(lblSariBilgi);
+
+            Label lblMaviBilgi = new Label();
+            lblMaviBilgi.Text = "Depodaki miktar stoktan fazla: Mavi";
+            lblMaviBilgi.AutoSize = true;
+            lblMaviBilgi.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            lblMaviBilgi.ForeColor = Color.Black;
+            lblMaviBilgi.BackColor = Color.FromArgb(230, 245, 255);
+            lblMaviBilgi.Location = new Point(
+                lblSariBilgi.Location.X + lblSariBilgi.Width + xOffset,
+                cmbProjeler.Location.Y
+            );
+
+            this.Controls.Add(lblMaviBilgi);
+
             connection = new MySqlConnection(connectionString);
 
             lblUrunSayisi = new Label();
@@ -38,7 +67,7 @@ namespace StokTakipOtomasyonu
                 txtArama.Focus();
                 btnSec.Visible = _secimModu && _callerForm == "ProjeMontajDetayForm";
             };
-
+            
 
         }
 
@@ -72,7 +101,57 @@ namespace StokTakipOtomasyonu
                     }
                 }
             }
+
+            // ------- EKLENEN KISIM: DEPO VE STOK UYUŞMAZLIĞI RENKLENDİRME ---------
+            try
+            {
+                DataGridViewRow row = dataGridView1.Rows[e.RowIndex];
+
+                // Gerekli sütunlar var mı kontrolü
+                if (dataGridView1.Columns.Contains("Depo Konum") && dataGridView1.Columns.Contains("Stok Miktarı"))
+                {
+                    // Depo Konum string'i: "A1(3) A2(5) ..." gibi
+                    string depoKonumStr = row.Cells["Depo Konum"].Value?.ToString() ?? "";
+                    int stokMiktari = 0;
+                    int.TryParse(row.Cells["Stok Miktarı"].Value?.ToString(), out stokMiktari);
+
+                    // Depo toplam miktarı
+                    int toplamDepoMiktari = 0;
+                    if (!string.IsNullOrEmpty(depoKonumStr))
+                    {
+                        var arr = depoKonumStr.Split(' ');
+                        foreach (var konum in arr)
+                        {
+                            int parantezBas = konum.IndexOf('(');
+                            int parantezSon = konum.IndexOf(')');
+                            if (parantezBas >= 0 && parantezSon > parantezBas)
+                            {
+                                string miktarStr = konum.Substring(parantezBas + 1, parantezSon - parantezBas - 1);
+                                int miktarVal = 0;
+                                if (int.TryParse(miktarStr, out miktarVal))
+                                    toplamDepoMiktari += miktarVal;
+                            }
+                        }
+                    }
+
+                    // Sadece ilk sütunları renklendir
+                    if (e.ColumnIndex == 0) // Ürün Adı veya ilk görünür kolon
+                    {
+                        if (stokMiktari > toplamDepoMiktari)
+                        {
+                            row.DefaultCellStyle.BackColor = Color.FromArgb(255, 255, 230); // Açık sarı
+                        }
+                        else if (toplamDepoMiktari > stokMiktari)
+                        {
+                            row.DefaultCellStyle.BackColor = Color.FromArgb(230, 245, 255); // Açık mavi
+                        }
+                    }
+                }
+            }
+            catch { /* herhangi bir hata olursa geç */ }
+            // ------- EKLENEN KISIM SONU -------
         }
+
 
         private void EnsureConnectionClosed()
         {
