@@ -269,14 +269,16 @@ namespace StokTakipOtomasyonu.Forms
 
                 // Stok hareketleri ve güncellemeler
                 string hareketEkle = @"INSERT INTO urun_hareketleri 
-(urun_id, hareket_turu, miktar, kullanici_id, islem_turu_id, birim) 
-VALUES (@urun_id, 'Giris', @miktar, @kullanici_id, 0, @birim)";
+(urun_id, hareket_turu, miktar, kullanici_id, islem_turu_id, birim, depo_konum_id) 
+VALUES (@urun_id, 'Giris', @miktar, @kullanici_id, 0, @birim, @depo_konum_id)";
                 var hareketCmd = new MySqlCommand(hareketEkle, conn);
                 hareketCmd.Parameters.AddWithValue("@urun_id", urunId);
                 hareketCmd.Parameters.AddWithValue("@miktar", miktar);
                 hareketCmd.Parameters.AddWithValue("@kullanici_id", _kullaniciId);
                 hareketCmd.Parameters.AddWithValue("@birim", birim);
+                hareketCmd.Parameters.AddWithValue("@depo_konum_id", seciliKonumId.HasValue ? (object)seciliKonumId.Value : DBNull.Value);
                 hareketCmd.ExecuteNonQuery();
+
 
                 string miktarGuncelle = "UPDATE urunler SET miktar = miktar + @miktar, birim = @birim WHERE urun_id = @urun_id";
                 var miktarCmd = new MySqlCommand(miktarGuncelle, conn);
