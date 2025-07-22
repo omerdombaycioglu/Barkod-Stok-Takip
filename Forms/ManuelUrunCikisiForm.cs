@@ -108,7 +108,14 @@ namespace StokTakipOtomasyonu.Forms
                         konumStokCmd.Parameters.AddWithValue("@konum_id", depoKonumId);
                         object mevcut = await konumStokCmd.ExecuteScalarAsync();
 
-                        int konumStok = mevcut != null ? Convert.ToInt32(mevcut) : 0;
+                        if (mevcut == null)
+                        {
+                            // Kayıt yoksa, bu ürün bu konumda hiç yok!
+                            await ShowMessageAsync("Bu ürün seçilen depoda mevcut değil!", false);
+                            return;
+                        }
+
+                        int konumStok = Convert.ToInt32(mevcut);
 
                         if (konumStok < miktar)
                         {
@@ -169,6 +176,7 @@ namespace StokTakipOtomasyonu.Forms
                 await ShowMessageAsync("Hata: " + ex.Message, false);
             }
         }
+
 
 
 

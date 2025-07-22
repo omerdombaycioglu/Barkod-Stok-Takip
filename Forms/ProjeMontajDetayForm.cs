@@ -16,12 +16,12 @@ namespace StokTakipOtomasyonu.Forms
         private readonly string _projeKodu;
         private DataTable _tumUrunler;
         private DataTable _kullanilanlar;
-        private readonly int _kullaniciYetkisi; // EKLE
+        private readonly int _kullaniciYetkisi; 
 
         public ProjeMontajDetayForm(int projeId, int kullaniciId, string projeKodu, int kullaniciYetkisi)
         {
             this.Icon = new Icon("isp_logo2.ico");
-            InitializeComponent();
+            InitializeComponent();  // <-- önce tüm nesneleri yaratır
             _projeId = projeId;
             _kullaniciId = kullaniciId;
             _projeKodu = projeKodu;
@@ -29,8 +29,27 @@ namespace StokTakipOtomasyonu.Forms
             lblProjeKodu.Text = $"Proje: {_projeKodu}";
             nudMiktar.Value = 1;
             splitContainer.Height -= 50;
+
+            // Event ekleme buraya!
+            dgvProjeUrunler.CellFormatting += dgvProjeUrunler_CellFormatting;
         }
 
+
+        private void dgvProjeUrunler_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            if (e.RowIndex < 0 || e.ColumnIndex < 0) return;
+
+            if (dgvProjeUrunler.Columns[e.ColumnIndex].Name == "btnUrunEkle" ||
+                dgvProjeUrunler.Columns[e.ColumnIndex].Name == "btnUrunCikar")
+            {
+                DataGridViewCell cell = dgvProjeUrunler.Rows[e.RowIndex].Cells[e.ColumnIndex];
+                DataGridViewButtonCell btnCell = cell as DataGridViewButtonCell;
+                if (btnCell != null)
+                {
+                    btnCell.Style.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+                }
+            }
+        }
 
 
         private void ProjeMontajDetayForm_Load(object sender, EventArgs e)
@@ -152,6 +171,23 @@ namespace StokTakipOtomasyonu.Forms
             dgvProjeUrunler.ColumnHeadersHeight = 50;
             dgvProjeUrunler.RowHeadersVisible = false;
 
+            if (dgvProjeUrunler.Columns["btnUrunEkle"] != null)
+            {
+                dgvProjeUrunler.Columns["btnUrunEkle"].HeaderText = ""; // başlığı boş yap
+                dgvProjeUrunler.Columns["btnUrunEkle"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+                dgvProjeUrunler.Columns["btnUrunEkle"].Width = 28;
+                dgvProjeUrunler.Columns["btnUrunEkle"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            }
+            if (dgvProjeUrunler.Columns["btnUrunCikar"] != null)
+            {
+                dgvProjeUrunler.Columns["btnUrunCikar"].HeaderText = "";
+                dgvProjeUrunler.Columns["btnUrunCikar"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+                dgvProjeUrunler.Columns["btnUrunCikar"].Width = 28;
+                dgvProjeUrunler.Columns["btnUrunCikar"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            }
+
+
+
 
         }
         private void DgvProjeUrunler_CellClick(object sender, DataGridViewCellEventArgs e)
@@ -244,7 +280,7 @@ namespace StokTakipOtomasyonu.Forms
             }
         }
 
-        
+
 
         private void BtnProjeyeYeniUrunEkle_Click(object sender, EventArgs e)
         {
