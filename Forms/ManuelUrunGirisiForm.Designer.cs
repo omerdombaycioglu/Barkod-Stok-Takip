@@ -45,6 +45,7 @@
             this.lblBaslik = new System.Windows.Forms.Label();
             this.lblDepoKonum = new System.Windows.Forms.Label();
             this.cmbDepoKonum = new System.Windows.Forms.ComboBox();
+            this.cmbBirim = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.nudMiktar)).BeginInit();
             this.panelTop.SuspendLayout();
             this.SuspendLayout();
@@ -78,7 +79,7 @@
             0,
             0});
             this.nudMiktar.Name = "nudMiktar";
-            this.nudMiktar.Size = new System.Drawing.Size(220, 22);
+            this.nudMiktar.Size = new System.Drawing.Size(80, 22);
             this.nudMiktar.TabIndex = 3;
             this.nudMiktar.Value = new decimal(new int[] {
             1,
@@ -88,7 +89,7 @@
             // 
             // txtUrunKodu
             // 
-            this.txtUrunKodu.Location = new System.Drawing.Point(160, 185);
+            this.txtUrunKodu.Location = new System.Drawing.Point(160, 188);
             this.txtUrunKodu.Name = "txtUrunKodu";
             this.txtUrunKodu.Size = new System.Drawing.Size(220, 22);
             this.txtUrunKodu.TabIndex = 4;
@@ -181,7 +182,7 @@
             this.panelTop.Dock = System.Windows.Forms.DockStyle.Top;
             this.panelTop.Location = new System.Drawing.Point(0, 0);
             this.panelTop.Name = "panelTop";
-            this.panelTop.Size = new System.Drawing.Size(424, 60);
+            this.panelTop.Size = new System.Drawing.Size(419, 60);
             this.panelTop.TabIndex = 0;
             // 
             // lblBaslik
@@ -212,10 +213,18 @@
             this.cmbDepoKonum.Size = new System.Drawing.Size(220, 24);
             this.cmbDepoKonum.TabIndex = 14;
             // 
+            // cmbBirim
+            // 
+            this.cmbBirim.FormattingEnabled = true;
+            this.cmbBirim.Location = new System.Drawing.Point(246, 150);
+            this.cmbBirim.Name = "cmbBirim";
+            this.cmbBirim.Size = new System.Drawing.Size(134, 24);
+            this.cmbBirim.TabIndex = 15;
+            // 
             // ManuelUrunGirisiForm
             // 
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
-            this.ClientSize = new System.Drawing.Size(424, 372);
+            this.ClientSize = new System.Drawing.Size(419, 372);           
             this.Controls.Add(this.panelTop);
             this.Controls.Add(this.txtBarkod);
             this.Controls.Add(this.txtIslemTuru);
@@ -243,5 +252,7 @@
             this.PerformLayout();
 
         }
+
+        private System.Windows.Forms.ComboBox comboBox1;
     }
 }

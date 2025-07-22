@@ -13,12 +13,26 @@ namespace StokTakipOtomasyonu.Forms
         private Timer mesajTimer;
         private System.Windows.Forms.ComboBox cmbDepoKonum;
         private System.Windows.Forms.Label lblDepoKonum;
+        private ComboBox cmbBirim;
 
 
         public ManuelUrunGirisiForm(int kullaniciId)
         {
             this.Icon = new Icon("isp_logo2.ico");
             InitializeComponent();
+            cmbBirim = new ComboBox();
+            cmbBirim.DropDownStyle = ComboBoxStyle.DropDownList;
+            cmbBirim.Items.AddRange(new[] { "adet", "metre", "cm" });
+            cmbBirim.SelectedIndex = 0;
+            cmbBirim.Width = 80;
+            cmbBirim.Font = nudMiktar.Font;
+            // Form üzerinde miktarın sağında olacak şekilde konumlandır:
+            cmbBirim.Location = new Point(nudMiktar.Right + 8, nudMiktar.Top);
+
+            // Form'a ekle
+            this.Controls.Add(cmbBirim);
+
+
             _kullaniciId = kullaniciId;
 
             txtIslemTuru.Text = "Stok";
@@ -96,6 +110,8 @@ namespace StokTakipOtomasyonu.Forms
         {
             string barkod = txtBarkod.Text.Trim();
             int miktar = (int)nudMiktar.Value;
+            string birim = cmbBirim.SelectedItem?.ToString();
+
 
             // Depo konumunu seçmek zorunlu değil
             ComboBoxItem seciliKonum = null;
@@ -157,34 +173,68 @@ namespace StokTakipOtomasyonu.Forms
                     else
                     {
                         urunId = Convert.ToInt32(kodResult);
-                        string guncelle = "UPDATE urunler SET urun_barkod = @barkod WHERE urun_id = @urun_id";
-                        var guncelleCmd = new MySqlCommand(guncelle, conn);
-                        guncelleCmd.Parameters.AddWithValue("@barkod", barkod);
-                        guncelleCmd.Parameters.AddWithValue("@urun_id", urunId);
-                        guncelleCmd.ExecuteNonQuery();
+
+                        // Önce bu ürünün barkodu zaten var mı kontrol et
+                        string barkodVarMiSorgu = "SELECT urun_barkod FROM urunler WHERE urun_id = @urun_id";
+                        var barkodVarMiCmd = new MySqlCommand(barkodVarMiSorgu, conn);
+                        barkodVarMiCmd.Parameters.AddWithValue("@urun_id", urunId);
+                        object mevcutBarkod = barkodVarMiCmd.ExecuteScalar();
+
+                        if (mevcutBarkod == DBNull.Value || string.IsNullOrWhiteSpace(Convert.ToString(mevcutBarkod)))
+                        {
+                            // Eğer barkodu yoksa, atama yap
+                            string guncelle = "UPDATE urunler SET urun_barkod = @barkod WHERE urun_id = @urun_id";
+                            var guncelleCmd = new MySqlCommand(guncelle, conn);
+                            guncelleCmd.Parameters.AddWithValue("@barkod", barkod);
+                            guncelleCmd.Parameters.AddWithValue("@urun_id", urunId);
+                            guncelleCmd.ExecuteNonQuery();
+                        }
+                        // Eğer barkodu varsa hiçbir şey yapma!
                     }
+
                 }
                 else
                 {
                     urunId = Convert.ToInt32(result);
+                    // Kullanıcı farklı birimle giriş yaparsa uyarı ver
+                    string urunBirimSorgu = "SELECT birim FROM urunler WHERE urun_id = @urun_id";
+                    var birimCmd = new MySqlCommand(urunBirimSorgu, conn);
+                    birimCmd.Parameters.AddWithValue("@urun_id", urunId);
+                    string eskiBirim = (birimCmd.ExecuteScalar() as string) ?? "adet";
+                    if (!string.IsNullOrEmpty(eskiBirim) && eskiBirim != birim)
+                    {
+                        if (MessageBox.Show(
+                                $"Bu ürün daha önce '{eskiBirim}' birimiyle kayıtlı. Şimdi '{birim}' olarak giriş yapıyorsun. Devam edilsin mi?",
+                                "Birim Değişiyor",
+                                MessageBoxButtons.YesNo,
+                                MessageBoxIcon.Warning) != DialogResult.Yes)
+                            return;
+                    }
+
                 }
 
                 // 1. urun_hareketleri tablosuna ekle
                 string hareketEkle = @"INSERT INTO urun_hareketleri 
-            (urun_id, hareket_turu, miktar, kullanici_id, islem_turu_id) 
-            VALUES (@urun_id, 'Giris', @miktar, @kullanici_id, 0)";
+(urun_id, hareket_turu, miktar, kullanici_id, islem_turu_id, birim) 
+VALUES (@urun_id, 'Giris', @miktar, @kullanici_id, 0, @birim)";
+
                 var hareketCmd = new MySqlCommand(hareketEkle, conn);
                 hareketCmd.Parameters.AddWithValue("@urun_id", urunId);
                 hareketCmd.Parameters.AddWithValue("@miktar", miktar);
                 hareketCmd.Parameters.AddWithValue("@kullanici_id", _kullaniciId);
+                hareketCmd.Parameters.AddWithValue("@birim", birim); // BUNU EKLE
                 hareketCmd.ExecuteNonQuery();
 
+
                 // 2. urunler tablosunda toplam miktarı güncelle
-                string miktarGuncelle = "UPDATE urunler SET miktar = miktar + @miktar WHERE urun_id = @urun_id";
+                string miktarGuncelle = "UPDATE urunler SET miktar = miktar + @miktar, birim = @birim WHERE urun_id = @urun_id";
                 var miktarCmd = new MySqlCommand(miktarGuncelle, conn);
                 miktarCmd.Parameters.AddWithValue("@miktar", miktar);
+                miktarCmd.Parameters.AddWithValue("@birim", birim);   // <-- Seçili birim
                 miktarCmd.Parameters.AddWithValue("@urun_id", urunId);
-                miktarCmd.ExecuteNonQuery();
+                miktarCmd.ExecuteNonQuery();             
+
+
 
                 // 3. urun_depo_konum tablosunu güncelle (sadece konum seçildiyse)
                 if (seciliKonumId.HasValue)
@@ -223,7 +273,7 @@ namespace StokTakipOtomasyonu.Forms
                 string urunAdi = adCmd.ExecuteScalar()?.ToString() ?? "(ad yok)";
 
                 string konumMetni = seciliKonum != null ? seciliKonum.Text : "konum belirtilmedi";
-                lblBasariMesaji.Text = $"✔ {urunAdi} ürününden {miktar} adet ({konumMetni}) stok girişi yapıldı.";
+                lblBasariMesaji.Text = $"✔ {urunAdi} ürününden {miktar} {birim} ({konumMetni}) stok girişi yapıldı.";
                 lblBasariMesaji.Visible = true;
                 mesajTimer.Start();
 

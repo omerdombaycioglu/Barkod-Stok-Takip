@@ -16,7 +16,7 @@ namespace StokTakipOtomasyonu.Forms
         private readonly string _projeKodu;
         private DataTable _tumUrunler;
         private DataTable _kullanilanlar;
-        private readonly int _kullaniciYetkisi; 
+        private readonly int _kullaniciYetkisi;
 
         public ProjeMontajDetayForm(int projeId, int kullaniciId, string projeKodu, int kullaniciYetkisi)
         {
@@ -33,6 +33,37 @@ namespace StokTakipOtomasyonu.Forms
             // Event ekleme buraya!
             dgvProjeUrunler.CellFormatting += dgvProjeUrunler_CellFormatting;
         }
+        private void AddButtonColumnsOnce()
+        {
+            // Varsa öncekileri kaldır, yeni ekle (double oluşmasın diye)
+            if (dgvProjeUrunler.Columns["btnUrunEkle"] == null)
+            {
+                var btnUrunEkle = new DataGridViewButtonColumn()
+                {
+                    Name = "btnUrunEkle",
+                    HeaderText = "Projeye Ekle",
+                    Text = "+",
+                    UseColumnTextForButtonValue = true,
+                    FlatStyle = FlatStyle.Flat,
+                    Width = 40
+                };
+                dgvProjeUrunler.Columns.Add(btnUrunEkle);
+            }
+            if (dgvProjeUrunler.Columns["btnUrunCikar"] == null)
+            {
+                var btnUrunCikar = new DataGridViewButtonColumn()
+                {
+                    Name = "btnUrunCikar",
+                    HeaderText = "Projeden Çıkar",
+                    Text = "-",
+                    UseColumnTextForButtonValue = true,
+                    FlatStyle = FlatStyle.Flat,
+                    Width = 40
+                };
+                dgvProjeUrunler.Columns.Add(btnUrunCikar);
+            }
+        }
+
 
 
         private void dgvProjeUrunler_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
@@ -60,61 +91,6 @@ namespace StokTakipOtomasyonu.Forms
             dgvKullanilanlar.CellClick += DgvKullanilanlar_CellClick;
             dgvProjeUrunler.CellClick += DgvProjeUrunler_CellClick;
 
-            // SADECE YETKİLİ KULLANICIYA BUTONLARI EKLE
-            if (_kullaniciYetkisi == 1)
-            {
-                // Ekle butonu
-                DataGridViewButtonColumn btnUrunEkle = new DataGridViewButtonColumn
-                {
-                    Name = "btnUrunEkle",
-                    HeaderText = "Projeye Ekle",
-                    Text = "+",
-                    UseColumnTextForButtonValue = true,
-                    FlatStyle = FlatStyle.Flat
-                };
-
-                // Çıkar butonu
-                DataGridViewButtonColumn btnUrunCikar = new DataGridViewButtonColumn
-                {
-                    Name = "btnUrunCikar",
-                    HeaderText = "Projeden Çıkar",
-                    Text = "-",
-                    UseColumnTextForButtonValue = true,
-                    FlatStyle = FlatStyle.Flat
-                };
-
-                // Çöp kutusu butonu
-                DataGridViewButtonColumn btnUrunSil = new DataGridViewButtonColumn
-                {
-                    Name = "btnUrunSil",
-                    HeaderText = "Ürünü Kaldır",
-                    Text = "🗑️",
-                    UseColumnTextForButtonValue = true,
-                    FlatStyle = FlatStyle.Flat
-                };
-
-                dgvProjeUrunler.Columns.Insert(0, btnUrunSil);
-                dgvProjeUrunler.Columns.Add(btnUrunEkle);
-                dgvProjeUrunler.Columns.Add(btnUrunCikar);
-
-                // Sadece yetkiliye butonu göster
-                Button btnProjeyeYeniUrunEkle = new Button
-                {
-                    Name = "btnProjeyeYeniUrunEkle",
-                    Text = "📦 Projeye Yeni Ürün Ekle",
-                    BackColor = Color.SeaGreen,
-                    ForeColor = Color.White,
-                    FlatStyle = FlatStyle.Flat,
-                    Font = new Font("Segoe UI", 9F, FontStyle.Bold),
-                    Size = new Size(220, 35),
-                    Location = new Point(25, this.ClientSize.Height - 50),
-                    Anchor = AnchorStyles.Bottom | AnchorStyles.Left
-                };
-
-                btnProjeyeYeniUrunEkle.Click += BtnProjeyeYeniUrunEkle_Click;
-                this.Controls.Add(btnProjeyeYeniUrunEkle);
-                splitContainer.Height -= 50;
-            }
         }
 
 
@@ -123,19 +99,20 @@ namespace StokTakipOtomasyonu.Forms
         private void LoadProjeUrunleri()
         {
             string query = @"
-        SELECT 
-            u.urun_id, 
-            u.urun_kodu, 
-            u.urun_adi, 
-            pu.miktar AS gerekli_miktar,
-            IFNULL((SELECT SUM(miktar) FROM proje_hareketleri 
-                    WHERE proje_id = pu.proje_id AND urun_id = pu.urun_id AND aktif = 1), 0) AS kullanilan_miktar
-        FROM proje_urunleri pu
-        JOIN urunler u ON pu.urun_id = u.urun_id
-        WHERE pu.proje_id = @pid";
+    SELECT 
+        u.urun_id, 
+        u.urun_kodu, 
+        u.urun_adi, 
+        pu.miktar AS gerekli_miktar,
+        IFNULL((SELECT SUM(miktar) FROM proje_hareketleri 
+                WHERE proje_id = pu.proje_id AND urun_id = pu.urun_id AND aktif = 1), 0) AS kullanilan_miktar
+    FROM proje_urunleri pu
+    JOIN urunler u ON pu.urun_id = u.urun_id
+    WHERE pu.proje_id = @pid";
 
             _tumUrunler = DatabaseHelper.ExecuteQuery(query, new MySqlParameter("@pid", _projeId));
-            _tumUrunler.Columns.Add("tamamlandi", typeof(string));
+            if (!_tumUrunler.Columns.Contains("tamamlandi"))
+                _tumUrunler.Columns.Add("tamamlandi", typeof(string));
 
             foreach (DataRow row in _tumUrunler.Rows)
             {
@@ -145,13 +122,54 @@ namespace StokTakipOtomasyonu.Forms
             }
 
             dgvProjeUrunler.DataSource = _tumUrunler;
-            dgvProjeUrunler.Columns["urun_id"].Visible = false;
 
-            foreach (DataGridViewRow row in dgvProjeUrunler.Rows)
+            // Buton kolonları ekleniyorsa buraya ekle (tekrar eklememesi için önlem al)
+            if (dgvProjeUrunler.Columns["btnUrunEkle"] == null)
             {
-                if (row.Cells["tamamlandi"].Value?.ToString() == "✔")
-                    row.DefaultCellStyle.BackColor = Color.LightGreen;
+                DataGridViewButtonColumn btnUrunEkle = new DataGridViewButtonColumn
+                {
+                    Name = "btnUrunEkle",
+                    HeaderText = "Projeye Ekle",
+                    Text = "+",
+                    UseColumnTextForButtonValue = true,
+                    FlatStyle = FlatStyle.Flat,
+                    Width = 40
+                };
+                dgvProjeUrunler.Columns.Add(btnUrunEkle);
             }
+
+            if (dgvProjeUrunler.Columns["btnUrunCikar"] == null)
+            {
+                DataGridViewButtonColumn btnUrunCikar = new DataGridViewButtonColumn
+                {
+                    Name = "btnUrunCikar",
+                    HeaderText = "Projeden Çıkar",
+                    Text = "-",
+                    UseColumnTextForButtonValue = true,
+                    FlatStyle = FlatStyle.Flat,
+                    Width = 40
+                };
+                dgvProjeUrunler.Columns.Add(btnUrunCikar);
+            }
+
+            // Sil butonu (opsiyonel)
+            if (dgvProjeUrunler.Columns["btnUrunSil"] == null)
+            {
+                DataGridViewButtonColumn btnUrunSil = new DataGridViewButtonColumn
+                {
+                    Name = "btnUrunSil",
+                    HeaderText = "Ürünü Kaldır",
+                    Text = "🗑️",
+                    UseColumnTextForButtonValue = true,
+                    FlatStyle = FlatStyle.Flat,
+                    Width = 40
+                };
+                dgvProjeUrunler.Columns.Insert(0, btnUrunSil);
+            }
+
+            // Sütun başlıkları vs
+            if (dgvProjeUrunler.Columns["urun_id"] != null)
+                dgvProjeUrunler.Columns["urun_id"].Visible = false;
             if (dgvProjeUrunler.Columns["urun_kodu"] != null)
                 dgvProjeUrunler.Columns["urun_kodu"].HeaderText = "Ürün Kodu";
             if (dgvProjeUrunler.Columns["urun_adi"] != null)
@@ -163,6 +181,15 @@ namespace StokTakipOtomasyonu.Forms
             if (dgvProjeUrunler.Columns["tamamlandi"] != null)
                 dgvProjeUrunler.Columns["tamamlandi"].HeaderText = "Tamam";
 
+            // Satırları yeşil yap!
+            foreach (DataGridViewRow row in dgvProjeUrunler.Rows)
+            {
+                if (row.Cells["tamamlandi"].Value?.ToString() == "✔")
+                    row.DefaultCellStyle.BackColor = Color.LightGreen;
+                else
+                    row.DefaultCellStyle.BackColor = dgvProjeUrunler.DefaultCellStyle.BackColor;
+            }
+
             // Satır yüksekliği ve fontunu büyüt
             dgvProjeUrunler.RowTemplate.Height = 30;
             dgvProjeUrunler.DefaultCellStyle.Font = new Font("Segoe UI", 11F);
@@ -170,26 +197,11 @@ namespace StokTakipOtomasyonu.Forms
             dgvProjeUrunler.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.EnableResizing;
             dgvProjeUrunler.ColumnHeadersHeight = 50;
             dgvProjeUrunler.RowHeadersVisible = false;
-
-            if (dgvProjeUrunler.Columns["btnUrunEkle"] != null)
-            {
-                dgvProjeUrunler.Columns["btnUrunEkle"].HeaderText = ""; // başlığı boş yap
-                dgvProjeUrunler.Columns["btnUrunEkle"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-                dgvProjeUrunler.Columns["btnUrunEkle"].Width = 28;
-                dgvProjeUrunler.Columns["btnUrunEkle"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            }
-            if (dgvProjeUrunler.Columns["btnUrunCikar"] != null)
-            {
-                dgvProjeUrunler.Columns["btnUrunCikar"].HeaderText = "";
-                dgvProjeUrunler.Columns["btnUrunCikar"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-                dgvProjeUrunler.Columns["btnUrunCikar"].Width = 28;
-                dgvProjeUrunler.Columns["btnUrunCikar"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            }
-
-
-
-
         }
+
+
+
+
         private void DgvProjeUrunler_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             // Hücre gerçekten bir veri hücresi mi? (satır başlığı veya kolon başlığı tıklanmışsa işlemi iptal et)
@@ -383,11 +395,18 @@ ORDER BY ph.islem_tarihi DESC";
                 dgvKullanilanlar.Columns["islem_tarihi"].HeaderText = "İşlem Tarihi";
 
             // Satır ve başlık fontunu, yüksekliğini büyüt
-            dgvKullanilanlar.RowTemplate.Height = 50;
             dgvKullanilanlar.DefaultCellStyle.Font = new Font("Segoe UI", 11F);
             dgvKullanilanlar.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
             dgvKullanilanlar.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.EnableResizing;
             dgvKullanilanlar.ColumnHeadersHeight = 46;
+
+            // Satır yüksekliğini sabitle!
+            dgvKullanilanlar.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.None;
+            dgvKullanilanlar.RowTemplate.Height = 36;
+            foreach (DataGridViewRow row in dgvKullanilanlar.Rows)
+            {
+                row.Height = 36;
+            }
 
             // Tüm grid alanını dolduracak şekilde kolon ayarla
             dgvKullanilanlar.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
@@ -407,12 +426,13 @@ ORDER BY ph.islem_tarihi DESC";
                 dgvKullanilanlar.Columns["btnGeriAl"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
             }
 
-            // Alternatif satır arkaplanı isteğe bağlı (kullanmak istersen)
-            //dgvKullanilanlar.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(245, 250, 255);
+            // Alternatif satır arkaplanı isteğe bağlı
+            // dgvKullanilanlar.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(245, 250, 255);
 
             // Scroll barların düzgün çıkması için:
             dgvKullanilanlar.ScrollBars = ScrollBars.Both;
         }
+
 
 
         private void DgvKullanilanlar_CellClick(object sender, DataGridViewCellEventArgs e)
@@ -478,9 +498,6 @@ ORDER BY ph.islem_tarihi DESC";
             LoadProjeUrunleri();
             LoadKullanilanUrunler();
         }
-
-
-
 
 
         private async void txtBarkod_KeyDown(object sender, KeyEventArgs e)
