@@ -1,6 +1,7 @@
 ﻿// Bu dosya, "kat" ve "konum" kolonlarının "harf" ve "numara" olarak değiştirildiği yeni sürüme uyarlanmış tam halidir.
 using MySql.Data.MySqlClient;
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
 using System.Linq;
@@ -46,6 +47,8 @@ namespace StokTakipOtomasyonu.Forms
             lstTamamlayici.MouseClick += lstTamamlayici_MouseClick;
             lstTamamlayici.KeyDown += lstTamamlayici_KeyDown;
             this.Controls.Add(lstTamamlayici);
+            button1.Click += button1_Click;
+
 
         }
 
@@ -57,6 +60,157 @@ namespace StokTakipOtomasyonu.Forms
                 DepoKonumuGuncelle(e.RowIndex, true);
             }
         }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            using (var dialog = new DepoKonumEkleDialog())
+            {
+                if (dialog.ShowDialog() == DialogResult.OK)
+                {
+                    string harf = dialog.Harf;
+                    string numaraStr = dialog.Numara;
+
+                    if (string.IsNullOrEmpty(harf) || string.IsNullOrEmpty(numaraStr))
+                    {
+                        MessageBox.Show("Harf ve numara boş olamaz!");
+                        return;
+                    }
+                    if (!int.TryParse(numaraStr, out int numara))
+                    {
+                        MessageBox.Show("Numara kısmı sadece sayı olmalı.");
+                        return;
+                    }
+
+                    try
+                    {
+                        if (connection.State != ConnectionState.Open)
+                            connection.Open();
+
+                        string checkQuery = "SELECT COUNT(*) FROM depo_konum WHERE harf=@harf AND numara=@numara";
+                        using (MySqlCommand checkCmd = new MySqlCommand(checkQuery, connection))
+                        {
+                            checkCmd.Parameters.AddWithValue("@harf", harf);
+                            checkCmd.Parameters.AddWithValue("@numara", numara);
+                            if (Convert.ToInt32(checkCmd.ExecuteScalar()) > 0)
+                            {
+                                MessageBox.Show("Bu depo konumu zaten var!");
+                                return;
+                            }
+                        }
+                        string query = "INSERT INTO depo_konum (harf, numara) VALUES (@harf, @numara)";
+                        using (MySqlCommand cmd = new MySqlCommand(query, connection))
+                        {
+                            cmd.Parameters.AddWithValue("@harf", harf);
+                            cmd.Parameters.AddWithValue("@numara", numara);
+                            cmd.ExecuteNonQuery();
+                        }
+                        MessageBox.Show("Depo konumu eklendi.", "Başarılı", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        LoadDepoKonumlari();
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Hata: " + ex.Message);
+                    }
+                    finally
+                    {
+                        if (connection.State == ConnectionState.Open)
+                            connection.Close();
+                    }
+                }
+            }
+        }
+
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            // Tüm depo konumlarını ComboBoxItem listesine çekeceğiz.
+            var konumlar = new List<ComboboxItem>();
+            try
+            {
+                if (connection.State != ConnectionState.Open)
+                    connection.Open();
+
+                string query = "SELECT id, CONCAT(harf, ' - ', numara) AS konum_bilgisi FROM depo_konum ORDER BY harf, numara";
+                using (MySqlCommand cmd = new MySqlCommand(query, connection))
+                using (MySqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        konumlar.Add(new ComboboxItem(reader["konum_bilgisi"].ToString(), Convert.ToInt32(reader["id"])));
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Hata: " + ex.Message);
+                return;
+            }
+            finally
+            {
+                if (connection.State == ConnectionState.Open)
+                    connection.Close();
+            }
+
+            using (var dialog = new DepoKonumSilDialog(konumlar))
+            {
+                if (dialog.ShowDialog() == DialogResult.OK)
+                {
+                    int? seciliKonumId = dialog.SeciliKonumId;
+                    if (seciliKonumId == null)
+                    {
+                        MessageBox.Show("Lütfen silinecek bir depo konumu seçin.");
+                        return;
+                    }
+
+                    try
+                    {
+                        if (connection.State != ConnectionState.Open)
+                            connection.Open();
+
+                        // Ürün var mı kontrolü
+                        string kontrolQuery = "SELECT COUNT(*) FROM urun_depo_konum WHERE depo_konum_id = @konumId";
+                        using (MySqlCommand kontrolCmd = new MySqlCommand(kontrolQuery, connection))
+                        {
+                            kontrolCmd.Parameters.AddWithValue("@konumId", seciliKonumId.Value);
+                            int urunVar = Convert.ToInt32(kontrolCmd.ExecuteScalar());
+                            if (urunVar > 0)
+                            {
+                                MessageBox.Show("Bu konumda ürün bulunduğu için silinemez!");
+                                return;
+                            }
+                        }
+
+                        // Onay ekranı
+                        var result = MessageBox.Show("Seçilen depo konumunu silmek istediğinize emin misiniz?", "Onay", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                        if (result != DialogResult.Yes)
+                            return;
+
+                        // Sil
+                        string silQuery = "DELETE FROM depo_konum WHERE id = @id";
+                        using (MySqlCommand silCmd = new MySqlCommand(silQuery, connection))
+                        {
+                            silCmd.Parameters.AddWithValue("@id", seciliKonumId.Value);
+                            silCmd.ExecuteNonQuery();
+                        }
+
+                        MessageBox.Show("Depo konumu silindi.", "Başarılı", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        LoadDepoKonumlari();
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Hata: " + ex.Message);
+                    }
+                    finally
+                    {
+                        if (connection.State == ConnectionState.Open)
+                            connection.Close();
+                    }
+                }
+            }
+        }
+
+
+
 
 
 
@@ -602,6 +756,7 @@ namespace StokTakipOtomasyonu.Forms
         {
 
         }
+
     }
 
     public class ComboboxItem

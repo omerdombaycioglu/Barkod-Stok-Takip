@@ -29,6 +29,8 @@
             this.label2 = new System.Windows.Forms.Label();
             this.txtMiktar = new System.Windows.Forms.TextBox();
             this.lblUyari2 = new System.Windows.Forms.Label();
+            this.button1 = new System.Windows.Forms.Button();
+            this.button2 = new System.Windows.Forms.Button();
             this.panelTop.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvDepoKonumlari)).BeginInit();
             this.SuspendLayout();
@@ -71,8 +73,8 @@
             // 
             // dgvDepoKonumlari
             // 
-            this.dgvDepoKonumlari.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-            | System.Windows.Forms.AnchorStyles.Left)
+            this.dgvDepoKonumlari.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dgvDepoKonumlari.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvDepoKonumlari.Location = new System.Drawing.Point(20, 200);
@@ -109,10 +111,8 @@
             this.lblUyari.Location = new System.Drawing.Point(400, 125);
             this.lblUyari.Name = "lblUyari";
             this.lblUyari.Size = new System.Drawing.Size(400, 23);
-            this.lblUyari.AutoSize = false;
-            this.lblUyari.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-
             this.lblUyari.TabIndex = 6;
+            this.lblUyari.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // btnYeniKonumEkle
             // 
@@ -165,14 +165,35 @@
             this.lblUyari2.Location = new System.Drawing.Point(400, 125);
             this.lblUyari2.Name = "lblUyari2";
             this.lblUyari2.Size = new System.Drawing.Size(400, 23);
-            this.lblUyari2.AutoSize = false;
-            this.lblUyari2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.lblUyari2.TabIndex = 12;
+            this.lblUyari2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(550, 56);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(197, 28);
+            this.button1.TabIndex = 14;
+            this.button1.Text = "➕Yeni Depo Konumu Oluştur";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // button2
+            // 
+            this.button2.Location = new System.Drawing.Point(550, 90);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(197, 28);
+            this.button2.TabIndex = 15;
+            this.button2.Text = "➖Mevcut Depo Konumunu Sil";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // DepoDuzenleForm
             // 
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
             this.ClientSize = new System.Drawing.Size(784, 461);
+            this.Controls.Add(this.button2);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.panelTop);
             this.Controls.Add(this.lblBarkodArama);
             this.Controls.Add(this.txtBarkodArama);
@@ -216,5 +237,8 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox txtMiktar;
         private System.Windows.Forms.Label lblUyari2;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button button2;
+
     }
 }
