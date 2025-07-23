@@ -64,6 +64,18 @@ namespace StokTakipOtomasyonu.Forms
             }
         }
 
+        private void DepoKonumlariniYukle()
+        {
+            string query = "SELECT id, CONCAT(harf, '-', numara) AS konum FROM depo_konum";
+            DataTable dt = DatabaseHelper.ExecuteQuery(query);
+
+            comboBox1.DataSource = dt;
+            comboBox1.DisplayMember = "konum";
+            comboBox1.ValueMember = "id";
+            comboBox1.SelectedIndex = -1; // Başta seçili olmasın
+        }
+
+
 
 
         private void dgvProjeUrunler_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
@@ -85,6 +97,7 @@ namespace StokTakipOtomasyonu.Forms
 
         private void ProjeMontajDetayForm_Load(object sender, EventArgs e)
         {
+            DepoKonumlariniYukle();
             LoadProjeUrunleri();
             LoadKullanilanUrunler();
             txtBarkod.Focus();
@@ -491,7 +504,7 @@ ORDER BY ph.islem_tarihi DESC";
                 new MySqlParameter("@kid", _kullaniciId),
                 new MySqlParameter("@pid", _projeId));
 
-            lblSonIslem.Text = $"{miktar} adet {urunAdi} stoklara geri eklendi.";
+            lblSonIslem.Text = $"{miktar} adet {urunAdi} stoklara geri eklendi.(Depo konumu belirtilmedi)";
             lblSonIslem.ForeColor = Color.Blue;
 
             // Listeyi güncelle
@@ -503,6 +516,15 @@ ORDER BY ph.islem_tarihi DESC";
         private async void txtBarkod_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode != Keys.Enter) return;
+
+            // 1. Depo konumu seçilmiş mi kontrolü
+            if (comboBox1.SelectedValue == null)
+            {
+                MessageBox.Show("Lütfen bir depo konumu seçiniz!", "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                comboBox1.Focus();
+                return;
+            }
+            int depoKonumId = Convert.ToInt32(comboBox1.SelectedValue);
 
             string barkod = txtBarkod.Text.Trim();
             int miktar = (int)nudMiktar.Value;
@@ -552,25 +574,56 @@ ORDER BY ph.islem_tarihi DESC";
                 txtBarkod.Clear();
                 return;
             }
+            // Depo konumu stok kontrolü
+            object depoStokObj = DatabaseHelper.ExecuteScalar(
+                "SELECT miktar FROM urun_depo_konum WHERE urun_id = @uid AND depo_konum_id = @depo_konum_id",
+                new MySqlParameter("@uid", urunId),
+                new MySqlParameter("@depo_konum_id", depoKonumId)
+            );
+            int depoStok = Convert.ToInt32(depoStokObj ?? 0);
+            if (depoStok < miktar)
+            {
+                MessageBox.Show($"Bu depoda yeterli ürün yok! Kalan: {depoStok}", "Depo Stok Yetersiz", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtBarkod.Clear();
+                return;
+            }
 
-            DatabaseHelper.ExecuteNonQuery(@"INSERT INTO proje_hareketleri (proje_id, urun_id, miktar, kullanici_id) 
-                                             VALUES (@pid, @uid, @miktar, @kid)",
+
+            // proje_hareketleri tablosuna depo konumsuz kaydet
+            DatabaseHelper.ExecuteNonQuery(@"
+        INSERT INTO proje_hareketleri (proje_id, urun_id, miktar, kullanici_id) 
+        VALUES (@pid, @uid, @miktar, @kid)",
                 new MySqlParameter("@pid", _projeId),
                 new MySqlParameter("@uid", urunId),
                 new MySqlParameter("@miktar", miktar),
-                new MySqlParameter("@kid", _kullaniciId));
+                new MySqlParameter("@kid", _kullaniciId)
+            );
 
-            DatabaseHelper.ExecuteNonQuery(@"INSERT INTO urun_hareketleri (urun_id, hareket_turu, miktar, kullanici_id, islem_turu_id, proje_id)
-                                             VALUES (@uid, 'Cikis', @miktar, @kid, 1, @pid)",
+            // urun_hareketleri tablosuna depo konumlu kaydet
+            DatabaseHelper.ExecuteNonQuery(@"
+        INSERT INTO urun_hareketleri (urun_id, hareket_turu, miktar, kullanici_id, islem_turu_id, proje_id, depo_konum_id, aciklama)
+        VALUES (@uid, 'Cikis', @miktar, @kid, 1, @pid, @depo_konum_id, 'Çıkış Proje')",
                 new MySqlParameter("@uid", urunId),
                 new MySqlParameter("@miktar", miktar),
                 new MySqlParameter("@kid", _kullaniciId),
-                new MySqlParameter("@pid", _projeId));
+                new MySqlParameter("@pid", _projeId),
+                new MySqlParameter("@depo_konum_id", depoKonumId)
+            );
 
+            // Genel stoktan düş
             DatabaseHelper.ExecuteNonQuery("UPDATE urunler SET miktar = miktar - @miktar WHERE urun_id = @id",
                 new MySqlParameter("@miktar", miktar),
                 new MySqlParameter("@id", urunId));
+            // İlgili depo konumundan da miktarı düş
+            DatabaseHelper.ExecuteNonQuery(
+                "UPDATE urun_depo_konum SET miktar = miktar - @miktar WHERE urun_id = @uid AND depo_konum_id = @depo_konum_id",
+                new MySqlParameter("@miktar", miktar),
+                new MySqlParameter("@uid", urunId),
+                new MySqlParameter("@depo_konum_id", depoKonumId)
+            );
 
+
+            // Animasyon için satırı bul ve renklendir
             int rowIndex = dgvProjeUrunler.Rows
                 .Cast<DataGridViewRow>()
                 .FirstOrDefault(r => Convert.ToInt32(r.Cells["urun_id"].Value) == urunId)?.Index ?? -1;
@@ -584,14 +637,16 @@ ORDER BY ph.islem_tarihi DESC";
                 currentRow.DefaultCellStyle.BackColor = originalColor;
             }
 
-            lblSonIslem.Text = $"Son Giriş: {urunAdi} ürününden {miktar} adet eklendi.";
-            lblSonIslem.ForeColor = Color.DarkGreen;
+            lblSonIslem.Text = $"Son Çıkış: {urunAdi} ürününden {miktar} adet, {comboBox1.Text} konumundan çıktı.";
+            lblSonIslem.ForeColor = Color.DarkRed;
 
             txtBarkod.Clear();
             nudMiktar.Value = 1;
             LoadProjeUrunleri();
             LoadKullanilanUrunler();
         }
+
+
 
         private async void BtnGeriAl_Click(object sender, EventArgs e)
         {
@@ -642,6 +697,16 @@ ORDER BY ph.islem_tarihi DESC";
         private void label2_Click(object sender, EventArgs e) { }
 
         private void dgvKullanilanlar_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label3_Click(object sender, EventArgs e)
         {
 
         }

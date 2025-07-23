@@ -41,6 +41,8 @@ namespace StokTakipOtomasyonu.Forms
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.pictureBoxLogo = new System.Windows.Forms.PictureBox();
+            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.label3 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.nudMiktar)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer)).BeginInit();
             this.splitContainer.Panel1.SuspendLayout();
@@ -74,7 +76,7 @@ namespace StokTakipOtomasyonu.Forms
             // lblMiktar
             // 
             this.lblMiktar.AutoSize = true;
-            this.lblMiktar.Location = new System.Drawing.Point(290, 43);
+            this.lblMiktar.Location = new System.Drawing.Point(309, 19);
             this.lblMiktar.Name = "lblMiktar";
             this.lblMiktar.Size = new System.Drawing.Size(54, 20);
             this.lblMiktar.TabIndex = 2;
@@ -95,13 +97,13 @@ namespace StokTakipOtomasyonu.Forms
             this.txtBarkod.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.txtBarkod.Location = new System.Drawing.Point(84, 40);
             this.txtBarkod.Name = "txtBarkod";
-            this.txtBarkod.Size = new System.Drawing.Size(200, 27);
+            this.txtBarkod.Size = new System.Drawing.Size(170, 27);
             this.txtBarkod.TabIndex = 0;
             this.txtBarkod.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtBarkod_KeyDown);
             // 
             // nudMiktar
             // 
-            this.nudMiktar.Location = new System.Drawing.Point(350, 41);
+            this.nudMiktar.Location = new System.Drawing.Point(369, 17);
             this.nudMiktar.Maximum = new decimal(new int[] {
             100000,
             0,
@@ -113,7 +115,7 @@ namespace StokTakipOtomasyonu.Forms
             0,
             0});
             this.nudMiktar.Name = "nudMiktar";
-            this.nudMiktar.Size = new System.Drawing.Size(80, 27);
+            this.nudMiktar.Size = new System.Drawing.Size(64, 27);
             this.nudMiktar.TabIndex = 3;
             this.nudMiktar.Value = new decimal(new int[] {
             1,
@@ -206,10 +208,31 @@ namespace StokTakipOtomasyonu.Forms
             this.pictureBoxLogo.TabIndex = 0;
             this.pictureBoxLogo.TabStop = false;
             // 
+            // comboBox1
+            // 
+            this.comboBox1.FormattingEnabled = true;
+            this.comboBox1.Location = new System.Drawing.Point(369, 59);
+            this.comboBox1.Name = "comboBox1";
+            this.comboBox1.Size = new System.Drawing.Size(64, 28);
+            this.comboBox1.TabIndex = 9;
+            this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(260, 62);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(108, 20);
+            this.label3.TabIndex = 10;
+            this.label3.Text = "Depo Konumu:";
+            this.label3.Click += new System.EventHandler(this.label3_Click);
+            // 
             // ProjeMontajDetayForm
             // 
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
             this.ClientSize = new System.Drawing.Size(1511, 776);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.comboBox1);
             this.Controls.Add(this.pictureBoxLogo);
             this.Controls.Add(this.lblProjeKodu);
             this.Controls.Add(this.lblBarkod);
@@ -238,5 +261,8 @@ namespace StokTakipOtomasyonu.Forms
             this.PerformLayout();
 
         }
+
+        private ComboBox comboBox1;
+        private Label label3;
     }
 }

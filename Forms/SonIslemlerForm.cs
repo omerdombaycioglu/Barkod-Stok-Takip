@@ -70,7 +70,6 @@ ORDER BY uh.log_date DESC
 
 ";
 
-
                 var dt = DatabaseHelper.ExecuteQuery(
                     query,
                     new MySql.Data.MySqlClient.MySqlParameter("@baslangic", tarihBaslangic),
