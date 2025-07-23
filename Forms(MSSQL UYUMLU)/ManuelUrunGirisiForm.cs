@@ -3,13 +3,14 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
+using System.Configuration;
 
 namespace StokTakipOtomasyonu.Forms
 {
     public partial class ManuelUrunGirisiForm : Form
     {
         private int _kullaniciId;
-        private readonly string _connectionString = "Server=192.168.43.153;Database=stok_takip_otomasyonu;User Id=sa;Password=123;";
+        private readonly string _connectionString = ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString;
 
         private Timer mesajTimer;
         private System.Windows.Forms.ComboBox cmbDepoKonum;

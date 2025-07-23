@@ -3,6 +3,7 @@ using System;
 using System.Data;
 using System.Drawing;
 using System.Windows.Forms;
+using System.Configuration;
 
 namespace StokTakipOtomasyonu
 {
@@ -10,7 +11,7 @@ namespace StokTakipOtomasyonu
     {
         private int _urunId;
         private string _urunAdi;
-        private string connectionString = "Server=192.168.43.153;Database=stok_takip_otomasyonu;User Id=sa;Password=123;";
+        private string connectionString = ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString;
 
         public IslemGecmisiForm(int urunId, string urunAdi)
         {

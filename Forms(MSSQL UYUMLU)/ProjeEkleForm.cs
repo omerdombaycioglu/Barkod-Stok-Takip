@@ -7,12 +7,13 @@ using System.IO;
 using System.Windows.Forms;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
+using System.Configuration;
 
 namespace StokTakipOtomasyonu.Forms
 {
     public partial class ProjeEkleForm : Form
     {
-        private readonly string _connectionString = "Server=192.168.43.153;Database=stok_takip_otomasyonu;User Id=sa;Password=123;";
+        private readonly string _connectionString = ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString;
         private int _kullaniciId;
         private int _projeId;
         private DataTable _excelData;

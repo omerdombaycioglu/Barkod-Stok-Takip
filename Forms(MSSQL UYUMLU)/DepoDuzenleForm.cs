@@ -6,13 +6,14 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using System.Configuration;
 
 namespace StokTakipOtomasyonu.Forms
 {
     public partial class DepoDuzenleForm : Form
     {
         private SqlConnection connection;
-        private string connectionString = "Server=192.168.43.153;Database=stok_takip_otomasyonu;User Id=sa;Password=123;";
+        private string connectionString = ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString;
         private DataTable allProducts;
         private int currentUrunId = -1;
         private int urunToplamMiktar = 0;

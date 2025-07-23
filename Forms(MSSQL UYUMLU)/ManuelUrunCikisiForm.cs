@@ -6,13 +6,14 @@ using System.Drawing;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using static StokTakipOtomasyonu.Forms.ManuelUrunGirisiForm;
+using System.Configuration;
 
 namespace StokTakipOtomasyonu.Forms
 {
     public partial class ManuelUrunCikisiForm : Form
     {
         private readonly int _kullaniciId;
-        private readonly string _connectionString = "Server=192.168.43.153;Database=stok_takip_otomasyonu;User Id=sa;Password=123;";
+        private readonly string _connectionString = ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString;
 
         public ManuelUrunCikisiForm(int kullaniciId)
         {

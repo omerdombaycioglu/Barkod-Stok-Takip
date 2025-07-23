@@ -3,6 +3,7 @@ using System;
 using System.Data;
 using System.Drawing;
 using System.Windows.Forms;
+using System.Configuration;
 
 namespace StokTakipOtomasyonu
 {
@@ -12,7 +13,7 @@ namespace StokTakipOtomasyonu
         public int SecilenMiktar { get; private set; } = 1;
         private bool _secimModu = false;
         private SqlConnection connection;
-        private string _connectionString = "Server=192.168.43.153;Database=stok_takip_otomasyonu;User Id=sa;Password=123;";
+        private string _connectionString = ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString;
         private DataTable dataSourceTable;
         private Label lblUrunSayisi;
         private string _callerForm;
@@ -68,7 +69,6 @@ namespace StokTakipOtomasyonu
                 btnSec.Visible = _secimModu && _callerForm == "ProjeMontajDetayForm";
             };
             
-
         }
 
         public UrunListeleForm(bool secimModu, string callerForm = "") : this()
