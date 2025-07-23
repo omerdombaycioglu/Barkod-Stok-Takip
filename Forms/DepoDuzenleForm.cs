@@ -50,6 +50,8 @@ namespace StokTakipOtomasyonu.Forms
             lstTamamlayici.KeyDown += lstTamamlayici_KeyDown;
             txtMiktar.KeyDown += txtMiktar_KeyDown;
             this.Controls.Add(lstTamamlayici);
+            dgvDepoKonumlari.CurrentCellDirtyStateChanged += dgvDepoKonumlari_CurrentCellDirtyStateChanged;
+
             button1.Click += button1_Click;
 
 
@@ -57,12 +59,30 @@ namespace StokTakipOtomasyonu.Forms
 
         private void dgvDepoKonumlari_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
-            // Sadece miktar sütunu için çalışsın
             if (dgvDepoKonumlari.Columns[e.ColumnIndex].Name == "colMiktar")
             {
                 DepoKonumuGuncelle(e.RowIndex, true);
+
+                // GÜNCELLEMEYİ GECİKTİR!
+                this.BeginInvoke(new MethodInvoker(() =>
+                {
+                    UrunBilgileriniYukle(currentUrunId);
+                    UrunKonumlariniYukle(currentUrunId);
+                }));
             }
         }
+
+
+
+        private void dgvDepoKonumlari_CurrentCellDirtyStateChanged(object sender, EventArgs e)
+        {
+            if (dgvDepoKonumlari.IsCurrentCellDirty)
+            {
+                dgvDepoKonumlari.CommitEdit(DataGridViewDataErrorContexts.Commit);
+            }
+        }
+
+
 
         private void button1_Click(object sender, EventArgs e)
         {
@@ -543,9 +563,7 @@ namespace StokTakipOtomasyonu.Forms
 
                 if (!sessiz)
                     MessageBox.Show("Miktar güncellendi.", "Başarılı");
-
-                UrunBilgileriniYukle(currentUrunId);
-                UrunKonumlariniYukle(currentUrunId);
+               
             }
             catch (Exception ex)
             {
@@ -642,17 +660,21 @@ namespace StokTakipOtomasyonu.Forms
                 if (connection.State != ConnectionState.Open)
                     connection.Open();
 
+                // EDIT MODE'DAN ÇIK!
+                if (dgvDepoKonumlari.IsCurrentCellInEditMode)
+                    dgvDepoKonumlari.EndEdit();
+
                 string query = @"SELECT 
-                CONCAT(u.urun_kodu, ' - ', u.urun_adi) AS urun_bilgisi,
-                d.harf,
-                d.numara,
-                ud.miktar,
-                ud.depo_konum_id
-               FROM urun_depo_konum ud
-               JOIN urunler u ON ud.urun_id = u.urun_id
-               JOIN depo_konum d ON ud.depo_konum_id = d.id
-               WHERE ud.urun_id = @urunId
-               ORDER BY d.harf, d.numara";
+        CONCAT(u.urun_kodu, ' - ', u.urun_adi) AS urun_bilgisi,
+        d.harf,
+        d.numara,
+        ud.miktar,
+        ud.depo_konum_id
+       FROM urun_depo_konum ud
+       JOIN urunler u ON ud.urun_id = u.urun_id
+       JOIN depo_konum d ON ud.depo_konum_id = d.id
+       WHERE ud.urun_id = @urunId
+       ORDER BY d.harf, d.numara";
 
                 using (MySqlCommand cmd = new MySqlCommand(query, connection))
                 {
@@ -689,6 +711,7 @@ namespace StokTakipOtomasyonu.Forms
                     connection.Close();
             }
         }
+
 
 
 
