@@ -125,10 +125,11 @@ namespace StokTakipOtomasyonu.Forms
 
                         // Hareket ve konum-stok güncelle
                         string query = @"
-                    INSERT INTO urun_hareketleri (urun_id, hareket_turu, miktar, kullanici_id, islem_turu_id, depo_konum_id)
-                    VALUES (@uid, 'Cikis', @miktar, @kullanici_id, @islem_turu_id, @konum_id);
-                    UPDATE urunler SET miktar = miktar - @miktar WHERE urun_id = @uid;
-                    UPDATE urun_depo_konum SET miktar = miktar - @miktar WHERE urun_id = @uid AND depo_konum_id = @konum_id;";
+    INSERT INTO urun_hareketleri (urun_id, hareket_turu, miktar, kullanici_id, islem_turu_id, depo_konum_id, aciklama)
+    VALUES (@uid, 'Cikis', @miktar, @kullanici_id, @islem_turu_id, @konum_id, @aciklama);
+    UPDATE urunler SET miktar = miktar - @miktar WHERE urun_id = @uid;
+    UPDATE urun_depo_konum SET miktar = miktar - @miktar WHERE urun_id = @uid AND depo_konum_id = @konum_id;";
+
 
                         MySqlCommand updateCmd = new MySqlCommand(query, conn);
                         updateCmd.Parameters.AddWithValue("@uid", urunId);
@@ -136,6 +137,8 @@ namespace StokTakipOtomasyonu.Forms
                         updateCmd.Parameters.AddWithValue("@kullanici_id", _kullaniciId);
                         updateCmd.Parameters.AddWithValue("@islem_turu_id", cmbIslemTuru.SelectedIndex == 0 ? 0 : 2);
                         updateCmd.Parameters.AddWithValue("@konum_id", depoKonumId);
+                        updateCmd.Parameters.AddWithValue("@aciklama", textBox1.Text.Trim());
+
 
                         await updateCmd.ExecuteNonQueryAsync();
 
@@ -151,15 +154,18 @@ namespace StokTakipOtomasyonu.Forms
                         }
 
                         string query = @"
-                    INSERT INTO urun_hareketleri (urun_id, hareket_turu, miktar, kullanici_id, islem_turu_id)
-                    VALUES (@uid, 'Cikis', @miktar, @kullanici_id, @islem_turu_id);
-                    UPDATE urunler SET miktar = miktar - @miktar WHERE urun_id = @uid;";
+    INSERT INTO urun_hareketleri (urun_id, hareket_turu, miktar, kullanici_id, islem_turu_id, aciklama)
+    VALUES (@uid, 'Cikis', @miktar, @kullanici_id, @islem_turu_id, @aciklama);
+    UPDATE urunler SET miktar = miktar - @miktar WHERE urun_id = @uid;";
+
 
                         MySqlCommand updateCmd = new MySqlCommand(query, conn);
                         updateCmd.Parameters.AddWithValue("@uid", urunId);
                         updateCmd.Parameters.AddWithValue("@miktar", miktar);
                         updateCmd.Parameters.AddWithValue("@kullanici_id", _kullaniciId);
                         updateCmd.Parameters.AddWithValue("@islem_turu_id", cmbIslemTuru.SelectedIndex == 0 ? 0 : 2);
+                        updateCmd.Parameters.AddWithValue("@aciklama", textBox1.Text.Trim());
+
 
                         await updateCmd.ExecuteNonQueryAsync();
 
@@ -195,5 +201,9 @@ namespace StokTakipOtomasyonu.Forms
             public override string ToString() { return Text; }
         }
 
+        private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

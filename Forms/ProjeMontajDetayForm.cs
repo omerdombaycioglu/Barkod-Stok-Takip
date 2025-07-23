@@ -602,7 +602,7 @@ ORDER BY ph.islem_tarihi DESC";
             // urun_hareketleri tablosuna depo konumlu kaydet
             DatabaseHelper.ExecuteNonQuery(@"
         INSERT INTO urun_hareketleri (urun_id, hareket_turu, miktar, kullanici_id, islem_turu_id, proje_id, depo_konum_id, aciklama)
-        VALUES (@uid, 'Cikis', @miktar, @kid, 1, @pid, @depo_konum_id, 'Çıkış Proje')",
+        VALUES (@uid, 'Cikis', @miktar, @kid, 1, @pid, @depo_konum_id, '')",
                 new MySqlParameter("@uid", urunId),
                 new MySqlParameter("@miktar", miktar),
                 new MySqlParameter("@kid", _kullaniciId),

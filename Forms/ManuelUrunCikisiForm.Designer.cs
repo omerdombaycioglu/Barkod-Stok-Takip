@@ -40,15 +40,17 @@ namespace StokTakipOtomasyonu.Forms
             this.lblBaslik = new System.Windows.Forms.Label();
             this.lblDepoKonum = new System.Windows.Forms.Label();
             this.cmbDepoKonum = new System.Windows.Forms.ComboBox();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.nudMiktar)).BeginInit();
             this.panelTop.SuspendLayout();
             this.SuspendLayout();
             // 
             // lblBarkod
             // 
-            this.lblBarkod.Location = new System.Drawing.Point(30, 73);
+            this.lblBarkod.Location = new System.Drawing.Point(44, 73);
             this.lblBarkod.Name = "lblBarkod";
-            this.lblBarkod.Size = new System.Drawing.Size(80, 20);
+            this.lblBarkod.Size = new System.Drawing.Size(66, 20);
             this.lblBarkod.TabIndex = 1;
             this.lblBarkod.Text = "Barkod:";
             // 
@@ -62,7 +64,7 @@ namespace StokTakipOtomasyonu.Forms
             // 
             // lblIslemTuru
             // 
-            this.lblIslemTuru.Location = new System.Drawing.Point(30, 102);
+            this.lblIslemTuru.Location = new System.Drawing.Point(30, 106);
             this.lblIslemTuru.Name = "lblIslemTuru";
             this.lblIslemTuru.Size = new System.Drawing.Size(80, 20);
             this.lblIslemTuru.TabIndex = 3;
@@ -81,9 +83,9 @@ namespace StokTakipOtomasyonu.Forms
             // 
             // lblMiktar
             // 
-            this.lblMiktar.Location = new System.Drawing.Point(30, 173);
+            this.lblMiktar.Location = new System.Drawing.Point(57, 173);
             this.lblMiktar.Name = "lblMiktar";
-            this.lblMiktar.Size = new System.Drawing.Size(80, 20);
+            this.lblMiktar.Size = new System.Drawing.Size(53, 20);
             this.lblMiktar.TabIndex = 5;
             this.lblMiktar.Text = "Miktar:";
             // 
@@ -128,7 +130,7 @@ namespace StokTakipOtomasyonu.Forms
             this.btnKaydet.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(153)))), ((int)(((byte)(133)))));
             this.btnKaydet.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnKaydet.ForeColor = System.Drawing.Color.White;
-            this.btnKaydet.Location = new System.Drawing.Point(130, 204);
+            this.btnKaydet.Location = new System.Drawing.Point(130, 237);
             this.btnKaydet.Name = "btnKaydet";
             this.btnKaydet.Size = new System.Drawing.Size(220, 35);
             this.btnKaydet.TabIndex = 7;
@@ -143,7 +145,7 @@ namespace StokTakipOtomasyonu.Forms
             this.panelTop.Dock = System.Windows.Forms.DockStyle.Top;
             this.panelTop.Location = new System.Drawing.Point(0, 0);
             this.panelTop.Name = "panelTop";
-            this.panelTop.Size = new System.Drawing.Size(400, 60);
+            this.panelTop.Size = new System.Drawing.Size(409, 60);
             this.panelTop.TabIndex = 0;
             // 
             // lblBaslik
@@ -159,7 +161,7 @@ namespace StokTakipOtomasyonu.Forms
             // 
             // lblDepoKonum
             // 
-            this.lblDepoKonum.Location = new System.Drawing.Point(24, 140);
+            this.lblDepoKonum.Location = new System.Drawing.Point(10, 140);
             this.lblDepoKonum.Name = "lblDepoKonum";
             this.lblDepoKonum.Size = new System.Drawing.Size(100, 20);
             this.lblDepoKonum.TabIndex = 9;
@@ -173,10 +175,28 @@ namespace StokTakipOtomasyonu.Forms
             this.cmbDepoKonum.Size = new System.Drawing.Size(220, 28);
             this.cmbDepoKonum.TabIndex = 10;
             // 
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(130, 204);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(220, 27);
+            this.textBox1.TabIndex = 11;
+            // 
+            // label1
+            // 
+            this.label1.Location = new System.Drawing.Point(30, 207);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(80, 20);
+            this.label1.TabIndex = 12;
+            this.label1.Text = "Açıklama:";
+            this.label1.Click += new System.EventHandler(this.label1_Click);
+            // 
             // ManuelUrunCikisiForm
             // 
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
-            this.ClientSize = new System.Drawing.Size(400, 293);
+            this.ClientSize = new System.Drawing.Size(409, 321);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.textBox1);
             this.Controls.Add(this.panelTop);
             this.Controls.Add(this.lblBarkod);
             this.Controls.Add(this.txtBarkod);
@@ -201,5 +221,8 @@ namespace StokTakipOtomasyonu.Forms
             this.PerformLayout();
 
         }
+
+        private TextBox textBox1;
+        private Label label1;
     }
 }
