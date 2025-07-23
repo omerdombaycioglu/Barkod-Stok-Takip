@@ -124,7 +124,7 @@
             this.btnYeniKonumEkle.Name = "btnYeniKonumEkle";
             this.btnYeniKonumEkle.Size = new System.Drawing.Size(140, 28);
             this.btnYeniKonumEkle.TabIndex = 11;
-            this.btnYeniKonumEkle.Text = "Konum Ekle";
+            this.btnYeniKonumEkle.Text = "Konuma Ürünü Ekle";
             this.btnYeniKonumEkle.UseVisualStyleBackColor = false;
             this.btnYeniKonumEkle.Click += new System.EventHandler(this.btnYeniKonumEkle_Click);
             // 

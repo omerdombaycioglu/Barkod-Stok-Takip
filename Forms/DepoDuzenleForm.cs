@@ -30,6 +30,8 @@ namespace StokTakipOtomasyonu.Forms
 
             lblUyari.AutoSize = true;
             lblUyari2.AutoSize = true;
+            txtBarkodArama.KeyDown += txtBarkodArama_KeyDown;
+
 
             LoadDepoKonumlari();
 
@@ -46,6 +48,7 @@ namespace StokTakipOtomasyonu.Forms
             lstTamamlayici.Font = new Font("Segoe UI", 9F);
             lstTamamlayici.MouseClick += lstTamamlayici_MouseClick;
             lstTamamlayici.KeyDown += lstTamamlayici_KeyDown;
+            txtMiktar.KeyDown += txtMiktar_KeyDown;
             this.Controls.Add(lstTamamlayici);
             button1.Click += button1_Click;
 
@@ -119,6 +122,27 @@ namespace StokTakipOtomasyonu.Forms
                 }
             }
         }
+        private void txtBarkodArama_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                BarkodAraVeYukle();
+                e.Handled = true;
+                e.SuppressKeyPress = true;
+            }
+        }
+
+        private void txtMiktar_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                btnYeniKonumEkle_Click(sender, e); // Enter ile ekleme işlemini tetikle
+                e.Handled = true;
+                e.SuppressKeyPress = true;
+            }
+        }
+
+
 
 
         private void button2_Click(object sender, EventArgs e)
@@ -313,12 +337,8 @@ namespace StokTakipOtomasyonu.Forms
             if (dgvDepoKonumlari.Columns.Count == 0) return;
 
             var columnName = dgvDepoKonumlari.Columns[e.ColumnIndex].Name;
-
-            if (columnName == "colGuncelle")
-            {
-                DepoKonumuGuncelle(e.RowIndex);
-            }
-            else if (columnName == "colSil")
+           
+            if (columnName == "colSil")
             {
                 DepoKonumuSil(e.RowIndex);
             }
@@ -358,13 +378,7 @@ namespace StokTakipOtomasyonu.Forms
             miktarColumn.HeaderText = "Miktar";
             miktarColumn.Name = "colMiktar";
             miktarColumn.Width = 80;
-
-            DataGridViewButtonColumn guncelleColumn = new DataGridViewButtonColumn();
-            guncelleColumn.HeaderText = "İşlem";
-            guncelleColumn.Name = "colGuncelle";
-            guncelleColumn.Text = "Güncelle";
-            guncelleColumn.UseColumnTextForButtonValue = true;
-            guncelleColumn.Width = 80;
+           
 
             DataGridViewButtonColumn silColumn = new DataGridViewButtonColumn();
             silColumn.HeaderText = "";
@@ -380,7 +394,7 @@ namespace StokTakipOtomasyonu.Forms
             depoKonumIdColumn.Visible = false;
 
             dgvDepoKonumlari.Columns.AddRange(new DataGridViewColumn[] {
-                urunAdiColumn, harfColumn, numaraColumn, miktarColumn, guncelleColumn, silColumn, depoKonumIdColumn
+                urunAdiColumn, harfColumn, numaraColumn, miktarColumn, silColumn, depoKonumIdColumn
             });
         }
 
@@ -738,8 +752,10 @@ namespace StokTakipOtomasyonu.Forms
 
                 // Formu yenile
                 UrunKonumlariniYukle(currentUrunId);
+                UrunBilgileriniYukle(currentUrunId); // Mutlaka eklensin
                 txtMiktar.Clear();
                 cmbKatKonum.SelectedIndex = -1;
+
             }
             catch (Exception ex)
             {
