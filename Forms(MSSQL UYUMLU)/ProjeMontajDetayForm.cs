@@ -517,14 +517,14 @@ ORDER BY ph.islem_tarihi DESC";
         {
             if (e.KeyCode != Keys.Enter) return;
 
-            // 1. Depo konumu seçilmiş mi kontrolü
-            if (comboBox1.SelectedValue == null)
+            // Depo konumu kontrolü (UYARI GÖSTERME!)
+            int depoKonumId = -1; // default
+
+            if (comboBox1.SelectedValue != null && int.TryParse(comboBox1.SelectedValue.ToString(), out int selectedId))
             {
-                MessageBox.Show("Lütfen bir depo konumu seçiniz!", "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                comboBox1.Focus();
-                return;
+                depoKonumId = selectedId;
             }
-            int depoKonumId = Convert.ToInt32(comboBox1.SelectedValue);
+
 
             string barkod = txtBarkod.Text.Trim();
             int miktar = (int)nudMiktar.Value;
@@ -575,18 +575,22 @@ ORDER BY ph.islem_tarihi DESC";
                 return;
             }
             // Depo konumu stok kontrolü
-            object depoStokObj = DatabaseHelper.ExecuteScalar(
-                "SELECT miktar FROM urun_depo_konum WHERE urun_id = @uid AND depo_konum_id = @depo_konum_id",
-                new SqlParameter("@uid", urunId),
-                new SqlParameter("@depo_konum_id", depoKonumId)
-            );
-            int depoStok = Convert.ToInt32(depoStokObj ?? 0);
-            if (depoStok < miktar)
+            if (depoKonumId != -1)
             {
-                MessageBox.Show($"Bu depoda yeterli ürün yok! Kalan: {depoStok}", "Depo Stok Yetersiz", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                txtBarkod.Clear();
-                return;
+                object depoStokObj = DatabaseHelper.ExecuteScalar(
+                    "SELECT miktar FROM urun_depo_konum WHERE urun_id = @uid AND depo_konum_id = @depo_konum_id",
+                    new SqlParameter("@uid", urunId),
+                    new SqlParameter("@depo_konum_id", depoKonumId)
+                );
+                int depoStok = Convert.ToInt32(depoStokObj ?? 0);
+                if (depoStok < miktar)
+                {
+                    MessageBox.Show($"Bu depoda yeterli ürün yok! Kalan: {depoStok}", "Depo Stok Yetersiz", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    txtBarkod.Clear();
+                    return;
+                }
             }
+
 
 
             // proje_hareketleri tablosuna depo konumsuz kaydet
@@ -599,28 +603,33 @@ ORDER BY ph.islem_tarihi DESC";
                 new SqlParameter("@kid", _kullaniciId)
             );
 
-            // urun_hareketleri tablosuna depo konumlu kaydet
             DatabaseHelper.ExecuteNonQuery(@"
-        INSERT INTO urun_hareketleri (urun_id, hareket_turu, miktar, kullanici_id, islem_turu_id, proje_id, depo_konum_id, aciklama)
-        VALUES (@uid, 'Cikis', @miktar, @kid, 1, @pid, @depo_konum_id, '')",
-                new SqlParameter("@uid", urunId),
-                new SqlParameter("@miktar", miktar),
-                new SqlParameter("@kid", _kullaniciId),
-                new SqlParameter("@pid", _projeId),
-                new SqlParameter("@depo_konum_id", depoKonumId)
-            );
+INSERT INTO urun_hareketleri (urun_id, hareket_turu, miktar, kullanici_id, islem_turu_id, proje_id, depo_konum_id, aciklama)
+VALUES (@uid, 'Cikis', @miktar, @kid, 1, @pid, @depo_konum_id, '')",
+    new SqlParameter("@uid", urunId),
+    new SqlParameter("@miktar", miktar),
+    new SqlParameter("@kid", _kullaniciId),
+    new SqlParameter("@pid", _projeId),
+    new SqlParameter("@depo_konum_id", comboBox1.SelectedValue == null ? (object)DBNull.Value : comboBox1.SelectedValue)
+);
+
 
             // Genel stoktan düş
             DatabaseHelper.ExecuteNonQuery("UPDATE urunler SET miktar = miktar - @miktar WHERE urun_id = @id",
                 new SqlParameter("@miktar", miktar),
                 new SqlParameter("@id", urunId));
-            // İlgili depo konumundan da miktarı düş
-            DatabaseHelper.ExecuteNonQuery(
-                "UPDATE urun_depo_konum SET miktar = miktar - @miktar WHERE urun_id = @uid AND depo_konum_id = @depo_konum_id",
-                new SqlParameter("@miktar", miktar),
-                new SqlParameter("@uid", urunId),
-                new SqlParameter("@depo_konum_id", depoKonumId)
-            );
+
+            // Sadece depo konumu seçilmişse depo konumundan da düş
+            if (depoKonumId != -1)
+            {
+                DatabaseHelper.ExecuteNonQuery(
+                    "UPDATE urun_depo_konum SET miktar = miktar - @miktar WHERE urun_id = @uid AND depo_konum_id = @depo_konum_id",
+                    new SqlParameter("@miktar", miktar),
+                    new SqlParameter("@uid", urunId),
+                    new SqlParameter("@depo_konum_id", depoKonumId)
+                );
+            }
+
 
 
             // Animasyon için satırı bul ve renklendir
