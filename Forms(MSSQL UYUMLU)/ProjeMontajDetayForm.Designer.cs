@@ -43,6 +43,7 @@ namespace StokTakipOtomasyonu.Forms
             this.pictureBoxLogo = new System.Windows.Forms.PictureBox();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
+            this.BtnProjeyeYeniUrunEkle = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.nudMiktar)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer)).BeginInit();
             this.splitContainer.Panel1.SuspendLayout();
@@ -138,7 +139,7 @@ namespace StokTakipOtomasyonu.Forms
             // splitContainer.Panel2
             // 
             this.splitContainer.Panel2.Controls.Add(this.dgvKullanilanlar);
-            this.splitContainer.Size = new System.Drawing.Size(1471, 671);
+            this.splitContainer.Size = new System.Drawing.Size(1471, 528);
             this.splitContainer.SplitterDistance = 712;
             this.splitContainer.TabIndex = 7;
             // 
@@ -156,7 +157,7 @@ namespace StokTakipOtomasyonu.Forms
             this.dgvProjeUrunler.ReadOnly = true;
             this.dgvProjeUrunler.RowHeadersWidth = 51;
             this.dgvProjeUrunler.RowTemplate.Height = 24;
-            this.dgvProjeUrunler.Size = new System.Drawing.Size(710, 668);
+            this.dgvProjeUrunler.Size = new System.Drawing.Size(710, 522);
             this.dgvProjeUrunler.TabIndex = 0;
             this.dgvProjeUrunler.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvProjeUrunler_CellContentClick);
             // 
@@ -174,7 +175,7 @@ namespace StokTakipOtomasyonu.Forms
             this.dgvKullanilanlar.ReadOnly = true;
             this.dgvKullanilanlar.RowHeadersWidth = 51;
             this.dgvKullanilanlar.RowTemplate.Height = 24;
-            this.dgvKullanilanlar.Size = new System.Drawing.Size(756, 671);
+            this.dgvKullanilanlar.Size = new System.Drawing.Size(756, 525);
             this.dgvKullanilanlar.TabIndex = 0;
             this.dgvKullanilanlar.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvKullanilanlar_CellContentClick);
             // 
@@ -227,10 +228,20 @@ namespace StokTakipOtomasyonu.Forms
             this.label3.Text = "Depo Konumu:";
             this.label3.Click += new System.EventHandler(this.label3_Click);
             // 
+            // BtnProjeyeYeniUrunEkle
+            // 
+            this.BtnProjeyeYeniUrunEkle.Location = new System.Drawing.Point(24, 664);
+            this.BtnProjeyeYeniUrunEkle.Name = "BtnProjeyeYeniUrunEkle";
+            this.BtnProjeyeYeniUrunEkle.Size = new System.Drawing.Size(185, 38);
+            this.BtnProjeyeYeniUrunEkle.TabIndex = 11;
+            this.BtnProjeyeYeniUrunEkle.Text = "Projeye Yeni Ürün Ekle";
+            this.BtnProjeyeYeniUrunEkle.UseVisualStyleBackColor = true;
+            // 
             // ProjeMontajDetayForm
             // 
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
-            this.ClientSize = new System.Drawing.Size(1511, 776);
+            this.ClientSize = new System.Drawing.Size(1511, 714);
+            this.Controls.Add(this.BtnProjeyeYeniUrunEkle);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.comboBox1);
             this.Controls.Add(this.pictureBoxLogo);
@@ -264,5 +275,6 @@ namespace StokTakipOtomasyonu.Forms
 
         private ComboBox comboBox1;
         private Label label3;
+        private Button BtnProjeyeYeniUrunEkle;
     }
 }

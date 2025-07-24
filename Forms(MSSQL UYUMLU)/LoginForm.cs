@@ -13,55 +13,55 @@ namespace StokTakipOtomasyonu.Forms
         {
             this.Icon = new Icon("isp_logo2.ico");
             InitializeComponent();
-            LoadLogo();
+           // LoadLogo();
 
             this.Shown += (s, e) => txtKullaniciAdi.Focus();
         }
 
-        private void LoadLogo()
-        {
-            try
-            {
-                // 1. Önce çalışma dizininden yükleme denemesi
-                string exePath = Application.StartupPath;
-                string imagePath = Path.Combine(exePath, "Resources", "isp_logo.png");
+        //private void LoadLogo()
+        //{
+        //    try
+        //    {
+        //        // 1. Önce çalışma dizininden yükleme denemesi
+        //        string exePath = Application.StartupPath;
+        //        string imagePath = Path.Combine(exePath, "Resources", "isp_logo2.png");
 
-                if (File.Exists(imagePath))
-                {
-                    pictureBoxLogo.Image = Image.FromFile(imagePath);
-                }
-                else
-                {
-                    // 2. Embedded resource olarak yükleme
-                    var assembly = System.Reflection.Assembly.GetExecutingAssembly();
-                    string resourceName = "StokTakipOtomasyonu.Resources.isp_logo.png";
+        //        if (File.Exists(imagePath))
+        //        {
+        //            pictureBoxLogo.Image = Image.FromFile(imagePath);
+        //        }
+        //        else
+        //        {
+        //            // 2. Embedded resource olarak yükleme
+        //            var assembly = System.Reflection.Assembly.GetExecutingAssembly();
+        //            string resourceName = "StokTakipOtomasyonu.Resources.isp_logo.png";
 
-                    using (Stream stream = assembly.GetManifestResourceStream(resourceName))
-                    {
-                        if (stream != null)
-                        {
-                            pictureBoxLogo.Image = Image.FromStream(stream);
-                        }
-                        else
-                        {
-                            // 3. Logo bulunamazsa uyarı mesajı
-                            pictureBoxLogo.BackColor = Color.LightGray;
-                            pictureBoxLogo.Image = null;
-                            Console.WriteLine("Logo dosyası bulunamadı: " + resourceName);
-                        }
-                    }
-                }
+        //            using (Stream stream = assembly.GetManifestResourceStream(resourceName))
+        //            {
+        //                if (stream != null)
+        //                {
+        //                    pictureBoxLogo.Image = Image.FromStream(stream);
+        //                }
+        //                else
+        //                {
+        //                    // 3. Logo bulunamazsa uyarı mesajı
+        //                    pictureBoxLogo.BackColor = Color.LightGray;
+        //                    pictureBoxLogo.Image = null;
+        //                    Console.WriteLine("Logo dosyası bulunamadı: " + resourceName);
+        //                }
+        //            }
+        //        }
 
-                pictureBoxLogo.SizeMode = PictureBoxSizeMode.Zoom;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Logo yüklenirken hata oluştu: " + ex.Message,
-                              "Hata",
-                              MessageBoxButtons.OK,
-                              MessageBoxIcon.Warning);
-            }
-        }
+        //        pictureBoxLogo.SizeMode = PictureBoxSizeMode.Zoom;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        MessageBox.Show("Logo yüklenirken hata oluştu: " + ex.Message,
+        //                      "Hata",
+        //                      MessageBoxButtons.OK,
+        //                      MessageBoxIcon.Warning);
+        //    }
+        //}
         private void LoginForm_Load(object sender, EventArgs e)
         {
             txtKullaniciAdi.TabIndex = 0;

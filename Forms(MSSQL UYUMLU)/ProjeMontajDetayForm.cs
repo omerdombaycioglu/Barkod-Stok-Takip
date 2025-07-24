@@ -29,6 +29,8 @@ namespace StokTakipOtomasyonu.Forms
             lblProjeKodu.Text = $"Proje: {_projeKodu}";
             nudMiktar.Value = 1;
             splitContainer.Height -= 50;
+            BtnProjeyeYeniUrunEkle.Click += BtnProjeyeYeniUrunEkle_Click;
+
 
             // Event ekleme buraya!
             dgvProjeUrunler.CellFormatting += dgvProjeUrunler_CellFormatting;
