@@ -35,6 +35,7 @@
             this.txtPassword = new System.Windows.Forms.TextBox();
             this.btnSave = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
+            this.lblLoading = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // lblServer
@@ -104,9 +105,9 @@
             // 
             // btnSave
             // 
-            this.btnSave.Location = new System.Drawing.Point(150, 190);
+            this.btnSave.Location = new System.Drawing.Point(160, 190);
             this.btnSave.Name = "btnSave";
-            this.btnSave.Size = new System.Drawing.Size(90, 30);
+            this.btnSave.Size = new System.Drawing.Size(80, 30);
             this.btnSave.TabIndex = 8;
             this.btnSave.Text = "Kaydet";
             this.btnSave.UseVisualStyleBackColor = true;
@@ -122,10 +123,20 @@
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
+            // lblLoading
+            // 
+            this.lblLoading.AutoSize = true;
+            this.lblLoading.Location = new System.Drawing.Point(95, 230);
+            this.lblLoading.Name = "lblLoading";
+            this.lblLoading.Size = new System.Drawing.Size(79, 16);
+            this.lblLoading.TabIndex = 10;
+            this.lblLoading.Text = "Yükleniyor...";
+            // 
             // SettingsForm
             // 
             this.AcceptButton = this.btnSave;
-            this.ClientSize = new System.Drawing.Size(384, 251);
+            this.ClientSize = new System.Drawing.Size(384, 265);
+            this.Controls.Add(this.lblLoading);
             this.Controls.Add(this.lblServer);
             this.Controls.Add(this.txtServer);
             this.Controls.Add(this.lblDatabase);
@@ -146,6 +157,8 @@
             this.PerformLayout();
 
         }
+
+        private System.Windows.Forms.Label lblLoading;
     }
 }
 

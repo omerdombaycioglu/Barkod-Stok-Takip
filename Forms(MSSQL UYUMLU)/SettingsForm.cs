@@ -1,4 +1,5 @@
 ﻿using Org.BouncyCastle.Tls;
+using StokTakipOtomasyonu.Helpers;
 using System;
 using System.Configuration;
 using System.Windows.Forms;
@@ -10,6 +11,7 @@ namespace StokTakipOtomasyonu.Forms
         public SettingsForm()
         {
             InitializeComponent();
+            lblLoading.Visible = false; // <-- Ekle
             LoadCurrentSettings();
         }
 
@@ -28,6 +30,10 @@ namespace StokTakipOtomasyonu.Forms
 
         private void btnSave_Click(object sender, EventArgs e)
         {
+            lblLoading.Visible = true;    // <-- 1. Kaydet basınca görünür yap
+            btnSave.Enabled = false;
+            Application.DoEvents();       // lblLoading hemen gözüksün diye
+
             // Yeni bağlantı stringini oluştur
             var builder = new System.Data.SqlClient.SqlConnectionStringBuilder
             {
@@ -39,9 +45,25 @@ namespace StokTakipOtomasyonu.Forms
             };
             UpdateConnectionString("MyDb", builder.ConnectionString);
 
-            MessageBox.Show("Bağlantı bilgileri kaydedildi.", "Bilgi", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            this.Close();
+            // Bağlantı test et
+            bool result = DatabaseHelper.TestConnection();
+
+            lblLoading.Visible = false;   // <-- 2. İşlem bitince gizle
+            btnSave.Enabled = true;
+
+            if (result)
+            {
+                MessageBox.Show("Bağlantı başarılı!", "Bilgi", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                this.DialogResult = DialogResult.OK;
+                this.Close();
+            }
+            else
+            {
+                MessageBox.Show("Bağlantı hatası! Bağlantı bilgilerinizi kontrol edin.", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                // Form açık kalır, kullanıcı tekrar deneyebilir!
+            }
         }
+
 
         private void UpdateConnectionString(string name, string connString)
         {
@@ -61,7 +83,20 @@ namespace StokTakipOtomasyonu.Forms
             if (this.DialogResult != DialogResult.OK)
                 this.DialogResult = DialogResult.Cancel;
         }
+        private void btnBaglan_Click(object sender, EventArgs e)
+        {           
+            Application.DoEvents(); // ProgressBar hemen gözüksün diye
 
+            // Zaman alan işlemin burada:
+            bool result = DatabaseHelper.TestConnection();            
+
+            if (result)
+                MessageBox.Show("Bağlantı başarılı!");
+            else
+                MessageBox.Show("Bağlantı hatası!");
+        }
+
+        
     }
 }
 
