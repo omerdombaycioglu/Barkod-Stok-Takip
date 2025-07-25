@@ -166,7 +166,6 @@ namespace StokTakipOtomasyonu.Forms
             }
         }
 
-
         private void ShowProjectTransactionHistory(int projeId, string projeKodu)
         {
             string query = @"
@@ -197,7 +196,5 @@ ORDER BY ph.islem_tarihi DESC";
             var frm = new FormIslemGecmisi(dt, projeKodu); // << BURASI
             frm.ShowDialog();                              // << BURASI
         }
-
-
     }
 }

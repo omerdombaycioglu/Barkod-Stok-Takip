@@ -20,7 +20,6 @@ namespace StokTakipOtomasyonu.Forms
         private int depodakiToplamMiktar = 0;
         private ListBox lstTamamlayici;
 
-
         public DepoDuzenleForm()
         {
             InitializeComponent();

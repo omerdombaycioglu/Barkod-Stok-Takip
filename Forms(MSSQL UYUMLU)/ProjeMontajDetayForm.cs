@@ -34,37 +34,7 @@ namespace StokTakipOtomasyonu.Forms
 
             // Event ekleme buraya!
             dgvProjeUrunler.CellFormatting += dgvProjeUrunler_CellFormatting;
-        }
-        private void AddButtonColumnsOnce()
-        {
-            // Varsa öncekileri kaldır, yeni ekle (double oluşmasın diye)
-            if (dgvProjeUrunler.Columns["btnUrunEkle"] == null)
-            {
-                var btnUrunEkle = new DataGridViewButtonColumn()
-                {
-                    Name = "btnUrunEkle",
-                    HeaderText = "Projeye Ekle",
-                    Text = "+",
-                    UseColumnTextForButtonValue = true,
-                    FlatStyle = FlatStyle.Flat,
-                    Width = 40
-                };
-                dgvProjeUrunler.Columns.Add(btnUrunEkle);
-            }
-            if (dgvProjeUrunler.Columns["btnUrunCikar"] == null)
-            {
-                var btnUrunCikar = new DataGridViewButtonColumn()
-                {
-                    Name = "btnUrunCikar",
-                    HeaderText = "Projeden Çıkar",
-                    Text = "-",
-                    UseColumnTextForButtonValue = true,
-                    FlatStyle = FlatStyle.Flat,
-                    Width = 40
-                };
-                dgvProjeUrunler.Columns.Add(btnUrunCikar);
-            }
-        }
+        }        
 
         private void DepoKonumlariniYukle()
         {
