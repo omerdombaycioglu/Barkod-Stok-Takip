@@ -1,4 +1,4 @@
-﻿using MySql.Data.MySqlClient;
+﻿using System.Data.SqlClient;
 using StokTakipOtomasyonu.Helpers;
 using System;
 using System.Data;
@@ -96,11 +96,11 @@ namespace StokTakipOtomasyonu.Forms
                                     VALUES (@urun_id, @kolon, @eski, @yeni, @kullanici_id)";
 
                                         DatabaseHelper.ExecuteNonQuery(logQuery, transaction,
-                                            new MySqlParameter("@urun_id", urunId),
-                                            new MySqlParameter("@kolon", kolon),
-                                            new MySqlParameter("@eski", eskiDeger),
-                                            new MySqlParameter("@yeni", yeniDeger),
-                                            new MySqlParameter("@kullanici_id", aktifKullaniciId));
+                                            new SqlParameter("@urun_id", urunId),
+                                            new SqlParameter("@kolon", kolon),
+                                            new SqlParameter("@eski", eskiDeger),
+                                            new SqlParameter("@yeni", yeniDeger),
+                                            new SqlParameter("@kullanici_id", aktifKullaniciId));
 
                                         degisiklikVar = true;
                                     }
@@ -118,13 +118,13 @@ namespace StokTakipOtomasyonu.Forms
                                 WHERE urun_id = @urun_id";
 
                                     DatabaseHelper.ExecuteNonQuery(updateQuery, transaction,
-                                        new MySqlParameter("@urun_adi", originalRow["urun_adi"] ?? DBNull.Value),
-                                        new MySqlParameter("@urun_kodu", originalRow["urun_kodu"] ?? DBNull.Value),
-                                        new MySqlParameter("@urun_barkod", originalRow["urun_barkod"] ?? DBNull.Value),
-                                        new MySqlParameter("@urun_marka", originalRow["urun_marka"] ?? DBNull.Value),
-                                        new MySqlParameter("@urun_no", originalRow["urun_no"] ?? DBNull.Value),
-                                        new MySqlParameter("@kritik_seviye", originalRow["kritik_seviye"] ?? DBNull.Value),
-                                        new MySqlParameter("@urun_id", urunId));
+                                        new SqlParameter("@urun_adi", originalRow["urun_adi"] ?? DBNull.Value),
+                                        new SqlParameter("@urun_kodu", originalRow["urun_kodu"] ?? DBNull.Value),
+                                        new SqlParameter("@urun_barkod", originalRow["urun_barkod"] ?? DBNull.Value),
+                                        new SqlParameter("@urun_marka", originalRow["urun_marka"] ?? DBNull.Value),
+                                        new SqlParameter("@urun_no", originalRow["urun_no"] ?? DBNull.Value),
+                                        new SqlParameter("@kritik_seviye", originalRow["kritik_seviye"] ?? DBNull.Value),
+                                        new SqlParameter("@urun_id", urunId));
                                 }
                             }
 

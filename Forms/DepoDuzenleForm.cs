@@ -1,29 +1,29 @@
 ﻿// Bu dosya, "kat" ve "konum" kolonlarının "harf" ve "numara" olarak değiştirildiği yeni sürüme uyarlanmış tam halidir.
-using MySql.Data.MySqlClient;
+using System.Data.SqlClient;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using System.Configuration;
 
 namespace StokTakipOtomasyonu.Forms
 {
     public partial class DepoDuzenleForm : Form
     {
-        private MySqlConnection connection;
-        private string connectionString = "server=localhost;database=stok_takip_otomasyonu;uid=root;pwd=;";
+        private SqlConnection connection;
+        private string connectionString = ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString;
         private DataTable allProducts;
         private int currentUrunId = -1;
         private int urunToplamMiktar = 0;
         private int depodakiToplamMiktar = 0;
         private ListBox lstTamamlayici;
 
-
         public DepoDuzenleForm()
         {
             InitializeComponent();
-            connection = new MySqlConnection(connectionString);
+            connection = new SqlConnection(connectionString);
             SetupBarkodAutoComplete();
             lblUyari.Visible = false;
             lblUyari2.Visible = false;
@@ -110,7 +110,7 @@ namespace StokTakipOtomasyonu.Forms
                             connection.Open();
 
                         string checkQuery = "SELECT COUNT(*) FROM depo_konum WHERE harf=@harf AND numara=@numara";
-                        using (MySqlCommand checkCmd = new MySqlCommand(checkQuery, connection))
+                        using (SqlCommand checkCmd = new SqlCommand(checkQuery, connection))
                         {
                             checkCmd.Parameters.AddWithValue("@harf", harf);
                             checkCmd.Parameters.AddWithValue("@numara", numara);
@@ -121,7 +121,7 @@ namespace StokTakipOtomasyonu.Forms
                             }
                         }
                         string query = "INSERT INTO depo_konum (harf, numara) VALUES (@harf, @numara)";
-                        using (MySqlCommand cmd = new MySqlCommand(query, connection))
+                        using (SqlCommand cmd = new SqlCommand(query, connection))
                         {
                             cmd.Parameters.AddWithValue("@harf", harf);
                             cmd.Parameters.AddWithValue("@numara", numara);
@@ -175,8 +175,8 @@ namespace StokTakipOtomasyonu.Forms
                     connection.Open();
 
                 string query = "SELECT id, CONCAT(harf, ' - ', numara) AS konum_bilgisi FROM depo_konum ORDER BY harf, numara";
-                using (MySqlCommand cmd = new MySqlCommand(query, connection))
-                using (MySqlDataReader reader = cmd.ExecuteReader())
+                using (SqlCommand cmd = new SqlCommand(query, connection))
+                using (SqlDataReader reader = cmd.ExecuteReader())
                 {
                     while (reader.Read())
                     {
@@ -213,7 +213,7 @@ namespace StokTakipOtomasyonu.Forms
 
                         // Ürün var mı kontrolü
                         string kontrolQuery = "SELECT COUNT(*) FROM urun_depo_konum WHERE depo_konum_id = @konumId";
-                        using (MySqlCommand kontrolCmd = new MySqlCommand(kontrolQuery, connection))
+                        using (SqlCommand kontrolCmd = new SqlCommand(kontrolQuery, connection))
                         {
                             kontrolCmd.Parameters.AddWithValue("@konumId", seciliKonumId.Value);
                             int urunVar = Convert.ToInt32(kontrolCmd.ExecuteScalar());
@@ -231,7 +231,7 @@ namespace StokTakipOtomasyonu.Forms
 
                         // Sil
                         string silQuery = "DELETE FROM depo_konum WHERE id = @id";
-                        using (MySqlCommand silCmd = new MySqlCommand(silQuery, connection))
+                        using (SqlCommand silCmd = new SqlCommand(silQuery, connection))
                         {
                             silCmd.Parameters.AddWithValue("@id", seciliKonumId.Value);
                             silCmd.ExecuteNonQuery();
@@ -255,9 +255,6 @@ namespace StokTakipOtomasyonu.Forms
 
 
 
-
-
-
         private void SetupBarkodAutoComplete()
         {
             try
@@ -269,8 +266,8 @@ namespace StokTakipOtomasyonu.Forms
                          CONCAT(urun_kodu, ' - ', urun_adi) AS urun_bilgisi 
                          FROM urunler 
                          ORDER BY urun_adi";
-                MySqlCommand cmd = new MySqlCommand(query, connection);
-                MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
+                SqlCommand cmd = new SqlCommand(query, connection);
+                SqlDataAdapter adapter = new SqlDataAdapter(cmd);
                 allProducts = new DataTable();
                 adapter.Fill(allProducts);
 
@@ -314,8 +311,6 @@ namespace StokTakipOtomasyonu.Forms
             }
         }
 
-
-
         private void LoadDepoKonumlari()
         {
             try
@@ -324,8 +319,8 @@ namespace StokTakipOtomasyonu.Forms
                     connection.Open();
 
                 string query = "SELECT id, CONCAT(harf, ' - ', numara) AS konum_bilgisi FROM depo_konum ORDER BY harf, numara";
-                MySqlCommand cmd = new MySqlCommand(query, connection);
-                MySqlDataReader reader = cmd.ExecuteReader();
+                SqlCommand cmd = new SqlCommand(query, connection);
+                SqlDataReader reader = cmd.ExecuteReader();
 
                 cmbKatKonum.Items.Clear();
                 while (reader.Read())
@@ -429,10 +424,10 @@ namespace StokTakipOtomasyonu.Forms
                (SELECT SUM(ud.miktar) FROM urun_depo_konum ud WHERE ud.urun_id = u.urun_id) AS depodaki_toplam
                FROM urunler u WHERE u.urun_id = @urunId";
 
-                using (MySqlCommand cmd = new MySqlCommand(query, connection))
+                using (SqlCommand cmd = new SqlCommand(query, connection))
                 {
                     cmd.Parameters.AddWithValue("@urunId", urunId);
-                    using (MySqlDataReader reader = cmd.ExecuteReader())
+                    using (SqlDataReader reader = cmd.ExecuteReader())
                     {
                         if (reader.Read())
                         {
@@ -556,7 +551,7 @@ namespace StokTakipOtomasyonu.Forms
                     connection.Open();
 
                 string query = "UPDATE urun_depo_konum SET miktar = @miktar WHERE depo_konum_id = @id";
-                MySqlCommand cmd = new MySqlCommand(query, connection);
+                SqlCommand cmd = new SqlCommand(query, connection);
                 cmd.Parameters.AddWithValue("@miktar", yeniMiktar);
                 cmd.Parameters.AddWithValue("@id", depoKonumId);
                 cmd.ExecuteNonQuery();
@@ -590,7 +585,7 @@ namespace StokTakipOtomasyonu.Forms
                         connection.Open();
 
                     string query = "DELETE FROM urun_depo_konum WHERE depo_konum_id = @id";
-                    MySqlCommand cmd = new MySqlCommand(query, connection);
+                    SqlCommand cmd = new SqlCommand(query, connection);
                     cmd.Parameters.AddWithValue("@id", depoKonumId);
                     cmd.ExecuteNonQuery();
 
@@ -627,7 +622,7 @@ namespace StokTakipOtomasyonu.Forms
                     connection.Open();
 
                 string query = "SELECT urun_id FROM urunler WHERE urun_barkod = @barkod";
-                MySqlCommand cmd = new MySqlCommand(query, connection);
+                SqlCommand cmd = new SqlCommand(query, connection);
                 cmd.Parameters.AddWithValue("@barkod", txtBarkodArama.Text);
                 object result = cmd.ExecuteScalar();
 
@@ -676,10 +671,10 @@ namespace StokTakipOtomasyonu.Forms
        WHERE ud.urun_id = @urunId
        ORDER BY d.harf, d.numara";
 
-                using (MySqlCommand cmd = new MySqlCommand(query, connection))
+                using (SqlCommand cmd = new SqlCommand(query, connection))
                 {
                     cmd.Parameters.AddWithValue("@urunId", urunId);
-                    MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
+                    SqlDataAdapter adapter = new SqlDataAdapter(cmd);
                     DataTable dt = new DataTable();
                     adapter.Fill(dt);
 
@@ -745,7 +740,7 @@ namespace StokTakipOtomasyonu.Forms
 
                 // Aynı ürün ve konum daha önce eklenmiş mi?
                 string kontrolQuery = "SELECT COUNT(*) FROM urun_depo_konum WHERE urun_id = @urunId AND depo_konum_id = @konumId";
-                MySqlCommand kontrolCmd = new MySqlCommand(kontrolQuery, connection);
+                SqlCommand kontrolCmd = new SqlCommand(kontrolQuery, connection);
                 kontrolCmd.Parameters.AddWithValue("@urunId", currentUrunId);
                 kontrolCmd.Parameters.AddWithValue("@konumId", secilenKonumId);
                 int kayitVar = Convert.ToInt32(kontrolCmd.ExecuteScalar());
@@ -754,7 +749,7 @@ namespace StokTakipOtomasyonu.Forms
                 {
                     // Güncelle
                     string guncelleQuery = "UPDATE urun_depo_konum SET miktar = miktar + @miktar WHERE urun_id = @urunId AND depo_konum_id = @konumId";
-                    MySqlCommand guncelleCmd = new MySqlCommand(guncelleQuery, connection);
+                    SqlCommand guncelleCmd = new SqlCommand(guncelleQuery, connection);
                     guncelleCmd.Parameters.AddWithValue("@miktar", miktar);
                     guncelleCmd.Parameters.AddWithValue("@urunId", currentUrunId);
                     guncelleCmd.Parameters.AddWithValue("@konumId", secilenKonumId);
@@ -764,7 +759,7 @@ namespace StokTakipOtomasyonu.Forms
                 {
                     // Yeni ekle
                     string ekleQuery = "INSERT INTO urun_depo_konum (urun_id, depo_konum_id, miktar) VALUES (@urunId, @konumId, @miktar)";
-                    MySqlCommand ekleCmd = new MySqlCommand(ekleQuery, connection);
+                    SqlCommand ekleCmd = new SqlCommand(ekleQuery, connection);
                     ekleCmd.Parameters.AddWithValue("@urunId", currentUrunId);
                     ekleCmd.Parameters.AddWithValue("@konumId", secilenKonumId);
                     ekleCmd.Parameters.AddWithValue("@miktar", miktar);

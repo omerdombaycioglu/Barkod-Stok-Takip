@@ -1,39 +1,36 @@
-﻿using MySql.Data.MySqlClient;
-using System;
+﻿using System;
 using System.Data;
+using System.Data.SqlClient;
+using System.Configuration;
 
 namespace StokTakipOtomasyonu.Helpers
 {
     public static class DatabaseHelper
-    {
-        private static string _connectionString = "server=localhost;database=stok_takip_otomasyonu;uid=root;pwd=;";
-
-        public static void SetConnectionString(string connectionString)
+    {                 
+        public static SqlConnection GetConnection()
         {
-            _connectionString = connectionString;
+            // Her defasında güncel connection string'i oku!
+            string connStr = ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString;
+            return new SqlConnection(connStr);
         }
 
-        public static MySqlConnection GetConnection()
-        {
-            return new MySqlConnection(_connectionString);
-        }
 
-        public static DataTable ExecuteQuery(string query, params MySqlParameter[] parameters)
+        public static DataTable ExecuteQuery(string query, params SqlParameter[] parameters)
         {
             return ExecuteQuery(query, null, parameters);
         }
 
-        public static DataTable ExecuteQuery(string query, MySqlTransaction transaction, params MySqlParameter[] parameters)
+        public static DataTable ExecuteQuery(string query, SqlTransaction transaction, params SqlParameter[] parameters)
         {
             DataTable dt = new DataTable();
             try
             {
                 if (transaction != null)
                 {
-                    using (var cmd = new MySqlCommand(query, transaction.Connection, transaction))
+                    using (var cmd = new SqlCommand(query, transaction.Connection, transaction))
                     {
                         if (parameters != null) cmd.Parameters.AddRange(parameters);
-                        using (var adapter = new MySqlDataAdapter(cmd))
+                        using (var adapter = new SqlDataAdapter(cmd))
                             adapter.Fill(dt);
                     }
                 }
@@ -42,10 +39,10 @@ namespace StokTakipOtomasyonu.Helpers
                     using (var conn = GetConnection())
                     {
                         conn.Open();
-                        using (var cmd = new MySqlCommand(query, conn))
+                        using (var cmd = new SqlCommand(query, conn))
                         {
                             if (parameters != null) cmd.Parameters.AddRange(parameters);
-                            using (var adapter = new MySqlDataAdapter(cmd))
+                            using (var adapter = new SqlDataAdapter(cmd))
                                 adapter.Fill(dt);
                         }
                     }
@@ -58,18 +55,18 @@ namespace StokTakipOtomasyonu.Helpers
             return dt;
         }
 
-        public static int ExecuteNonQuery(string query, params MySqlParameter[] parameters)
+        public static int ExecuteNonQuery(string query, params SqlParameter[] parameters)
         {
             return ExecuteNonQuery(query, null, parameters);
         }
 
-        public static int ExecuteNonQuery(string query, MySqlTransaction transaction, params MySqlParameter[] parameters)
+        public static int ExecuteNonQuery(string query, SqlTransaction transaction, params SqlParameter[] parameters)
         {
             try
             {
                 if (transaction != null)
                 {
-                    using (var cmd = new MySqlCommand(query, transaction.Connection, transaction))
+                    using (var cmd = new SqlCommand(query, transaction.Connection, transaction))
                     {
                         if (parameters != null) cmd.Parameters.AddRange(parameters);
                         return cmd.ExecuteNonQuery();
@@ -80,7 +77,7 @@ namespace StokTakipOtomasyonu.Helpers
                     using (var conn = GetConnection())
                     {
                         conn.Open();
-                        using (var cmd = new MySqlCommand(query, conn))
+                        using (var cmd = new SqlCommand(query, conn))
                         {
                             if (parameters != null) cmd.Parameters.AddRange(parameters);
                             return cmd.ExecuteNonQuery();
@@ -94,18 +91,18 @@ namespace StokTakipOtomasyonu.Helpers
             }
         }
 
-        public static object ExecuteScalar(string query, params MySqlParameter[] parameters)
+        public static object ExecuteScalar(string query, params SqlParameter[] parameters)
         {
             return ExecuteScalar(query, null, parameters);
         }
 
-        public static object ExecuteScalar(string query, MySqlTransaction transaction, params MySqlParameter[] parameters)
+        public static object ExecuteScalar(string query, SqlTransaction transaction, params SqlParameter[] parameters)
         {
             try
             {
                 if (transaction != null)
                 {
-                    using (var cmd = new MySqlCommand(query, transaction.Connection, transaction))
+                    using (var cmd = new SqlCommand(query, transaction.Connection, transaction))
                     {
                         if (parameters != null) cmd.Parameters.AddRange(parameters);
                         return cmd.ExecuteScalar();
@@ -116,7 +113,7 @@ namespace StokTakipOtomasyonu.Helpers
                     using (var conn = GetConnection())
                     {
                         conn.Open();
-                        using (var cmd = new MySqlCommand(query, conn))
+                        using (var cmd = new SqlCommand(query, conn))
                         {
                             if (parameters != null) cmd.Parameters.AddRange(parameters);
                             return cmd.ExecuteScalar();
@@ -146,7 +143,7 @@ namespace StokTakipOtomasyonu.Helpers
             }
         }
 
-        public static MySqlTransaction BeginTransaction(MySqlConnection connection)
+        public static SqlTransaction BeginTransaction(SqlConnection connection)
         {
             if (connection.State != ConnectionState.Open)
                 connection.Open();

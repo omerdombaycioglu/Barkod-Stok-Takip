@@ -1,4 +1,4 @@
-﻿using MySql.Data.MySqlClient;
+﻿using System.Data.SqlClient;
 using StokTakipOtomasyonu.Helpers;
 using System;
 using System.Data;
@@ -29,40 +29,12 @@ namespace StokTakipOtomasyonu.Forms
             lblProjeKodu.Text = $"Proje: {_projeKodu}";
             nudMiktar.Value = 1;
             splitContainer.Height -= 50;
+            BtnProjeyeYeniUrunEkle.Click += BtnProjeyeYeniUrunEkle_Click;
+
 
             // Event ekleme buraya!
             dgvProjeUrunler.CellFormatting += dgvProjeUrunler_CellFormatting;
-        }
-        private void AddButtonColumnsOnce()
-        {
-            // Varsa öncekileri kaldır, yeni ekle (double oluşmasın diye)
-            if (dgvProjeUrunler.Columns["btnUrunEkle"] == null)
-            {
-                var btnUrunEkle = new DataGridViewButtonColumn()
-                {
-                    Name = "btnUrunEkle",
-                    HeaderText = "Projeye Ekle",
-                    Text = "+",
-                    UseColumnTextForButtonValue = true,
-                    FlatStyle = FlatStyle.Flat,
-                    Width = 40
-                };
-                dgvProjeUrunler.Columns.Add(btnUrunEkle);
-            }
-            if (dgvProjeUrunler.Columns["btnUrunCikar"] == null)
-            {
-                var btnUrunCikar = new DataGridViewButtonColumn()
-                {
-                    Name = "btnUrunCikar",
-                    HeaderText = "Projeden Çıkar",
-                    Text = "-",
-                    UseColumnTextForButtonValue = true,
-                    FlatStyle = FlatStyle.Flat,
-                    Width = 40
-                };
-                dgvProjeUrunler.Columns.Add(btnUrunCikar);
-            }
-        }
+        }        
 
         private void DepoKonumlariniYukle()
         {
@@ -117,13 +89,13 @@ namespace StokTakipOtomasyonu.Forms
         u.urun_kodu, 
         u.urun_adi, 
         pu.miktar AS gerekli_miktar,
-        IFNULL((SELECT SUM(miktar) FROM proje_hareketleri 
+        ISNULL((SELECT SUM(miktar) FROM proje_hareketleri 
                 WHERE proje_id = pu.proje_id AND urun_id = pu.urun_id AND aktif = 1), 0) AS kullanilan_miktar
     FROM proje_urunleri pu
     JOIN urunler u ON pu.urun_id = u.urun_id
     WHERE pu.proje_id = @pid";
 
-            _tumUrunler = DatabaseHelper.ExecuteQuery(query, new MySqlParameter("@pid", _projeId));
+            _tumUrunler = DatabaseHelper.ExecuteQuery(query, new SqlParameter("@pid", _projeId));
             if (!_tumUrunler.Columns.Contains("tamamlandi"))
                 _tumUrunler.Columns.Add("tamamlandi", typeof(string));
 
@@ -238,8 +210,8 @@ namespace StokTakipOtomasyonu.Forms
                 DatabaseHelper.ExecuteNonQuery(@"
             UPDATE proje_urunleri SET miktar = miktar + 1
             WHERE proje_id = @pid AND urun_id = @uid",
-                    new MySqlParameter("@pid", _projeId),
-                    new MySqlParameter("@uid", urunId));
+                    new SqlParameter("@pid", _projeId),
+                    new SqlParameter("@uid", urunId));
 
                 lblSonIslem.Text = $"{urunAdi} ürününün proje için gerekli miktarı 1 artırıldı.";
                 lblSonIslem.ForeColor = Color.DarkGreen;
@@ -258,8 +230,8 @@ namespace StokTakipOtomasyonu.Forms
                 DatabaseHelper.ExecuteNonQuery(@"
             UPDATE proje_urunleri SET miktar = miktar - 1
             WHERE proje_id = @pid AND urun_id = @uid",
-                    new MySqlParameter("@pid", _projeId),
-                    new MySqlParameter("@uid", urunId));
+                    new SqlParameter("@pid", _projeId),
+                    new SqlParameter("@uid", urunId));
 
                 lblSonIslem.Text = $"{urunAdi} ürününün proje için gerekli miktarı 1 azaltıldı.";
                 lblSonIslem.ForeColor = Color.IndianRed;
@@ -278,8 +250,8 @@ namespace StokTakipOtomasyonu.Forms
                 object hareketSayisi = DatabaseHelper.ExecuteScalar(@"
             SELECT COUNT(*) FROM proje_hareketleri 
             WHERE proje_id = @pid AND urun_id = @uid AND aktif = 1",
-                    new MySqlParameter("@pid", _projeId),
-                    new MySqlParameter("@uid", urunId));
+                    new SqlParameter("@pid", _projeId),
+                    new SqlParameter("@uid", urunId));
 
                 if (Convert.ToInt32(hareketSayisi) > 0)
                 {
@@ -294,8 +266,8 @@ namespace StokTakipOtomasyonu.Forms
                 DatabaseHelper.ExecuteNonQuery(@"
             DELETE FROM proje_urunleri 
             WHERE proje_id = @pid AND urun_id = @uid",
-                    new MySqlParameter("@pid", _projeId),
-                    new MySqlParameter("@uid", urunId));
+                    new SqlParameter("@pid", _projeId),
+                    new SqlParameter("@uid", urunId));
 
                 lblSonIslem.Text = $"{urunAdi} ürünü projeden kaldırıldı.";
                 lblSonIslem.ForeColor = Color.Red;
@@ -320,8 +292,8 @@ namespace StokTakipOtomasyonu.Forms
                     object varMi = DatabaseHelper.ExecuteScalar(@"
                 SELECT COUNT(*) FROM proje_urunleri
                 WHERE proje_id = @pid AND urun_id = @uid",
-                        new MySqlParameter("@pid", _projeId),
-                        new MySqlParameter("@uid", secilenUrunId));
+                        new SqlParameter("@pid", _projeId),
+                        new SqlParameter("@uid", secilenUrunId));
 
                     if (Convert.ToInt32(varMi) > 0)
                     {
@@ -329,9 +301,9 @@ namespace StokTakipOtomasyonu.Forms
                         DatabaseHelper.ExecuteNonQuery(@"
                     UPDATE proje_urunleri SET miktar = miktar + @miktar
                     WHERE proje_id = @pid AND urun_id = @uid",
-                            new MySqlParameter("@pid", _projeId),
-                            new MySqlParameter("@uid", secilenUrunId),
-                            new MySqlParameter("@miktar", secilenUrunMiktar));
+                            new SqlParameter("@pid", _projeId),
+                            new SqlParameter("@uid", secilenUrunId),
+                            new SqlParameter("@miktar", secilenUrunMiktar));
                     }
                     else
                     {
@@ -339,10 +311,10 @@ namespace StokTakipOtomasyonu.Forms
                         DatabaseHelper.ExecuteNonQuery(@"
                     INSERT INTO proje_urunleri (proje_id, urun_id, miktar, user_id)
                     VALUES (@pid, @uid, @miktar, @kid)",
-                            new MySqlParameter("@pid", _projeId),
-                            new MySqlParameter("@uid", secilenUrunId),
-                            new MySqlParameter("@miktar", secilenUrunMiktar),
-                            new MySqlParameter("@kid", _kullaniciId));
+                            new SqlParameter("@pid", _projeId),
+                            new SqlParameter("@uid", secilenUrunId),
+                            new SqlParameter("@miktar", secilenUrunMiktar),
+                            new SqlParameter("@kid", _kullaniciId));
                     }
 
                     lblSonIslem.Text = $"Yeni ürün projeye eklendi veya miktarı güncellendi.";
@@ -373,7 +345,7 @@ JOIN urunler u ON ph.urun_id = u.urun_id
 WHERE ph.proje_id = @pid AND ph.aktif = 1
 ORDER BY ph.islem_tarihi DESC";
 
-            _kullanilanlar = DatabaseHelper.ExecuteQuery(query, new MySqlParameter("@pid", _projeId));
+            _kullanilanlar = DatabaseHelper.ExecuteQuery(query, new SqlParameter("@pid", _projeId));
             dgvKullanilanlar.DataSource = _kullanilanlar;
 
             // Gereksiz satır başı seçme butonunu kaldır
@@ -483,26 +455,26 @@ ORDER BY ph.islem_tarihi DESC";
             // İşlemi pasif hale getir ve geri alındığı tarihi kaydet
             DatabaseHelper.ExecuteNonQuery(@"
         UPDATE proje_hareketleri 
-        SET aktif = 0, geri_alinan_islem = NOW() 
+        SET aktif = 0, geri_alinan_islem = GETDATE() 
         WHERE id = @hid",
-                new MySqlParameter("@hid", hareketId));
+                new SqlParameter("@hid", hareketId));
 
             // Ürün miktarını stokta güncelle
             DatabaseHelper.ExecuteNonQuery(@"
         UPDATE urunler 
         SET miktar = miktar + @miktar 
         WHERE urun_id = @uid",
-                new MySqlParameter("@miktar", miktar),
-                new MySqlParameter("@uid", urunId));
+                new SqlParameter("@miktar", miktar),
+                new SqlParameter("@uid", urunId));
 
             // Urun hareketlerini de loglayalım (Giriş olarak, proje geri alma işlemi)
             DatabaseHelper.ExecuteNonQuery(@"
         INSERT INTO urun_hareketleri (urun_id, hareket_turu, miktar, kullanici_id, islem_turu_id, proje_id, aciklama)
         VALUES (@uid, 'Giris', @miktar, @kid, 1, @pid, 'İşlem geri alındı')",
-                new MySqlParameter("@uid", urunId),
-                new MySqlParameter("@miktar", miktar),
-                new MySqlParameter("@kid", _kullaniciId),
-                new MySqlParameter("@pid", _projeId));
+                new SqlParameter("@uid", urunId),
+                new SqlParameter("@miktar", miktar),
+                new SqlParameter("@kid", _kullaniciId),
+                new SqlParameter("@pid", _projeId));
 
             lblSonIslem.Text = $"{miktar} adet {urunAdi} stoklara geri eklendi.(Depo konumu belirtilmedi)";
             lblSonIslem.ForeColor = Color.Blue;
@@ -517,21 +489,21 @@ ORDER BY ph.islem_tarihi DESC";
         {
             if (e.KeyCode != Keys.Enter) return;
 
-            // 1. Depo konumu seçilmiş mi kontrolü
-            if (comboBox1.SelectedValue == null)
+            // Depo konumu kontrolü (UYARI GÖSTERME!)
+            int depoKonumId = -1; // default
+
+            if (comboBox1.SelectedValue != null && int.TryParse(comboBox1.SelectedValue.ToString(), out int selectedId))
             {
-                MessageBox.Show("Lütfen bir depo konumu seçiniz!", "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                comboBox1.Focus();
-                return;
+                depoKonumId = selectedId;
             }
-            int depoKonumId = Convert.ToInt32(comboBox1.SelectedValue);
+
 
             string barkod = txtBarkod.Text.Trim();
             int miktar = (int)nudMiktar.Value;
             if (string.IsNullOrEmpty(barkod) || miktar <= 0) return;
 
             string getUrunIdQuery = "SELECT urun_id, urun_adi FROM urunler WHERE urun_barkod = @barkod";
-            var param = new MySqlParameter("@barkod", barkod);
+            var param = new SqlParameter("@barkod", barkod);
             DataTable urunResult = DatabaseHelper.ExecuteQuery(getUrunIdQuery, param);
 
             if (urunResult.Rows.Count == 0)
@@ -565,7 +537,7 @@ ORDER BY ph.islem_tarihi DESC";
                 return;
             }
 
-            object stokObj = DatabaseHelper.ExecuteScalar("SELECT miktar FROM urunler WHERE urun_id = @id", new MySqlParameter("@id", urunId));
+            object stokObj = DatabaseHelper.ExecuteScalar("SELECT miktar FROM urunler WHERE urun_id = @id", new SqlParameter("@id", urunId));
             int stok = Convert.ToInt32(stokObj ?? 0);
 
             if (stok < miktar)
@@ -575,52 +547,61 @@ ORDER BY ph.islem_tarihi DESC";
                 return;
             }
             // Depo konumu stok kontrolü
-            object depoStokObj = DatabaseHelper.ExecuteScalar(
-                "SELECT miktar FROM urun_depo_konum WHERE urun_id = @uid AND depo_konum_id = @depo_konum_id",
-                new MySqlParameter("@uid", urunId),
-                new MySqlParameter("@depo_konum_id", depoKonumId)
-            );
-            int depoStok = Convert.ToInt32(depoStokObj ?? 0);
-            if (depoStok < miktar)
+            if (depoKonumId != -1)
             {
-                MessageBox.Show($"Bu depoda yeterli ürün yok! Kalan: {depoStok}", "Depo Stok Yetersiz", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                txtBarkod.Clear();
-                return;
+                object depoStokObj = DatabaseHelper.ExecuteScalar(
+                    "SELECT miktar FROM urun_depo_konum WHERE urun_id = @uid AND depo_konum_id = @depo_konum_id",
+                    new SqlParameter("@uid", urunId),
+                    new SqlParameter("@depo_konum_id", depoKonumId)
+                );
+                int depoStok = Convert.ToInt32(depoStokObj ?? 0);
+                if (depoStok < miktar)
+                {
+                    MessageBox.Show($"Bu depoda yeterli ürün yok! Kalan: {depoStok}", "Depo Stok Yetersiz", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    txtBarkod.Clear();
+                    return;
+                }
             }
+
 
 
             // proje_hareketleri tablosuna depo konumsuz kaydet
             DatabaseHelper.ExecuteNonQuery(@"
         INSERT INTO proje_hareketleri (proje_id, urun_id, miktar, kullanici_id) 
         VALUES (@pid, @uid, @miktar, @kid)",
-                new MySqlParameter("@pid", _projeId),
-                new MySqlParameter("@uid", urunId),
-                new MySqlParameter("@miktar", miktar),
-                new MySqlParameter("@kid", _kullaniciId)
+                new SqlParameter("@pid", _projeId),
+                new SqlParameter("@uid", urunId),
+                new SqlParameter("@miktar", miktar),
+                new SqlParameter("@kid", _kullaniciId)
             );
 
-            // urun_hareketleri tablosuna depo konumlu kaydet
             DatabaseHelper.ExecuteNonQuery(@"
-        INSERT INTO urun_hareketleri (urun_id, hareket_turu, miktar, kullanici_id, islem_turu_id, proje_id, depo_konum_id, aciklama)
-        VALUES (@uid, 'Cikis', @miktar, @kid, 1, @pid, @depo_konum_id, '')",
-                new MySqlParameter("@uid", urunId),
-                new MySqlParameter("@miktar", miktar),
-                new MySqlParameter("@kid", _kullaniciId),
-                new MySqlParameter("@pid", _projeId),
-                new MySqlParameter("@depo_konum_id", depoKonumId)
-            );
+INSERT INTO urun_hareketleri (urun_id, hareket_turu, miktar, kullanici_id, islem_turu_id, proje_id, depo_konum_id, aciklama)
+VALUES (@uid, 'Cikis', @miktar, @kid, 1, @pid, @depo_konum_id, '')",
+    new SqlParameter("@uid", urunId),
+    new SqlParameter("@miktar", miktar),
+    new SqlParameter("@kid", _kullaniciId),
+    new SqlParameter("@pid", _projeId),
+    new SqlParameter("@depo_konum_id", comboBox1.SelectedValue == null ? (object)DBNull.Value : comboBox1.SelectedValue)
+);
+
 
             // Genel stoktan düş
             DatabaseHelper.ExecuteNonQuery("UPDATE urunler SET miktar = miktar - @miktar WHERE urun_id = @id",
-                new MySqlParameter("@miktar", miktar),
-                new MySqlParameter("@id", urunId));
-            // İlgili depo konumundan da miktarı düş
-            DatabaseHelper.ExecuteNonQuery(
-                "UPDATE urun_depo_konum SET miktar = miktar - @miktar WHERE urun_id = @uid AND depo_konum_id = @depo_konum_id",
-                new MySqlParameter("@miktar", miktar),
-                new MySqlParameter("@uid", urunId),
-                new MySqlParameter("@depo_konum_id", depoKonumId)
-            );
+                new SqlParameter("@miktar", miktar),
+                new SqlParameter("@id", urunId));
+
+            // Sadece depo konumu seçilmişse depo konumundan da düş
+            if (depoKonumId != -1)
+            {
+                DatabaseHelper.ExecuteNonQuery(
+                    "UPDATE urun_depo_konum SET miktar = miktar - @miktar WHERE urun_id = @uid AND depo_konum_id = @depo_konum_id",
+                    new SqlParameter("@miktar", miktar),
+                    new SqlParameter("@uid", urunId),
+                    new SqlParameter("@depo_konum_id", depoKonumId)
+                );
+            }
+
 
 
             // Animasyon için satırı bul ve renklendir
@@ -651,13 +632,13 @@ ORDER BY ph.islem_tarihi DESC";
         private async void BtnGeriAl_Click(object sender, EventArgs e)
         {
             string query = @"
-        SELECT ph.id AS hareket_id, ph.urun_id, ph.miktar 
-        FROM proje_hareketleri ph
-        WHERE ph.proje_id = @pid AND ph.aktif = 1
-        ORDER BY ph.islem_tarihi DESC 
-        LIMIT 1";
+        SELECT TOP 1 ph.id AS hareket_id, ph.urun_id, ph.miktar 
+FROM proje_hareketleri ph
+WHERE ph.proje_id = @pid AND ph.aktif = 1
+ORDER BY ph.islem_tarihi DESC
+";
 
-            DataTable dt = DatabaseHelper.ExecuteQuery(query, new MySqlParameter("@pid", _projeId));
+            DataTable dt = DatabaseHelper.ExecuteQuery(query, new SqlParameter("@pid", _projeId));
             if (dt.Rows.Count == 0)
             {
                 MessageBox.Show("Geri alınabilecek bir işlem yok.", "Bilgi", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -669,16 +650,16 @@ ORDER BY ph.islem_tarihi DESC";
             int miktar = Convert.ToInt32(dt.Rows[0]["miktar"]);
 
             DatabaseHelper.ExecuteNonQuery(
-    "UPDATE proje_hareketleri SET aktif = 0, geri_alinan_islem = NOW() WHERE id = @hid",
-    new MySqlParameter("@hid", hareketId));
+    "UPDATE proje_hareketleri SET aktif = 0, geri_alinan_islem = GETDATE() WHERE id = @hid",
+    new SqlParameter("@hid", hareketId));
 
             DatabaseHelper.ExecuteNonQuery("UPDATE urunler SET miktar = miktar + @miktar WHERE urun_id = @uid",
-                new MySqlParameter("@miktar", miktar),
-                new MySqlParameter("@uid", urunId));
+                new SqlParameter("@miktar", miktar),
+                new SqlParameter("@uid", urunId));
 
             string urunAdi = DatabaseHelper.ExecuteScalar(
                 "SELECT urun_adi FROM urunler WHERE urun_id = @uid",
-                new MySqlParameter("@uid", urunId)
+                new SqlParameter("@uid", urunId)
             )?.ToString() ?? "[Bilinmeyen Ürün]";
 
             lblSonIslem.Text = $"{miktar} adet {urunAdi} stoklara geri eklendi.";

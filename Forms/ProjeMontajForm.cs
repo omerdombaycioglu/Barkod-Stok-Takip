@@ -1,5 +1,5 @@
 ﻿
-using MySql.Data.MySqlClient;
+using System.Data.SqlClient;
 using StokTakipOtomasyonu.Helpers;
 using System;
 using System.Data;
@@ -25,7 +25,7 @@ namespace StokTakipOtomasyonu.Forms
         private int GetKullaniciYetki(int kullaniciId)
         {
             string query = "SELECT kullanici_yetki FROM kullanicilar WHERE kullanici_id = @id";
-            object result = DatabaseHelper.ExecuteScalar(query, new MySqlParameter("@id", kullaniciId));
+            object result = DatabaseHelper.ExecuteScalar(query, new SqlParameter("@id", kullaniciId));
             return result != null ? Convert.ToInt32(result) : 0;
         }
 
@@ -159,13 +159,12 @@ namespace StokTakipOtomasyonu.Forms
                 if (result == DialogResult.Yes)
                 {
                     string query = "UPDATE projeler SET aktif = 0 WHERE proje_id = @pid";
-                    DatabaseHelper.ExecuteNonQuery(query, new MySqlParameter("@pid", projeId));
+                    DatabaseHelper.ExecuteNonQuery(query, new SqlParameter("@pid", projeId));
                     LoadProjects();
                     MessageBox.Show("Proje başarıyla silindi (soft delete).", "Bilgi", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
         }
-
 
         private void ShowProjectTransactionHistory(int projeId, string projeKodu)
         {
@@ -185,7 +184,7 @@ WHERE ph.proje_id = @proje_id
 ORDER BY ph.islem_tarihi DESC";
 
 
-            var parameters = new[] { new MySqlParameter("@proje_id", projeId) };
+            var parameters = new[] { new SqlParameter("@proje_id", projeId) };
             DataTable dt = DatabaseHelper.ExecuteQuery(query, parameters);
 
             if (dt.Rows.Count == 0)
@@ -197,7 +196,5 @@ ORDER BY ph.islem_tarihi DESC";
             var frm = new FormIslemGecmisi(dt, projeKodu); // << BURASI
             frm.ShowDialog();                              // << BURASI
         }
-
-
     }
 }

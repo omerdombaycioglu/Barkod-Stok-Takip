@@ -1,5 +1,5 @@
 ﻿// ProjeEkleForm.cs
-using MySql.Data.MySqlClient;
+using System.Data.SqlClient;
 using System;
 using System.Data;
 using System.Drawing;
@@ -7,12 +7,13 @@ using System.IO;
 using System.Windows.Forms;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
+using System.Configuration;
 
 namespace StokTakipOtomasyonu.Forms
 {
     public partial class ProjeEkleForm : Form
     {
-        private readonly string _connectionString = "server=localhost;user=root;database=stok_takip_otomasyonu;password=;";
+        private readonly string _connectionString = ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString;
         private int _kullaniciId;
         private int _projeId;
         private DataTable _excelData;
@@ -58,7 +59,7 @@ namespace StokTakipOtomasyonu.Forms
                 IWorkbook workbook = new XSSFWorkbook(fs);
                 ISheet sheet = workbook.GetSheetAt(0);
 
-                using (MySqlConnection conn = new MySqlConnection(_connectionString))
+                using (SqlConnection conn = new SqlConnection(_connectionString))
                 {
                     conn.Open();
                     for (int i = 6; i <= sheet.LastRowNum; i++)
@@ -87,7 +88,7 @@ namespace StokTakipOtomasyonu.Forms
                         string stokDurum = "Yetersiz";
 
                         string checkQuery = "SELECT urun_id, miktar FROM urunler WHERE urun_kodu = @kod";
-                        MySqlCommand cmd = new MySqlCommand(checkQuery, conn);
+                        SqlCommand cmd = new SqlCommand(checkQuery, conn);
                         cmd.Parameters.AddWithValue("@kod", siparisNo);
 
                         int urunId = -1;
@@ -97,8 +98,9 @@ namespace StokTakipOtomasyonu.Forms
                         {
                             if (reader.Read())
                             {
-                                urunId = reader.GetInt32("urun_id");
-                                stokMiktar = reader.GetInt32("miktar");
+                                urunId = reader.GetInt32(reader.GetOrdinal("urun_id"));      // doğru
+                                stokMiktar = reader.GetInt32(reader.GetOrdinal("miktar"));   // doğru
+
                                 stokDurum = stokMiktar >= miktar ? "Yeterli" : "Yetersiz";
                                 urunVar = true;
                             }
@@ -106,8 +108,8 @@ namespace StokTakipOtomasyonu.Forms
 
                         if (!urunVar)
                         {
-                            string insertUrun = "INSERT INTO urunler (urun_kodu, urun_adi, urun_marka, miktar) VALUES (@kod, @adi, @marka, 0); SELECT LAST_INSERT_ID();";
-                            MySqlCommand insertCmd = new MySqlCommand(insertUrun, conn);
+                            string insertUrun = "INSERT INTO urunler (urun_kodu, urun_adi, urun_marka, miktar) VALUES (@kod, @adi, @marka, 0); SELECT SCOPE_IDENTITY();";
+                            SqlCommand insertCmd = new SqlCommand(insertUrun, conn);
                             insertCmd.Parameters.AddWithValue("@kod", siparisNo);
                             insertCmd.Parameters.AddWithValue("@adi", aciklama);
                             insertCmd.Parameters.AddWithValue("@marka", marka);
@@ -150,13 +152,13 @@ namespace StokTakipOtomasyonu.Forms
                 return;
             }
 
-            using (MySqlConnection conn = new MySqlConnection(_connectionString))
+            using (SqlConnection conn = new SqlConnection(_connectionString))
             {
                 conn.Open();
 
                 // EKLENDİ: Aynı kodda aktif proje var mı kontrolü
                 string checkQuery = "SELECT COUNT(*) FROM projeler WHERE proje_kodu = @kod AND aktif = 1";
-                using (MySqlCommand checkCmd = new MySqlCommand(checkQuery, conn))
+                using (SqlCommand checkCmd = new SqlCommand(checkQuery, conn))
                 {
                     checkCmd.Parameters.AddWithValue("@kod", txtProjeKodu.Text.Trim());
                     int count = Convert.ToInt32(checkCmd.ExecuteScalar());
@@ -167,8 +169,8 @@ namespace StokTakipOtomasyonu.Forms
                     }
                 }
 
-                string insertProje = "INSERT INTO projeler (proje_kodu, proje_tanimi, olusturan_id) VALUES (@kod, @tanimi, @olusturan); SELECT LAST_INSERT_ID();";
-                MySqlCommand cmd = new MySqlCommand(insertProje, conn);
+                string insertProje = "INSERT INTO projeler (proje_kodu, proje_tanimi, olusturan_id) VALUES (@kod, @tanimi, @olusturan); SELECT SCOPE_IDENTITY();";
+                SqlCommand cmd = new SqlCommand(insertProje, conn);
                 cmd.Parameters.AddWithValue("@kod", txtProjeKodu.Text.Trim());
                 cmd.Parameters.AddWithValue("@tanimi", txtProjeTanimi.Text.Trim());
                 cmd.Parameters.AddWithValue("@olusturan", _kullaniciId);
@@ -180,12 +182,12 @@ namespace StokTakipOtomasyonu.Forms
                     int miktar = Convert.ToInt32(row["Miktar"]);
 
                     string getIdQuery = "SELECT urun_id FROM urunler WHERE urun_kodu = @kod";
-                    MySqlCommand getIdCmd = new MySqlCommand(getIdQuery, conn);
+                    SqlCommand getIdCmd = new SqlCommand(getIdQuery, conn);
                     getIdCmd.Parameters.AddWithValue("@kod", siparisNo);
                     int urunId = Convert.ToInt32(getIdCmd.ExecuteScalar());
 
                     string insertProjeUrun = "INSERT INTO proje_urunleri (proje_id, urun_id, miktar, user_id) VALUES (@proje, @urun, @miktar, @kullanici)";
-                    MySqlCommand insertCmd = new MySqlCommand(insertProjeUrun, conn);
+                    SqlCommand insertCmd = new SqlCommand(insertProjeUrun, conn);
                     insertCmd.Parameters.AddWithValue("@proje", _projeId);
                     insertCmd.Parameters.AddWithValue("@urun", urunId);
                     insertCmd.Parameters.AddWithValue("@miktar", miktar);

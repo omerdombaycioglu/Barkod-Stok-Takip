@@ -1,4 +1,4 @@
-﻿using MySql.Data.MySqlClient;
+﻿using System.Data.SqlClient;
 using NPOI.SS.Formula.Functions;
 using System;
 using System.Data;
@@ -6,13 +6,14 @@ using System.Drawing;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using static StokTakipOtomasyonu.Forms.ManuelUrunGirisiForm;
+using System.Configuration;
 
 namespace StokTakipOtomasyonu.Forms
 {
     public partial class ManuelUrunCikisiForm : Form
     {
         private readonly int _kullaniciId;
-        private readonly string _connectionString = "server=localhost;user=root;database=stok_takip_otomasyonu;password=;";
+        private readonly string _connectionString = ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString;
 
         public ManuelUrunCikisiForm(int kullaniciId)
         {
@@ -25,10 +26,10 @@ namespace StokTakipOtomasyonu.Forms
 
             // Depo konumları doldur
             cmbDepoKonum.Items.Clear();
-            using (var conn = new MySqlConnection(_connectionString))
+            using (var conn = new SqlConnection(_connectionString))
             {
                 conn.Open();
-                var cmd = new MySqlCommand("SELECT id, harf, numara FROM depo_konum ORDER BY harf, numara", conn);
+                var cmd = new SqlCommand("SELECT id, harf, numara FROM depo_konum ORDER BY harf, numara", conn);
                 var reader = cmd.ExecuteReader();
                 while (reader.Read())
                 {
@@ -70,11 +71,11 @@ namespace StokTakipOtomasyonu.Forms
 
             try
             {
-                using (MySqlConnection conn = new MySqlConnection(_connectionString))
+                using (SqlConnection conn = new SqlConnection(_connectionString))
                 {
                     await conn.OpenAsync();
 
-                    MySqlCommand cmd = new MySqlCommand("SELECT urun_id, urun_adi, miktar, birim FROM urunler WHERE urun_barkod = @barkod", conn);
+                    SqlCommand cmd = new SqlCommand("SELECT urun_id, urun_adi, miktar, birim FROM urunler WHERE urun_barkod = @barkod", conn);
                     string birim = "";
                     cmd.Parameters.AddWithValue("@barkod", barkod);
 
@@ -102,7 +103,7 @@ namespace StokTakipOtomasyonu.Forms
                     if (depoKonumId != null)
                     {
                         // Depo-konum stok kontrolü
-                        MySqlCommand konumStokCmd = new MySqlCommand(
+                        SqlCommand konumStokCmd = new SqlCommand(
                             "SELECT miktar FROM urun_depo_konum WHERE urun_id=@urun_id AND depo_konum_id=@konum_id", conn);
                         konumStokCmd.Parameters.AddWithValue("@urun_id", urunId);
                         konumStokCmd.Parameters.AddWithValue("@konum_id", depoKonumId);
@@ -131,7 +132,7 @@ namespace StokTakipOtomasyonu.Forms
     UPDATE urun_depo_konum SET miktar = miktar - @miktar WHERE urun_id = @uid AND depo_konum_id = @konum_id;";
 
 
-                        MySqlCommand updateCmd = new MySqlCommand(query, conn);
+                        SqlCommand updateCmd = new SqlCommand(query, conn);
                         updateCmd.Parameters.AddWithValue("@uid", urunId);
                         updateCmd.Parameters.AddWithValue("@miktar", miktar);
                         updateCmd.Parameters.AddWithValue("@kullanici_id", _kullaniciId);
@@ -159,7 +160,7 @@ namespace StokTakipOtomasyonu.Forms
     UPDATE urunler SET miktar = miktar - @miktar WHERE urun_id = @uid;";
 
 
-                        MySqlCommand updateCmd = new MySqlCommand(query, conn);
+                        SqlCommand updateCmd = new SqlCommand(query, conn);
                         updateCmd.Parameters.AddWithValue("@uid", urunId);
                         updateCmd.Parameters.AddWithValue("@miktar", miktar);
                         updateCmd.Parameters.AddWithValue("@kullanici_id", _kullaniciId);

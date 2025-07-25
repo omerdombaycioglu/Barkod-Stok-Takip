@@ -1,4 +1,5 @@
-﻿using StokTakipOtomasyonu.Helpers;
+﻿using System.Data.SqlClient;
+using StokTakipOtomasyonu.Helpers;
 using System;
 using System.Data;
 using System.Drawing;
@@ -30,15 +31,15 @@ namespace StokTakipOtomasyonu.Forms
                 string tarihBaslangic = dtpBaslangic.Value.Date.ToString("yyyy-MM-dd 00:00:00");
                 string tarihBitis = dtpBitis.Value.Date.ToString("yyyy-MM-dd 23:59:59");
 
-                string limitStr = "";
+                string topStr = "";
                 if (cmbLimit.SelectedIndex == 0)
-                    limitStr = "LIMIT 100";
+                    topStr = "TOP 100";
                 else if (cmbLimit.SelectedIndex == 1)
-                    limitStr = "LIMIT 200";
-                // Hepsini Göster ise LIMIT yok
+                    topStr = "TOP 200";
+                // Hepsini Göster ise TOP yok
 
                 string query = $@"
-    SELECT 
+SELECT {topStr}
     u.urun_barkod, 
     u.urun_kodu, 
     u.urun_adi, 
@@ -47,7 +48,7 @@ namespace StokTakipOtomasyonu.Forms
         WHEN 'Cikis' THEN 'Çıkış' 
     END AS hareket_turu,
     uh.miktar, 
-    DATE_FORMAT(uh.log_date, '%d.%m.%Y %H:%i:%s') AS tarih, 
+    FORMAT(uh.log_date, 'dd.MM.yyyy HH:mm:ss') AS tarih, 
     k.ad_soyad AS kullanici,
     CASE 
         WHEN uh.islem_turu_id = 0 THEN 'Stok'
@@ -55,8 +56,7 @@ namespace StokTakipOtomasyonu.Forms
         WHEN uh.islem_turu_id = 2 THEN 'Hurda/İade'
         ELSE ''
     END AS islem_turu,
-    -- BURAYA EKLE: depo_konum_id ve isim göster
-    CONCAT(dk.harf, dk.numara) AS depo_konum,
+    (dk.harf + CAST(dk.numara AS NVARCHAR)) AS depo_konum,
     p.proje_kodu,
     uh.aciklama
 FROM urun_hareketleri uh
@@ -66,16 +66,26 @@ LEFT JOIN projeler p ON uh.proje_id = p.proje_id
 LEFT JOIN depo_konum dk ON uh.depo_konum_id = dk.id
 WHERE uh.log_date BETWEEN @baslangic AND @bitis
 ORDER BY uh.log_date DESC
-{limitStr}
-
 ";
+                // Eğer topStr varsa (TOP 100/200), direkt başa ekliyor
 
-                var dt = DatabaseHelper.ExecuteQuery(
-                    query,
-                    new MySql.Data.MySqlClient.MySqlParameter("@baslangic", tarihBaslangic),
-                    new MySql.Data.MySqlClient.MySqlParameter("@bitis", tarihBitis)
-                );
-                dataGridView1.DataSource = dt;
+                // Veritabanı bağlantısı (DatabaseHelper yerine doğrudan veya kendi MSSQL uyumlu helper'ını yaz)
+                using (SqlConnection conn = DatabaseHelper.GetConnection())
+
+                {
+                    conn.Open();
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@baslangic", tarihBaslangic);
+                        cmd.Parameters.AddWithValue("@bitis", tarihBitis);
+                        DataTable dt = new DataTable();
+                        using (SqlDataAdapter da = new SqlDataAdapter(cmd))
+                        {
+                            da.Fill(dt);
+                        }
+                        dataGridView1.DataSource = dt;
+                    }
+                }
             }
             catch (Exception ex)
             {

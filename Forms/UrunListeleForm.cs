@@ -1,8 +1,9 @@
-﻿using MySql.Data.MySqlClient;
+﻿using System.Data.SqlClient;
 using System;
 using System.Data;
 using System.Drawing;
 using System.Windows.Forms;
+using System.Configuration;
 
 namespace StokTakipOtomasyonu
 {
@@ -11,8 +12,8 @@ namespace StokTakipOtomasyonu
         public int SecilenUrunId { get; private set; }
         public int SecilenMiktar { get; private set; } = 1;
         private bool _secimModu = false;
-        private MySqlConnection connection;
-        private string connectionString = "server=localhost;database=stok_takip_otomasyonu;uid=root;pwd=;";
+        private SqlConnection connection;
+        private string _connectionString = ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString;
         private DataTable dataSourceTable;
         private Label lblUrunSayisi;
         private string _callerForm;
@@ -50,7 +51,7 @@ namespace StokTakipOtomasyonu
 
             this.Controls.Add(lblMaviBilgi);
 
-            connection = new MySqlConnection(connectionString);
+            connection = new SqlConnection(_connectionString);
 
             lblUrunSayisi = new Label();
             lblUrunSayisi.Location = new Point(20, dataGridView1.Bottom + 10);
@@ -68,7 +69,6 @@ namespace StokTakipOtomasyonu
                 btnSec.Visible = _secimModu && _callerForm == "ProjeMontajDetayForm";
             };
             
-
         }
 
         public UrunListeleForm(bool secimModu, string callerForm = "") : this()
@@ -169,8 +169,8 @@ namespace StokTakipOtomasyonu
                 connection.Open();
 
                 string query = "SELECT proje_id, CONCAT(proje_kodu, ' - ', proje_tanimi) AS proje_bilgisi FROM projeler WHERE aktif = 1";
-                MySqlCommand cmd = new MySqlCommand(query, connection);
-                MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
+                SqlCommand cmd = new SqlCommand(query, connection);
+                SqlDataAdapter adapter = new SqlDataAdapter(cmd);
                 DataTable dt = new DataTable();
                 adapter.Fill(dt);
 
@@ -204,10 +204,10 @@ namespace StokTakipOtomasyonu
         u.urun_marka AS 'Marka',
         u.miktar AS 'Stok Miktarı',
         u.kritik_seviye AS 'Kritik Seviye',
-        IFNULL((SELECT SUM(udk.miktar)
+        ISNULL((SELECT SUM(udk.miktar)
                 FROM urun_depo_konum udk
                 WHERE udk.urun_id = u.urun_id), 0) AS 'Depodaki Toplam Miktar',
-        IFNULL((SELECT GROUP_CONCAT(CONCAT(dk.harf, dk.numara, '(', udk.miktar, ')') SEPARATOR ' ')
+        ISNULL((SELECT STRING_AGG(CONCAT(dk.harf, dk.numara, '(', udk.miktar, ')'), ' ') AS [Depo Konum]
                 FROM urun_depo_konum udk
                 JOIN depo_konum dk ON dk.id = udk.depo_konum_id
                 WHERE udk.urun_id = u.urun_id), '') AS 'Depo Konum'
@@ -215,8 +215,8 @@ namespace StokTakipOtomasyonu
         ORDER BY u.urun_adi";
 
 
-                MySqlCommand cmd = new MySqlCommand(query, connection);
-                MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
+                SqlCommand cmd = new SqlCommand(query, connection);
+                SqlDataAdapter adapter = new SqlDataAdapter(cmd);
                 dataSourceTable = new DataTable();
                 adapter.Fill(dataSourceTable);
 
@@ -314,9 +314,9 @@ namespace StokTakipOtomasyonu
                                 WHERE pu.proje_id = @projeId
                                 ORDER BY u.urun_adi";
 
-                MySqlCommand cmd = new MySqlCommand(query, connection);
+                SqlCommand cmd = new SqlCommand(query, connection);
                 cmd.Parameters.AddWithValue("@projeId", projeId);
-                MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
+                SqlDataAdapter adapter = new SqlDataAdapter(cmd);
                 dataSourceTable = new DataTable();
                 adapter.Fill(dataSourceTable);
 

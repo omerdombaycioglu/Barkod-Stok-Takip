@@ -1,4 +1,4 @@
-﻿using MySql.Data.MySqlClient;
+﻿using System.Data.SqlClient;
 using StokTakipOtomasyonu.Helpers;
 using System;
 using System.Data;
@@ -178,8 +178,8 @@ namespace StokTakipOtomasyonu.Forms
                 string query = $"UPDATE kullanicilar SET {column} = @value WHERE kullanici_id = @id";
                 var parameters = new[]
                 {
-                    new MySqlParameter("@value", newValue),
-                    new MySqlParameter("@id", kullanici_id)
+                    new SqlParameter("@value", newValue),
+                    new SqlParameter("@id", kullanici_id)
                 };
 
                 DatabaseHelper.ExecuteNonQuery(query, parameters);
@@ -213,7 +213,7 @@ namespace StokTakipOtomasyonu.Forms
                     try
                     {
                         string query = "UPDATE kullanicilar SET silindi = 1 WHERE kullanici_id = @id";
-                        var param = new MySqlParameter("@id", id);
+                        var param = new SqlParameter("@id", id);
                         DatabaseHelper.ExecuteNonQuery(query, param);
                         KullanicilariYukle();
                     }
@@ -244,14 +244,14 @@ namespace StokTakipOtomasyonu.Forms
 
             string query = @"INSERT INTO kullanicilar 
                 (kullanici_adi, sifre, ad_soyad, kullanici_yetki, aktif, kayit_tarihi) 
-                VALUES (@kadi, @sifre, @ad, @yetki, 1, NOW())";
+                VALUES (@kadi, @sifre, @ad, @yetki, 1, GETDATE())";
 
             var parameters = new[]
             {
-                new MySqlParameter("@kadi", kadi),
-                new MySqlParameter("@sifre", sifre),
-                new MySqlParameter("@ad", adsoyad),
-                new MySqlParameter("@yetki", yetki)
+                new SqlParameter("@kadi", kadi),
+                new SqlParameter("@sifre", sifre),
+                new SqlParameter("@ad", adsoyad),
+                new SqlParameter("@yetki", yetki)
             };
 
             try

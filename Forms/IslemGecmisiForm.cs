@@ -1,8 +1,9 @@
-﻿using MySql.Data.MySqlClient;
+﻿using System.Data.SqlClient;
 using System;
 using System.Data;
 using System.Drawing;
 using System.Windows.Forms;
+using System.Configuration;
 
 namespace StokTakipOtomasyonu
 {
@@ -10,7 +11,7 @@ namespace StokTakipOtomasyonu
     {
         private int _urunId;
         private string _urunAdi;
-        private string connectionString = "server=localhost;database=stok_takip_otomasyonu;uid=root;pwd=;";
+        private string connectionString = ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString;
 
         public IslemGecmisiForm(int urunId, string urunAdi)
         {
@@ -26,7 +27,7 @@ namespace StokTakipOtomasyonu
         {
             try
             {
-                using (MySqlConnection connection = new MySqlConnection(connectionString))
+                using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     connection.Open();
                     string query = @"SELECT 
@@ -53,9 +54,9 @@ namespace StokTakipOtomasyonu
                                     WHERE uh.urun_id = @urunId
                                     ORDER BY uh.log_date DESC";
 
-                    MySqlCommand cmd = new MySqlCommand(query, connection);
+                    SqlCommand cmd = new SqlCommand(query, connection);
                     cmd.Parameters.AddWithValue("@urunId", _urunId);
-                    MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
+                    SqlDataAdapter adapter = new SqlDataAdapter(cmd);
                     DataTable dt = new DataTable();
                     adapter.Fill(dt);
 

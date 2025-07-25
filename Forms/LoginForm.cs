@@ -2,7 +2,7 @@
 using System.Windows.Forms;
 using System.Drawing;
 using System.IO;
-using MySql.Data.MySqlClient;
+using System.Data.SqlClient;
 using StokTakipOtomasyonu.Helpers;
 
 namespace StokTakipOtomasyonu.Forms
@@ -12,56 +12,11 @@ namespace StokTakipOtomasyonu.Forms
         public LoginForm()
         {
             this.Icon = new Icon("isp_logo2.ico");
-            InitializeComponent();
-            LoadLogo();
+            InitializeComponent();         
 
             this.Shown += (s, e) => txtKullaniciAdi.Focus();
         }
-
-        private void LoadLogo()
-        {
-            try
-            {
-                // 1. Önce çalışma dizininden yükleme denemesi
-                string exePath = Application.StartupPath;
-                string imagePath = Path.Combine(exePath, "Resources", "isp_logo.png");
-
-                if (File.Exists(imagePath))
-                {
-                    pictureBoxLogo.Image = Image.FromFile(imagePath);
-                }
-                else
-                {
-                    // 2. Embedded resource olarak yükleme
-                    var assembly = System.Reflection.Assembly.GetExecutingAssembly();
-                    string resourceName = "StokTakipOtomasyonu.Resources.isp_logo.png";
-
-                    using (Stream stream = assembly.GetManifestResourceStream(resourceName))
-                    {
-                        if (stream != null)
-                        {
-                            pictureBoxLogo.Image = Image.FromStream(stream);
-                        }
-                        else
-                        {
-                            // 3. Logo bulunamazsa uyarı mesajı
-                            pictureBoxLogo.BackColor = Color.LightGray;
-                            pictureBoxLogo.Image = null;
-                            Console.WriteLine("Logo dosyası bulunamadı: " + resourceName);
-                        }
-                    }
-                }
-
-                pictureBoxLogo.SizeMode = PictureBoxSizeMode.Zoom;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Logo yüklenirken hata oluştu: " + ex.Message,
-                              "Hata",
-                              MessageBoxButtons.OK,
-                              MessageBoxIcon.Warning);
-            }
-        }
+        
         private void LoginForm_Load(object sender, EventArgs e)
         {
             txtKullaniciAdi.TabIndex = 0;
@@ -89,8 +44,8 @@ namespace StokTakipOtomasyonu.Forms
                 }
 
                 var dt = DatabaseHelper.ExecuteQuery(query,
-                    new MySqlParameter("@kadi", txtKullaniciAdi.Text),
-                    new MySqlParameter("@sifre", txtSifre.Text));
+                    new SqlParameter("@kadi", txtKullaniciAdi.Text),
+                    new SqlParameter("@sifre", txtSifre.Text));
 
                 if (dt.Rows.Count > 0)
                 {
